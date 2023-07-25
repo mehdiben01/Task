@@ -62,10 +62,18 @@ public class UtilisateurController {
             return "redirect:/team";
         }
         utilisateur.setNom(utilisateur.getNom().toUpperCase());
+        utilisateur.setPassword(utilisateur.getPrenom().toLowerCase());
         utilisateur.setEmail(utilisateur.getEmail().toLowerCase());
+        utilisateur.setProfession(utilisateur.getProfession().toLowerCase());
         // Vérifier si l'utilisateur existe déjà
         boolean champExiste = utilisateurRepository.existsByEmailOrTel( utilisateur.getEmail(), utilisateur.getTel());
         if (champExiste) {
+            // Gérer le cas où l'utilisateur existe déjà
+            redirectAttributes.addFlashAttribute("message", "L'utilisateur existe déjà.");
+            return "redirect:/team";
+        }
+        boolean NomExiste = utilisateurRepository.existsByNomAndPrenom( utilisateur.getNom(), utilisateur.getPrenom());
+        if (NomExiste) {
             // Gérer le cas où l'utilisateur existe déjà
             redirectAttributes.addFlashAttribute("message", "L'utilisateur existe déjà.");
             return "redirect:/team";
@@ -129,26 +137,23 @@ public class UtilisateurController {
             return "redirect:/DetailTeam/" + existingUtilisateur.getId();
         }
 
-
-        // Mettre à jour les attributs de l'utilisateur existant avec les nouvelles valeurs
-        existingUtilisateur.setNom(updatedUtilisateur.getNom());
-        existingUtilisateur.setPrenom(updatedUtilisateur.getPrenom());
-        existingUtilisateur.setProfession(updatedUtilisateur.getProfession());
-        existingUtilisateur.setEmail(updatedUtilisateur.getEmail());
-        existingUtilisateur.setDaten(updatedUtilisateur.getDaten());
-        existingUtilisateur.setTel(updatedUtilisateur.getTel());
-        existingUtilisateur.setType(updatedUtilisateur.getType());
-
-
-
         // Vérifier si l'utilisateur existe déjà
-        boolean DataExiste = utilisateurRepository.existsByNomAndPrenomAndProfessionAndDatenAndTelAndType(updatedUtilisateur.getNom(),updatedUtilisateur.getPrenom(),updatedUtilisateur.getProfession(),updatedUtilisateur.getDaten(),updatedUtilisateur.getTel(), updatedUtilisateur.getType());
+        boolean DataExiste = utilisateurRepository.existsByNomAndPrenomAndProfessionAndDatenAndTelAndType(updatedUtilisateur.getNom().toUpperCase(),updatedUtilisateur.getPrenom().toLowerCase(),updatedUtilisateur.getProfession().toLowerCase(),updatedUtilisateur.getDaten(),updatedUtilisateur.getTel(), updatedUtilisateur.getType());
         if (DataExiste) {
             // Gérer le cas où l'utilisateur existe déjà
             redirectAttributes.addFlashAttribute("message", "Donnée existe déjà.");
             return "redirect:/DetailTeam/" + existingUtilisateur.getId();
+        }else{
+            // Mettre à jour les attributs de l'utilisateur existant avec les nouvelles valeurs
+            existingUtilisateur.setNom(updatedUtilisateur.getNom().toUpperCase());
+            existingUtilisateur.setPrenom(updatedUtilisateur.getPrenom().toLowerCase());
+            existingUtilisateur.setProfession(updatedUtilisateur.getProfession().toLowerCase());
+            existingUtilisateur.setEmail(updatedUtilisateur.getEmail().toLowerCase());
+            existingUtilisateur.setDaten(updatedUtilisateur.getDaten());
+            existingUtilisateur.setTel(updatedUtilisateur.getTel());
+            existingUtilisateur.setType(updatedUtilisateur.getType());
         }
-        boolean NomExiste = utilisateurRepository.existsByNomAndIdNot(updatedUtilisateur.getNom(), updatedUtilisateur.getId());
+        boolean NomExiste = utilisateurRepository.existsByNomAndIdNot(updatedUtilisateur.getNom().toUpperCase(), updatedUtilisateur.getId());
         if (NomExiste) {
             // Gérer le cas où l'utilisateur existe déjà
             redirectAttributes.addFlashAttribute("message", "Donnée existe déjà .");
@@ -160,6 +165,8 @@ public class UtilisateurController {
             redirectAttributes.addFlashAttribute("message", "Donnée existe déjà .");
             return "redirect:/DetailTeam/" + existingUtilisateur.getId();
         }
+
+
 
         // Enregistrer les modifications dans la base de données
         utilisateurService.save(existingUtilisateur);

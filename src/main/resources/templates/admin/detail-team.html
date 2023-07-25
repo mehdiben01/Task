@@ -115,7 +115,7 @@
 
                   <div class="ap-nameAddress pb-3">
                     <h5 class="ap-nameAddress__title" th:text="${utilisateur.nom +' '+ utilisateur.prenom}"></h5>
-                    <p class="ap-nameAddress__subTitle fs-14 m-0" th:text="${utilisateur.profession}"></p>
+                    <p class="ap-nameAddress__subTitle fs-14 m-0" th:text="${#strings.capitalize(utilisateur.profession)}"></p>
                   </div>
                 </div>
 

@@ -20,7 +20,7 @@ public interface UtilisateurRepository extends JpaRepository<Utilisateur, Intege
 
     boolean existsByPassword(String password);
 
-
+  boolean existsByNomAndPrenom(String nom, String prenom);
     List<Utilisateur> findAllByIsDeletedAndType(String isDeleted, String type);
 
     long countByTypeAndIsDeleted(String type , String isDeleted);

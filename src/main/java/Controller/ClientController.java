@@ -121,7 +121,7 @@ public class ClientController {
 
     @PostMapping("/client/update")
     public String updateClient(@ModelAttribute("client") Client updateclient , RedirectAttributes redirectAttributes, BindingResult bindingResult, Model model){
-// Récupérer l'utilisateur existant à partir de la base de données
+    // Récupérer l'utilisateur existant à partir de la base de données
         Client existingClient = clientService.getClientById(updateclient.getId());
         if (bindingResult.hasErrors()) {
             model.addAttribute("message", "Il y a des erreurs de validation.");
@@ -129,7 +129,7 @@ public class ClientController {
         }
 
         // Vérifier si l'utilisateur existe déjà
-        boolean ClientExiste = clientRepository.existsByNomAndPrenomAndEmailAndTelAndCompany(updateclient.getNom(),updateclient.getPrenom(),updateclient.getEmail(),updateclient.getTel(),updateclient.getCompany());
+        boolean ClientExiste = clientRepository.existsByNomAndPrenomAndEmailAndTelAndCompany(updateclient.getNom().toUpperCase(),updateclient.getPrenom().toLowerCase(),updateclient.getEmail(),updateclient.getTel(),updateclient.getCompany().toUpperCase());
         if (ClientExiste) {
             // Gérer le cas où l'utilisateur existe déjà
             redirectAttributes.addFlashAttribute("message", "Donnée existe déjà.");
@@ -137,7 +137,7 @@ public class ClientController {
         }else {
 
             existingClient.setNom(updateclient.getNom().toUpperCase());
-            existingClient.setPrenom(updateclient.getPrenom());
+            existingClient.setPrenom(updateclient.getPrenom().toLowerCase());
             existingClient.setTel(updateclient.getTel());
             existingClient.setCompany(updateclient.getCompany().toUpperCase());
         }
