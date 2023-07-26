@@ -21,10 +21,10 @@ public class Tache {
     @Column(nullable = false)
     private String description;
     @Column(nullable = false)
-    private String date_debut;
+    private String dated;
 
     @Column(nullable = false)
-    private String date_fin;
+    private String datef;
     @Column(nullable = false)
     private int etat;
 

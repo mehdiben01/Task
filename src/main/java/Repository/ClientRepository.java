@@ -12,7 +12,7 @@ public interface ClientRepository extends JpaRepository<Client, Integer> {
 
     boolean existsByNomAndPrenomAndEmailAndTelAndCompany(String nom,String prenom, String email, String tel , String company);
 
-    boolean existsByNomAndIdNot(String nom, Integer id);
+    boolean existsByNomAndPrenomAndIdNot(String nom,String prenom, Integer id);
 
     boolean existsByTelAndIdNot(String tel, Integer id);
 

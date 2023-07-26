@@ -1036,7 +1036,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="/tache" th:class="${activePage == 'tache'} ? 'active' : ''">
+                        <a href="/tache" th:class="${activePage == 'tache' || activePage == 'detailTache'} ? 'active' : ''">
                             <span data-feather="clipboard" class="nav-icon"></span>
                             <span class="menu-text">Tâches</span>
                         </a>

@@ -131,19 +131,19 @@
                           <!-- Ajouter la validation et les messages d'erreur pour les autres champs -->
                           <div class="form-group mb-20">
                             <label class="mb-15">Date de début</label>
-                            <input type="date" class="form-control" placeholder="Date De debut" th:field="*{date_debut}" name="date_debut" required
-                                   th:classappend="${#fields.hasErrors('date_debut')} ? 'is-invalid'" id="dateDebutInput">
+                            <input type="date" class="form-control" placeholder="Date De debut" th:field="*{dated}" name="date_debut" required
+                                   th:classappend="${#fields.hasErrors('dated')} ? 'is-invalid'" id="dateDebutInput">
                             <div class="invalid-feedback">
-                              <span th:if="${#fields.hasErrors('date_debut')}" th:errors="*{date_debut}"></span>
+                              <span th:if="${#fields.hasErrors('dated')}" th:errors="*{dated}"></span>
                               La date de début est requise.
                             </div>
                           </div>
                           <div class="form-group mb-20">
                             <label class="mb-15">Date de fin</label>
-                            <input type="date" class="form-control" placeholder="Date De fin" th:field="*{date_fin}" name="date_fin"  required
-                                   th:classappend="${#fields.hasErrors('date_fin')} ? 'is-invalid'" id="dateFinInput">
+                            <input type="date" class="form-control" placeholder="Date De fin" th:field="*{datef}" name="date_fin"  required
+                                   th:classappend="${#fields.hasErrors('datef')} ? 'is-invalid'" id="dateFinInput">
                             <div class="invalid-feedback">
-                              <span th:if="${#fields.hasErrors('date_fin')}" th:errors="*{date_fin}"></span>
+                              <span th:if="${#fields.hasErrors('datef')}" th:errors="*{datef}"></span>
                               La date de fin est requise.
                             </div>
                           </div>
@@ -263,16 +263,16 @@
                         </div>
                       </td>
                       <td>
-                        <div class="userDatatable-content" th:text="${task.date_debut}">
+                        <div class="userDatatable-content" th:text="${task.dated}">
 
                         </div>
                       </td>
                       <td>
-                        <div class="userDatatable-content d-inline-block" th:if="${(T(java.time.LocalDate).parse(task.date_fin) < #temporals.createToday()) and (task.etat != '100') }"  >
-                            <span class="bg-opacity-danger color-danger rounded-pill userDatatable-content-status active" th:text="${task.date_fin}">
+                        <div class="userDatatable-content d-inline-block" th:if="${(T(java.time.LocalDate).parse(task.datef) < #temporals.createToday()) and (task.etat != '100') }"  >
+                            <span class="bg-opacity-danger color-danger rounded-pill userDatatable-content-status active" th:text="${task.datef}">
                             </span>
                         </div>
-                        <div class="userDatatable-content" th:unless="${T(java.time.LocalDate).parse(task.date_fin) < #temporals.createToday() and (task.etat != '100')}" th:text="${task.date_fin}">
+                        <div class="userDatatable-content" th:unless="${T(java.time.LocalDate).parse(task.datef) < #temporals.createToday() and (task.etat != '100')}" th:text="${task.datef}">
                         </div>
                       </td>
                       <td>
@@ -317,18 +317,15 @@
                       </td>
 
                       <td>
-                        <a href="/team"><img class="rounded-circle wh-34" th:src="${task.users.cheminImage}" alt="author"></a>
+                        <a th:href="@{/DetailTeam/{id}(id=${task.users.id})}"><img class="rounded-circle wh-34" th:src="${task.users.cheminImage}" alt="author"></a>
 
 
                       </td>
                       <td>
                         <ul class="orderDatatable_actions mb-0 d-flex flex-wrap">
+
                           <li>
-                            <a href="#" class="view">
-                              <span data-feather="eye"></span></a>
-                          </li>
-                          <li>
-                            <a href="#" class="edit">
+                            <a th:href="@{/DetailTache/{id}(id=${task.id})}" class="edit" >
                               <span data-feather="edit"></span></a>
                           </li>
                           <li>

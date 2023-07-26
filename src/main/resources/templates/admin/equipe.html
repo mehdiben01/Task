@@ -244,7 +244,7 @@
                   <img class="ap-img__main bg-opacity-primary  wh-120 rounded-circle mb-3 " th:src="${utilisateurs.cheminImage}" alt="profile">
                 </div>
                 <div class="ap-nameAddress">
-                  <h6 class="ap-nameAddress__title" th:text="${utilisateurs.nom + ' ' +utilisateurs.prenom}"></h6>
+                  <h6 class="ap-nameAddress__title" th:text="${#strings.capitalize(utilisateurs.prenom) + ' ' +utilisateurs.nom}"></h6>
                   <p class="ap-nameAddress__subTitle  fs-14 pt-1 m-0 " th:text="${#strings.capitalize(utilisateurs.profession)}"></p>
                 </div>
                 <div class="ap-button account-profile-cards__button button-group d-flex justify-content-center flex-wrap pt-20">

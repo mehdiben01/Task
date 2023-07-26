@@ -56,7 +56,7 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-lg-12">
-<br>
+            <br>
             <div class="container-fluid">
               <!-- Autres contenus de la page -->
               <div th:if="${message}" class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -81,22 +81,29 @@
               <div class="card-body text-center p-0">
 
                 <div class="account-profile border-bottom pt-25 px-25 pb-0 flex-column d-flex align-items-center ">
-                  <form action="/update/imagec" method="post" th:object="${client}" enctype="multipart/form-data">
+                    <div class="ap-img mb-20 pro_img_wrapper">
+
+                        <!-- Profile picture image-->
+                        <img class="ap-img__main rounded-circle wh-120" th:src="${tache.project.clients.cheminImage}" alt="profile">
+
+                      </label>
+                    </div>
+
+                  <div class="ap-nameAddress pb-3">
+                    <h5 class="ap-nameAddress__title" th:text="${tache.project.clients.company}"></h5>
+                  </div>
+                </div>
+                <div class="account-profile border-bottom pt-25 px-25 pb-0 flex-column d-flex align-items-center ">
                   <div class="ap-img mb-20 pro_img_wrapper">
-                    <input name="id" th:value="${clients.id}" type="hidden">
-                    <input id="file-upload" type="file" name="image" class="d-none" onchange="this.form.submit()">
-                    <label for="file-upload">
-                      <!-- Profile picture image-->
-                      <img class="ap-img__main rounded-circle wh-120" th:src="${clients.cheminImage}" alt="profile">
-                      <span class="cross" id="remove_pro_pic">
-                                                    <span data-feather="camera"></span>
-                                                </span>
+
+                    <!-- Profile picture image-->
+                    <img class="ap-img__main rounded-circle wh-120" th:src="${tache.users.cheminImage}" alt="profile">
+
                     </label>
                   </div>
-                  </form>
+
                   <div class="ap-nameAddress pb-3">
-                    <h5 class="ap-nameAddress__title" th:text="${#strings.capitalize(clients.prenom)} + ' ' + ${clients.nom}"></h5>
-                    <p class="ap-nameAddress__subTitle fs-14 m-0" th:text="${clients.company}"></p>
+                    <h5 class="ap-nameAddress__title" th:text="${#strings.capitalize(tache.users.prenom)} + ' ' + ${tache.users.nom}"></h5>
                   </div>
                 </div>
                 <div class="ps-tab p-20 pb-25">
@@ -134,61 +141,78 @@
                         <div class="row justify-content-center">
                           <div class="col-xxl-6 col-lg-8 col-sm-10">
                             <div class="edit-profile__body mx-lg-20">
-                              <form action="/client/update" method="post" th:object="${client}" class="was-validated">
-                                <input type="hidden" class="form-control" id="id"  name="id" th:value="${clients.id}">
+                              <form action="/tache/update" method="post" th:object="${tache}" class="was-validated">
+                                <input type="hidden" class="form-control" id="id"  name="id" th:value="${tache.id}">
                                 <div class="form-group mb-20">
-                                  <label for="names">Nom</label>
-                                  <input type="text" class="form-control" id="names" name="nom" placeholder="Nom" th:value="${clients.nom}" pattern="[A-Za-z\s]+"   required  th:classappend="${#fields.hasErrors('nom')} ? 'is-invalid'">
+                                  <label for="title">Nom</label>
+                                  <input type="text" class="form-control" id="title" name="title" placeholder="title" th:value="${tache.title}" pattern="[A-Za-zÀ-ÿ\s]+"   required  th:classappend="${#fields.hasErrors('title')} ? 'is-invalid'">
                                   <div class="invalid-feedback">
-                                    <span th:if="${#fields.hasErrors('nom')}" th:errors="*{nom}"></span>
-                                    Le nom est requis.
+                                    <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></span>
+                                    Le titre est requis.
                                   </div>
                                 </div>
                                 <div class="form-group mb-20">
-                                  <label for="names">Prenom</label>
-                                  <input type="text" class="form-control" id="prenom" name="prenom" placeholder="Prenom" th:value="${clients.prenom}" pattern="[A-Za-z\s]+"   required th:classappend="${#fields.hasErrors('nom')} ? 'is-invalid'" >
+                                  <label for="description">Prenom</label>
+                                  <textarea class="form-control" id="description" name="description" placeholder="description" th:text="${tache.description}" pattern="[A-Za-zÀ-ÿ\s]+" required th:classappend="${#fields.hasErrors('description')} ? 'is-invalid'"></textarea>
                                   <div class="invalid-feedback">
-                                    <span th:if="${#fields.hasErrors('prenom')}" th:errors="*{prenom}"></span>
-                                    Le prénom est requis.
+                                    <span th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></span>
+                                    La description est requis.
+                                  </div>
+                                </div>
+
+                                <div class="form-group mb-20">
+                                  <label for="datepicker8">Date de debut</label>
+                                  <input type="date" class="form-control" id="datepicker8" name="dated" placeholder="date de debut" th:value="${tache.dated}" required th:classappend="${#fields.hasErrors('dated')} ? 'is-invalid'">
+                                  <div class="invalid-feedback">
+                                    <span th:if="${#fields.hasErrors('dated')}" th:errors="*{dated}"></span>
+                                    La date de debut est requis.
                                   </div>
                                 </div>
                                 <div class="form-group mb-20">
-                                  <label for="phoneNumber1">phone number</label>
-                                  <input type="tel" class="form-control" id="phoneNumber1" name="tel" placeholder="Tel" th:value="${clients.tel}" pattern="[0-9]{10}" required th:classappend="${#fields.hasErrors('tel')} ? 'is-invalid'">
+                                  <label for="datepicker7">Date de fin</label>
+                                  <input type="date" class="form-control" id="datepicker7" name="datef" placeholder="date de fin" th:value="${tache.datef}" required th:classappend="${#fields.hasErrors('datef')} ? 'is-invalid'">
                                   <div class="invalid-feedback">
-                                    <span th:if="${#fields.hasErrors('tel')}" th:errors="*{tel}"></span>
-                                    Le téléphone est requis.
+                                    <span th:if="${#fields.hasErrors('datef')}" th:errors="*{datef}"></span>
+                                    La date de fin est requis.
                                   </div>
                                 </div>
                                 <div class="form-group mb-20">
-                                  <label for="company1">company name</label>
-                                  <input type="text" class="form-control" id="company1" name="company" placeholder="Entreprise" th:value="${clients.company}" pattern="[A-Za-zÀ-ÿ\s]+"   required  th:classappend="${#fields.hasErrors('company')} ? 'is-invalid'">
+                                  <div class="skillsOption">
+                                    <label for="etat">Etat</label>
+                                    <select class="js-example-basic-single js-states form-control" id="etat" name="etat"  required  th:classappend="${#fields.hasErrors('etat')} ? 'is-invalid'">
+                                      <option value="Pas encore commencé" th:selected="${tache.etat == 0}">Pas encore commencé</option>
+                                      <option value="10" th:selected="${tache.etat == 10}">10%</option>
+                                      <option value="20" th:selected="${tache.etat == 20}">20%</option>
+                                      <option value="30" th:selected="${tache.etat == 30}">30%</option>
+                                      <option value="40" th:selected="${tache.etat == 40}">40%</option>
+                                      <option value="50" th:selected="${tache.etat == 50}">50%</option>
+                                      <option value="60" th:selected="${tache.etat == 60}">60%</option>
+                                      <option value="70" th:selected="${tache.etat == 70}">70%</option>
+                                      <option value="80" th:selected="${tache.etat == 80}">80%</option>
+                                      <option value="90" th:selected="${tache.etat == 90}">90%</option>
+                                      <option value="100" th:selected="${tache.etat == 100}">100%</option>
+                                    </select>
+                                  </div>
                                 </div>
                                 <div class="form-group mb-20">
-                                  <label for="names">Email</label>
-                                  <input type="email" class="form-control" id="email" name="email" placeholder="Email" th:value="${clients.email}" readonly>
+                                  <div class="skillsOption">
+                                    <label for="validationServer04">Projet</label>
+                                    <select class="custom-select is-valid form-control select-arrow-none ih-medium  radius-xs shadow-none fs-14" id="validationServer04" aria-describedby="validationServer04Feedback" name="project"  required th:classappend="${#fields.hasErrors('title')} ? 'is-invalid'">
+                                      <option th:each="project : ${project}" th:value="${project.id}" th:text="${project.title}" th:selected="${project.id == tache.project.id}"></option>
+                                    </select>
+                                  </div>
                                 </div>
-                                <div class="button-group d-flex flex-wrap pt-30 mb-15">
-
-
-
-                                  <button type="submit" class="btn btn-primary btn-default btn-squared mr-15 text-capitalize">update profile
+                                <div class="form-group mb-20">
+                                  <div class="skillsOption">
+                                    <label for="validationServer02">Membre</label>
+                                    <select class="custom-select is-valid form-control select-arrow-none ih-medium  radius-xs shadow-none fs-14" id="validationServer02" name="users"  required >
+                                      <option th:each="utilisateur : ${utilisateur}" th:value="${utilisateur.id}" th:text="${utilisateur.nom}" th:selected="${utilisateur.id == tache.users.id}"></option>
+                                    </select>
+                                  </div>
+                                </div>
+                               <div class="button-group d-flex flex-wrap pt-30 mb-15">
+                                 <button type="submit" class="btn btn-primary btn-default btn-squared mr-15 text-capitalize">update profile
                                   </button>
-
-
-
-
-
-
-
-
-                                  <button class="btn btn-light btn-default btn-squared fw-400 text-capitalize">cancel
-                                  </button>
-
-
-
-
-
                                 </div>
                               </form>
                             </div>
@@ -224,7 +248,7 @@
                               <div class="my-sm-0 my-10 py-10">
 
                                 <button type="submit" class="btn btn-danger btn-default btn-squared fw-400 text-capitalize" data-toggle="modal" data-target="#modal-info-delete"
-                                        th:data-id="${clients.id}" th:data-nom="${clients.company}">close account
+                                      >close account
                                 </button>
 
                               </div>

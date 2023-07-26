@@ -215,11 +215,10 @@
                  <a th:href="@{/DetailClient/{id}(id=${clients.id})}">
                   <button type="button" class="border text-capitalize px-25 color-gray transparent shadow2 radius-md">
                     Editer</button></a>
-                  <form action="/client/delete" method="post">
-                    <input type="hidden" th:value="${clients.id}" name="id">
-                  <button type="submit" class="border text-capitalize px-25 color-gray transparent shadow2 radius-md">
+                  <button type="submit" class="border text-capitalize px-25 color-gray transparent shadow2 radius-md" data-toggle="modal" data-target="#modal-info-delete"
+                          th:data-id="${clients.id}" th:data-nom="${clients.company}">
                     Supprimer</button>
-                  </form>
+
                 </div>
                 <br>
               </div>
@@ -234,6 +233,30 @@
 
     </div>
 
+  </div>
+  <div class="modal-info-delete modal fade show" id="modal-info-delete" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-info" role="document">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div class="modal-info-body d-flex">
+            <div class="modal-info-icon warning">
+              <span data-feather="info"></span>
+            </div>
+            <div class="modal-info-text">
+              <h6>Voulez-vous supprimer <span id="modal-nom-display"></span>?</h6>
+            </div>
+          </div>
+        </div>
+        <form action="/client/delete" method="post">
+          <div class="modal-footer">
+            <input type="hidden" class="form-control" id="modal-id" name="id" readonly>
+            <button type="button" class="btn btn-danger btn-outlined btn-sm" data-dismiss="modal">Non</button>
+            <button type="submit" class="btn btn-success btn-outlined btn-sm" >Oui</button>
+
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
   <footer class="footer-wrapper">
     <div class="container-fluid">
@@ -275,7 +298,28 @@
         </span>
 </div>
 <div class="overlay-dark-sidebar"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+  $(document).ready(function() {
+    $('#modal-info-delete').on('show.bs.modal', function (event) {
+      const button = $(event.relatedTarget);
+      const idValue = button.attr('data-id');
+      const nomValue = button.attr('data-nom');
 
+      $("#modal-nom-display").text(nomValue);
+      $("#modal-id").val(idValue);
+    });
+
+    // When the 'Yes' button in the modal is clicked, retrieve the 'id' value and do something with it
+    $(".btn-success").click(function() {
+      const idValue = $("#modal-id").val();
+      const nomValue = $("#modal-nom-display").text();
+      // Now you can use the 'idValue' and 'nomValue' variables in your code to perform the necessary action with the ID and name.
+      console.log("ID to be deleted:", idValue);
+      console.log("Name to be deleted:", nomValue);
+    });
+  });
+</script>
 <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDduF2tLXicDEPDMAtC6-NLOekX0A5vlnY"></script>
 <!-- inject:js-->
 <script src="assets/vendor_assets/js/jquery/jquery-3.5.1.min.js"></script>

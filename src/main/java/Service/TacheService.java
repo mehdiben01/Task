@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class TacheService {
@@ -25,5 +26,8 @@ public class TacheService {
         return tacheRepository.count();
     }
 
-
+    public Tache getTacheById(Integer id) {
+        return tacheRepository.getTacheById(id)
+                .orElseThrow(() -> new NoSuchElementException("Tache not found with ID: " + id));
+    }
 }

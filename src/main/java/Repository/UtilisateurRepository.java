@@ -14,7 +14,7 @@ public interface UtilisateurRepository extends JpaRepository<Utilisateur, Intege
 
     boolean existsByNomAndPrenomAndProfessionAndDatenAndTelAndType(String nom,  String prenom, String profession, String daten, String tel, String type);
 
-    boolean existsByNomAndIdNot(String nom, Integer id);
+    boolean existsByNomAndPrenomAndIdNot(String nom,String prenom, Integer id);
 
     boolean existsByTelAndIdNot(String tel , Integer id);
 

@@ -153,7 +153,7 @@ public class UtilisateurController {
             existingUtilisateur.setTel(updatedUtilisateur.getTel());
             existingUtilisateur.setType(updatedUtilisateur.getType());
         }
-        boolean NomExiste = utilisateurRepository.existsByNomAndIdNot(updatedUtilisateur.getNom().toUpperCase(), updatedUtilisateur.getId());
+        boolean NomExiste = utilisateurRepository.existsByNomAndPrenomAndIdNot(updatedUtilisateur.getNom().toUpperCase(),updatedUtilisateur.getPrenom().toLowerCase(), updatedUtilisateur.getId());
         if (NomExiste) {
             // Gérer le cas où l'utilisateur existe déjà
             redirectAttributes.addFlashAttribute("message", "Donnée existe déjà .");

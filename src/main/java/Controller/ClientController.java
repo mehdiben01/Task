@@ -10,7 +10,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -37,8 +36,6 @@ public class ClientController {
     @Autowired
     private ClientService service;
 
-
-
     @GetMapping("/client")
     public String getClient(Model model){
         Client client = new Client();
@@ -50,10 +47,6 @@ public class ClientController {
         return "admin/client";
     }
 
-
-
-
-
     @PostMapping("/client/save")
     public String saveClient(@ModelAttribute @Valid Client client, @RequestParam("logo") MultipartFile imageFile, HttpServletRequest request, RedirectAttributes redirectAttributes , BindingResult bindingResult, Model model ) {
         if (bindingResult.hasErrors()) {
@@ -64,10 +57,16 @@ public class ClientController {
         client.setCompany(client.getCompany().toUpperCase());
         client.setEmail(client.getEmail().toLowerCase());
         // Vérifier si l'utilisateur existe déjà
-        boolean champExiste = clientRepository.existsByEmailOrTelOrCompany(client.getEmail(), client.getTel(), client.getCompany());
+        boolean champExiste = clientRepository.existsByEmailOrTelOrCompany(client.getEmail().toLowerCase(), client.getTel(), client.getCompany().toUpperCase());
         if (champExiste) {
             // Gérer le cas où l'utilisateur existe déjà
             redirectAttributes.addFlashAttribute("message", "Client existe déjà.");
+            return "redirect:/client";
+        }
+        boolean NomExiste = clientRepository.existsByNomAndPrenomAndIdNot(client.getNom().toUpperCase(), client.getPrenom().toLowerCase(), client.getId());
+        if (NomExiste) {
+            // Gérer le cas où l'utilisateur existe déjà
+            redirectAttributes.addFlashAttribute("message", "Nom existe déjà.");
             return "redirect:/client";
         }
         if (!imageFile.isEmpty()) {
@@ -142,7 +141,7 @@ public class ClientController {
             existingClient.setCompany(updateclient.getCompany().toUpperCase());
         }
 
-        boolean NomExiste = clientRepository.existsByNomAndIdNot(updateclient.getNom().toUpperCase(), updateclient.getId());
+        boolean NomExiste = clientRepository.existsByNomAndPrenomAndIdNot(updateclient.getNom().toUpperCase(), updateclient.getPrenom().toLowerCase(), updateclient.getId());
         if (NomExiste) {
             // Gérer le cas où l'utilisateur existe déjà
             redirectAttributes.addFlashAttribute("message", "Nom existe déjà.");
