@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>StrikingDash</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+          rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+          crossorigin="anonymous">
+
+    <!-- inject:css-->
+    <link th:href="@{/assets/vendor_assets/css/bootstrap/bootstrap.css}" rel="stylesheet">
+    <link th:href="@{/assets/vendor_assets/css/daterangepicker.css}" rel="stylesheet">
+    <link th:href="@{/assets/vendor_assets/css/fontawesome.css}" rel="stylesheet">
+    <link th:href="@{/assets/vendor_assets/css/footable.standalone.min.css}" rel="stylesheet">
+    <link th:href="@{/assets/vendor_assets/css/fullcalendar@5.2.0.css}" rel="stylesheet">
+    <link th:href="@{/assets/vendor_assets/css/jquery-jvectormap-2.0.5.css}" rel="stylesheet">
+    <link th:href="@{/assets/vendor_assets/css/jquery.mCustomScrollbar.min.css}" rel="stylesheet">
+    <link th:href="@{/assets/vendor_assets/css/leaflet.css}" rel="stylesheet">
+    <link th:href="@{/assets/vendor_assets/css/line-awesome.min.css}" rel="stylesheet">
+    <link th:href="@{/assets/vendor_assets/css/magnific-popup.css}" rel="stylesheet">
+    <link th:href="@{/assets/vendor_assets/css/MarkerCluster.css}" rel="stylesheet">
+    <link th:href="@{/assets/vendor_assets/css/MarkerCluster.Default.css}" rel="stylesheet">
+    <link th:href="@{/assets/vendor_assets/css/select2.min.css}" rel="stylesheet">
+    <link th:href="@{/assets/vendor_assets/css/slick.css}" rel="stylesheet">
+    <link th:href="@{/assets/vendor_assets/css/star-rating-svg.css}" rel="stylesheet">
+    <link th:href="@{/assets/vendor_assets/css/trumbowyg.min.css}" rel="stylesheet">
+    <link th:href="@{/assets/vendor_assets/css/wickedpicker.min.css}" rel="stylesheet">
+    <link th:href="@{/style.css}" rel="stylesheet">
+
+    <!-- endinject -->
+
+    <link rel="icon" type="image/png" sizes="16x16" href="img/favicon.png">
+</head>
+
+<body class="layout-light side-menu overlayScroll">
+<div class="mobile-search">
+    <form class="search-form">
+        <span data-feather="search"></span>
+        <input class="form-control mr-sm-2 box-shadow-none" type="text" placeholder="Search...">
+    </form>
+</div>
+
+<div class="mobile-author-actions"></div>
+<div th:replace="include/header :: header" ></div>
+<main class="main-content">
+
+
+
+    <div class="contents">
+
+        <div class="profile-setting ">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <br>
+                        <div class="container-fluid">
+                            <!-- Autres contenus de la page -->
+                            <div th:if="${message}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <strong><span th:text="${message}"></span></strong>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                            <!-- Suite du contenu de la page -->
+                        </div>
+
+                        <div class="breadcrumb-main">
+                            <h4 class="text-capitalize breadcrumb-title">My profile</h4>
+                            <div class="breadcrumb-action justify-content-center flex-wrap">
+
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-xxl-3 col-lg-4 col-sm-5">
+                        <!-- Profile Acoount -->
+                        <div class="card mb-25">
+                            <div class="card-body text-center p-0">
+
+                                <div class="account-profile border-bottom pt-25 px-25 pb-0 flex-column d-flex align-items-center ">
+                                        <div class="ap-img mb-20 pro_img_wrapper">
+                                                <!-- Profile picture image-->
+                                                <img class="ap-img__main rounded-circle wh-120" th:src="${project.clients.cheminImage}" alt="profile">
+                                                <span class="cross" id="remove_pro_pic">
+                                                    <span data-feather="camera"></span>
+                                                </span>
+                                        </div>
+                                    <div class="ap-nameAddress pb-3">
+                                        <h5 class="ap-nameAddress__title" th:text="${project.title}"></h5>
+                                        <p class="ap-nameAddress__subTitle fs-14 m-0" th:text="${project.clients.company}"></p>
+                                    </div>
+                                </div>
+                                <div class="ps-tab p-20 pb-25">
+                                    <div class="nav flex-column text-left" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                                        <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true">
+                                            <span data-feather="user"></span>Edit profile</a>
+                                        <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false">
+                                            <span data-feather="settings"></span>Account
+                                            setting</a>
+
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <!-- Profile Acoount End -->
+                    </div>
+                    <div class="col-xxl-9 col-lg-8 col-sm-7">
+
+                        <div class="mb-50">
+                            <div class="tab-content" id="v-pills-tabContent">
+                                <div class="tab-pane fade  show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+                                    <!-- Edit Profile -->
+                                    <div class="edit-profile mt-25">
+                                        <div class="card">
+                                            <div class="card-header px-sm-25 px-3">
+                                                <div class="edit-profile__title">
+                                                    <h6>Edit Profile</h6>
+                                                    <span class="fs-13 color-light fw-400">Set up your personal
+                                                            information</span>
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="row justify-content-center">
+                                                    <div class="col-xxl-6 col-lg-8 col-sm-10">
+                                                        <div class="edit-profile__body mx-lg-20">
+                                                            <form action="/project/update" method="post" th:object="${project}" class="was-validated">
+                                                                <input type="hidden" class="form-control" id="id"  name="id" th:value="${project.id}">
+                                                                <div class="form-group mb-20">
+                                                                    <label for="names">Nom</label>
+                                                                    <input type="text" class="form-control" id="names" name="title" placeholder="Nom" th:value="${project.title}" pattern="[A-Za-zÀ-ÿ\s]+"   required  th:classappend="${#fields.hasErrors('title')} ? 'is-invalid'">
+                                                                    <div class="invalid-feedback">
+                                                                        <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></span>
+                                                                        Le nom est requis.
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group mb-20">
+                                                                    <label for="names">Prenom</label>
+                                                                    <textarea class="form-control" placeholder="Description" th:text="${project.description}" name="description" required th:classappend="${#fields.hasErrors('description')} ? 'is-invalid'" maxlength="300"></textarea>
+                                                                    <div class="invalid-feedback">
+                                                                        <span th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></span>
+                                                                        La description est requis.
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group mb-20">
+                                                                    <label for="dateDebutInput">Date de debut</label>
+                                                                    <input type="date" class="form-control" id="dateDebutInput" name="dated" placeholder="date de debut" th:value="${project.dated}" required th:classappend="${#fields.hasErrors('dated')} ? 'is-invalid'">
+                                                                    <div class="invalid-feedback">
+                                                                        <span th:if="${#fields.hasErrors('dated')}" th:errors="*{dated}"></span>
+                                                                        La date de debut est requis.
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group mb-20">
+                                                                    <label for="dateFinInput">Date de debut</label>
+                                                                    <input type="date" class="form-control" id="dateFinInput" name="datef" placeholder="date de debut" th:value="${project.datef}" required th:classappend="${#fields.hasErrors('datef')} ? 'is-invalid'">
+                                                                    <div class="invalid-feedback">
+                                                                        <span th:if="${#fields.hasErrors('datef')}" th:errors="*{datef}"></span>
+                                                                        La date de fin est requis.
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group mb-20">
+                                                                    <div class="skillsOption">
+                                                                        <label for="validationServer02">Client</label>
+                                                                        <select class="custom-select is-valid form-control select-arrow-none ih-medium  radius-xs shadow-none fs-14" id="validationServer02" name="clients"  required >
+                                                                            <option th:each="clients : ${clients}" th:value="${clients.id}" th:text="${clients.company}" th:selected="${clients.id == project.clients.id}"></option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="button-group d-flex flex-wrap pt-30 mb-15">
+
+
+
+                                                                    <button type="submit" class="btn btn-primary btn-default btn-squared mr-15 text-capitalize">update profile
+                                                                    </button>
+
+
+
+
+
+
+
+
+                                                                    <button class="btn btn-light btn-default btn-squared fw-400 text-capitalize">cancel
+                                                                    </button>
+
+
+
+
+
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Edit Profile End -->
+                                </div>
+                                <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+                                    <!-- Edit Profile -->
+                                    <div class="edit-profile mt-25">
+                                        <div class="card">
+                                            <div class="card-header  px-sm-25 px-3">
+                                                <div class="edit-profile__title">
+                                                    <h6>Account setting</h6>
+                                                    <span class="fs-13 color-light fw-400">Update your username and manage your
+                                                            account</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="card-footer">
+                                                <div class="row justify-content-center align-items-center">
+                                                    <div class="col-xxl-6 col-lg-8 col-sm-10">
+                                                        <div class="d-flex justify-content-between mt-1 align-items-center flex-wrap">
+                                                            <div class="text-capitalize py-10">
+                                                                <h6>close account</h6>
+                                                                <span class="fs-13 color-light fw-400">Delete your account and
+                                                                        account
+                                                                        data</span>
+                                                            </div>
+                                                            <div class="my-sm-0 my-10 py-10">
+
+                                                                <button type="submit" class="btn btn-danger btn-default btn-squared fw-400 text-capitalize" data-toggle="modal" data-target="#modal-info-delete"
+                                                                        th:data-id="${project.clients.id}" th:data-nom="${project.title+' de '+project.clients.company}">close account
+                                                                </button>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Edit Profile End -->
+                                </div>
+                                <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">
+                                    <!-- Edit Profile -->
+                                    <div class="edit-profile mt-25">
+                                        <div class="card">
+                                            <div class="card-header  px-sm-25 px-3">
+                                                <div class="edit-profile__title">
+                                                    <h6>change password</h6>
+                                                    <span class="fs-13 color-light fw-400">Change or reset your account
+                                                            password</span>
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="row justify-content-center">
+                                                    <div class="col-xxl-6 col-lg-8 col-sm-10">
+                                                        <div class="edit-profile__body mx-lg-20">
+                                                            <form>
+                                                                <div class="form-group mb-20">
+                                                                    <label for="name">old passowrd</label>
+                                                                    <input type="text" class="form-control" id="name">
+                                                                </div>
+                                                                <div class="form-group mb-1">
+                                                                    <label for="password-field">new password</label>
+                                                                    <div class="position-relative">
+                                                                        <input id="password-field" type="password" class="form-control pr-50" name="password" value="secret">
+                                                                        <span class="fa fa-fw fa-eye-slash text-light fs-16 field-icon toggle-password2"></span>
+                                                                    </div>
+                                                                    <small id="passwordHelpInline" class="text-light fs-13">Minimum
+                                                                        6
+                                                                        characters
+                                                                    </small>
+                                                                </div>
+                                                                <div class="button-group d-flex flex-wrap pt-45 mb-35">
+
+
+
+                                                                    <button class="btn btn-primary btn-default btn-squared mr-15 text-capitalize">Save Changes
+                                                                    </button>
+
+
+
+
+
+
+
+
+                                                                    <button class="btn btn-light btn-default btn-squared fw-400 text-capitalize">cancel
+                                                                    </button>
+
+
+
+
+
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Edit Profile End -->
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <div class="modal-info-delete modal fade show" id="modal-info-delete" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-sm modal-info" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="modal-info-body d-flex">
+                        <div class="modal-info-icon warning">
+                            <span data-feather="info"></span>
+                        </div>
+                        <div class="modal-info-text">
+                            <h6>Voulez-vous supprimer <span id="modal-nom-display"></span>?</h6>
+                        </div>
+                    </div>
+                </div>
+                <form action="/project/delete" method="post">
+                    <div class="modal-footer">
+                        <input type="hidden" class="form-control" id="modal-id" name="id" readonly>
+                        <button type="button" class="btn btn-danger btn-outlined btn-sm" data-dismiss="modal">Non</button>
+                        <button type="submit" class="btn btn-success btn-outlined btn-sm" >Oui</button>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <footer class="footer-wrapper">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="footer-copyright">
+                        <p>2020 @<a href="#">Aazztech</a>
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="footer-menu text-right">
+                        <ul>
+                            <li>
+                                <a href="#">About</a>
+                            </li>
+                            <li>
+                                <a href="#">Team</a>
+                            </li>
+                            <li>
+                                <a href="#">Contact</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- ends: .Footer Menu -->
+                </div>
+            </div>
+        </div>
+    </footer>
+</main>
+<div id="overlayer">
+        <span class="loader-overlay">
+            <div class="atbd-spin-dots spin-lg">
+                <span class="spin-dot badge-dot dot-primary"></span>
+                <span class="spin-dot badge-dot dot-primary"></span>
+                <span class="spin-dot badge-dot dot-primary"></span>
+                <span class="spin-dot badge-dot dot-primary"></span>
+            </div>
+        </span>
+</div>
+<div class="overlay-dark-sidebar"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#modal-info-delete').on('show.bs.modal', function (event) {
+            const button = $(event.relatedTarget);
+            const idValue = button.attr('data-id');
+            const nomValue = button.attr('data-nom');
+
+            $("#modal-nom-display").text(nomValue);
+            $("#modal-id").val(idValue);
+        });
+
+        // When the 'Yes' button in the modal is clicked, retrieve the 'id' value and do something with it
+        $(".btn-success").click(function() {
+            const idValue = $("#modal-id").val();
+            const nomValue = $("#modal-nom-display").text();
+            // Now you can use the 'idValue' and 'nomValue' variables in your code to perform the necessary action with the ID and name.
+            console.log("ID to be deleted:", idValue);
+            console.log("Name to be deleted:", nomValue);
+        });
+    });
+</script>
+<script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDduF2tLXicDEPDMAtC6-NLOekX0A5vlnY"></script>
+<!-- inject:js-->
+<script th:src="@{/assets/vendor_assets/js/jquery/jquery-3.5.1.min.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/jquery/jquery-ui.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/bootstrap/popper.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/bootstrap/bootstrap.min.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/moment/moment.min.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/accordion.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/autoComplete.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/Chart.min.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/charts.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/daterangepicker.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/drawer.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/dynamicBadge.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/dynamicCheckbox.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/feather.min.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/footable.min.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/fullcalendar@5.2.0.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/google-chart.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/jquery-jvectormap-2.0.5.min.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/jquery-jvectormap-world-mill-en.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/jquery.countdown.min.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/jquery.filterizr.min.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/jquery.magnific-popup.min.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/jquery.mCustomScrollbar.min.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/jquery.peity.min.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/jquery.star-rating-svg.min.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/leaflet.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/leaflet.markercluster.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/loader.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/message.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/moment.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/muuri.min.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/notification.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/popover.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/select2.full.min.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/slick.min.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/trumbowyg.min.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/wickedpicker.min.js}"></script>
+<script th:src="@{/assets/theme_assets/js/drag-drop.js}"></script>
+
+<script th:src="@{/assets/theme_assets/js/full-calendar.js}"></script>
+<script th:src="@{/assets/theme_assets/js/googlemap-init.js}"></script>
+<script th:src="@{/assets/theme_assets/js/icon-loader.js}"></script>
+<script th:src="@{/assets/theme_assets/js/jvectormap-init.js}"></script>
+<script th:src="@{/assets/theme_assets/js/leaflet-init.js}"></script>
+<script th:src="@{/assets/theme_assets/js/main.js}"></script>
+<!-- endinject-->
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+
+
+<script th:inline="javascript">
+    $(document).ready(function() {
+        // Function to set minimum date for Date de fin input based on Date de debut value
+        function setMinDateForDateFin() {
+            var dateDebut = new Date($('#dateDebutInput').val());
+            var dateFinInput = $('#dateFinInput');
+            var minDate = new Date(dateDebut.getTime() + 86400000); // Ajoute 1 jour à la date de début
+            dateFinInput.attr('min', formatDate(minDate));
+        }
+
+        // Trigger the change event on Date de debut input when the page loads
+        $('#dateDebutInput').change(function() {
+            setMinDateForDateFin();
+        });
+
+        // Set the initial minimum date for Date de fin input when the page loads
+        setMinDateForDateFin();
+    });
+
+    function formatDate(date) {
+        var year = date.getFullYear();
+        var month = (date.getMonth() + 1).toString().padStart(2, '0');
+        var day = date.getDate().toString().padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+</script>
+</body>
+
+</html>

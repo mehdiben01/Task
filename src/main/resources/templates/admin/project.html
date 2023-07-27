@@ -69,8 +69,24 @@
 
     <div class="container-fluid">
       <div class="row">
-        <div class="col-lg-12">
-          <div class="project-progree-breadcrumb">
+        <div class="col-lg-12"><br>
+
+            <div class="container-fluid">
+              <!-- Autres contenus de la page -->
+              <div th:if="${message}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong><span th:text="${message}"></span></strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+              <!-- Suite du contenu de la page -->
+            </div>
+            <div class="container-fluid">
+              <!-- Autres contenus de la page -->
+              <div th:if="${messagesu}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong><span th:text="${messagesu}"></span></strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+              <!-- Suite du contenu de la page -->
+            </div>
 
             <div class="breadcrumb-main user-member justify-content-sm-between ">
               <div class=" d-flex flex-wrap justify-content-center breadcrumb-main__wrapper">
@@ -78,6 +94,10 @@
                   <h4 class="text-capitalize fw-500 breadcrumb-title">projects</h4>
                   <span class="sub-title ml-sm-25 pl-sm-25" th:text="${countproj + ' Projets'}"></span>
                 </div>
+                <form  class="d-flex align-items-center user-member__form my-sm-0 my-2">
+                  <span data-feather="search"></span>
+                  <input class="form-control mr-sm-2 border-0 box-shadow-none" type="search" id="myInput"  placeholder="Search" aria-label="Search">
+                </form>
 
               </div>
               <div class="action-btn">
@@ -117,19 +137,19 @@
                             <!-- Ajouter la validation et les messages d'erreur pour les autres champs -->
                             <div class="form-group mb-20">
                               <label class="mb-15">Date de début</label>
-                              <input type="date" class="form-control" placeholder="Date De debut" th:field="*{date_debut}" name="date_debut" required
-                                     th:classappend="${#fields.hasErrors('date_debut')} ? 'is-invalid'" id="dateDebutInput">
+                              <input type="date" class="form-control" placeholder="Date De debut" th:field="*{dated}" name="date_debut" required
+                                     th:classappend="${#fields.hasErrors('dated')} ? 'is-invalid'" id="dateDebutInput">
                               <div class="invalid-feedback">
-                                <span th:if="${#fields.hasErrors('date_debut')}" th:errors="*{date_debut}"></span>
+                                <span th:if="${#fields.hasErrors('dated')}" th:errors="*{dated}"></span>
                                 La date de début est requise.
                               </div>
                             </div>
                             <div class="form-group mb-20">
                               <label class="mb-15">Date de fin</label>
-                              <input type="date" class="form-control" placeholder="Date De fin" th:field="*{date_fin}" name="date_fin"  required
-                                     th:classappend="${#fields.hasErrors('date_fin')} ? 'is-invalid'" id="dateFinInput">
+                              <input type="date" class="form-control" placeholder="Date De fin" th:field="*{datef}" name="date_fin"  required
+                                     th:classappend="${#fields.hasErrors('datef')} ? 'is-invalid'" id="dateFinInput">
                               <div class="invalid-feedback">
-                                <span th:if="${#fields.hasErrors('date_fin')}" th:errors="*{date_fin}"></span>
+                                <span th:if="${#fields.hasErrors('datef')}" th:errors="*{datef}"></span>
                                 La date de fin est requise.
                               </div>
                             </div>
@@ -168,53 +188,20 @@
               </div>
             </div>
 
-          </div>
+
         </div>
       </div>
-      <div class="row">
-        <div class="col-lg-12">
-          <div class="project-top-wrapper project-top-progress d-flex justify-content-between flex-wrap">
-            <div class="project-top-left d-flex flex-wrap justify-content-lg-between justify-content-center mt-n10">
-              <div class="project-tap global-shadow order-lg-1 order-2 my-10">
-                <ul class="nav px-1" id="ap-tab" role="tablist">
-                  <li class="nav-item">
-                    <a class="nav-link active" id="ap-overview-tab" data-toggle="pill" href="#ap-overview" role="tab" aria-controls="ap-overview" aria-selected="true">all projects</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" id="timeline-tab" data-toggle="pill" href="#timeline" role="tab" aria-controls="timeline" aria-selected="false">in progress</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" id="activity-tab" data-toggle="pill" href="#activity" role="tab" aria-controls="activity" aria-selected="false">completed</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" id="late-tab" data-toggle="pill" href="#late" role="tab" aria-controls="late" aria-selected="false">late</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" id="early-tab" data-toggle="pill" href="#early" role="tab" aria-controls="early" aria-selected="false">early</a>
-                  </li>
-                </ul>
-              </div>
-              <div class="project-search project-search--height global-shadow ml-md-20 my-10 order-md-2 order-1">
-                <form action="/" class="d-flex align-items-center user-member__form">
-                  <span data-feather="search"></span>
-                  <input class="form-control mr-sm-2 border-0 box-shadow-none" type="search" placeholder="Search by Name" aria-label="Search">
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+
       <!-- Tab Menu End -->
       <div class="projects-tab-content projects-tab-content--progress">
         <div class="tab-content mt-25" id="ap-tabContent">
-          <div class="tab-pane fade show active" id="ap-overview" role="tabpanel" aria-labelledby="ap-overview-tab">
+
+          <div class="container">
+
+
             <div class="row">
-
-
-
-                <div class="col-xl-4 mb-25 col-md-6" th:each="project : ${projects}">
-
-                <div class="user-group radius-xl bg-white media-ui media-ui--completed pt-30 pb-25">
+              <div class="col-xl-4 mb-25 col-md-6 project-item" th:each="project : ${projects}">
+              <div class="user-group radius-xl bg-white media-ui media-ui--completed pt-30 pb-25">
                   <div class="border-bottom px-30">
                     <div class="media user-group-media d-flex justify-content-between">
                       <div class="media-body d-flex align-items-center text-capitalize">
@@ -224,19 +211,6 @@
                         <span class="media-badge text-uppercase color-white bg-success" th:if="${project[1] == 100}">Terminé</span>
                         <span class="media-badge text-uppercase color-white bg-warning" th:if="${project[1] != 100}">En cours</span>
                       </div>
-                      <div class="mt-n15">
-                        <div class="dropdown dropleft">
-                          <button class="btn-link border-0 bg-transparent p-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span data-feather="more-horizontal"></span>
-                          </button>
-                          <div class="dropdown-menu dropdown-t-0">
-                            <a class="dropdown-item" href="#">view</a>
-                            <a class="dropdown-item" href="#">edit</a>
-                            <a class="dropdown-item" href="#">leave</a>
-                            <a class="dropdown-item" href="#">delete</a>
-                          </div>
-                        </div>
-                      </div>
                     </div>
                     <div class="user-group-people mt-15 text-capitalize">
                       <p th:text="${project[0].description}"></p>
@@ -244,11 +218,11 @@
                         <div class="d-flex align-items-center user-group-progress-top">
                           <div class="media-ui__start">
                             <span class="color-light fs-12">Start Date</span>
-                            <p class="fs-14 fw-500 color-dark mb-0" th:text="${project[0].date_debut}"></p>
+                            <p class="fs-14 fw-500 color-dark mb-0" th:text="${project[0].dated}"></p>
                           </div>
                           <div class="media-ui__end">
                             <span class="color-light fs-12">end date</span>
-                            <p class="fs-16 fw-500 color-success mb-0" th:text="${project[0].date_fin}"></p>
+                            <p class="fs-16 fw-500 color-success mb-0" th:text="${project[0].datef}"></p>
                           </div>
                         </div>
                       </div>
@@ -285,59 +259,80 @@
 
                     </div>
                   </div>
-                  <div class="mt-20 px-30">
-                    <p class="fs-13 color-light mb-10">Assigné à</p>
-                    <ul class="d-flex flex-wrap user-group-people__parent">
-                      <li>
-                        <a href="#"><img class="rounded-circle wh-34 bg-opacity-secondary" th:src="${project[0].clients.cheminImage}"  alt="author"></a>
-                      </li>
-                    </ul>
+
+                  <div class="ap-button account-profile-cards__button button-group d-flex justify-content-center flex-wrap pt-20">
+                    <a th:href="@{/DetailProject/{id}(id=${project[0].id})}">
+                      <button type="button" class="border text-capitalize px-25 color-gray transparent shadow2 radius-md">
+                        Editer</button></a>
+                    <button type="submit" class="border text-capitalize px-25 color-gray transparent shadow2 radius-md" data-toggle="modal" data-target="#modal-info-delete"
+                            th:data-id="${project[0].id}" th:data-nom="${project[0].title+' de '+project[0].clients.company}">
+                      Supprimer</button>
+
                   </div>
                 </div>
 
               </div>
             </div>
-            <div class="row">
-              <div class="col-lg-12">
-                <div class="d-flex justify-content-sm-end justify-content-star mt-1 mb-30">
-
-                  <nav class="atbd-page ">
-                    <ul class="atbd-pagination d-flex">
-                      <li class="atbd-pagination__item">
-                        <a href="#" class="atbd-pagination__link pagination-control"><span class="la la-angle-left"></span></a>
-                        <a href="#" class="atbd-pagination__link"><span class="page-number">1</span></a>
-                        <a href="#" class="atbd-pagination__link active"><span class="page-number">2</span></a>
-                        <a href="#" class="atbd-pagination__link"><span class="page-number">3</span></a>
-                        <a href="#" class="atbd-pagination__link pagination-control"><span class="page-number">...</span></a>
-                        <a href="#" class="atbd-pagination__link"><span class="page-number">12</span></a>
-                        <a href="#" class="atbd-pagination__link pagination-control"><span class="la la-angle-right"></span></a>
-                        <a href="#" class="atbd-pagination__option">
-                        </a>
-                      </li>
-                    </ul>
-                  </nav>
-
-
-                </div>
+            </div>
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="d-flex justify-content-sm-end justify-content-star mt-1 mb-30">
+                <nav class="atbd-page">
+                  <ul class="atbd-pagination d-flex">
+                    <li class="atbd-pagination__item">
+                      <a href="#" class="atbd-pagination__link pagination-control"><span class="la la-angle-left"></span></a>
+                      <a href="#" class="atbd-pagination__link" th:if="${currentPage > 0}"
+                         th:href="@{/projet(page=${currentPage - 1})}">
+                        <span class="page-number">Previous</span>
+                      </a>
+                      <a href="#" class="atbd-pagination__link" th:each="pageNumber : ${#numbers.sequence(0, totalPages - 1)}"
+                         th:href="@{/projet(page=${pageNumber})}"
+                         th:classappend="${pageNumber == currentPage} ? 'active' : ''">
+                        <span class="page-number" th:text="${pageNumber + 1}"></span>
+                      </a>
+                      <a href="#" class="atbd-pagination__link" th:if="${currentPage < totalPages - 1}"
+                         th:href="@{/projet(page=${currentPage + 1})}">
+                        <span class="page-number">Next</span>
+                      </a>
+                      <a href="#" class="atbd-pagination__link pagination-control"><span class="la la-angle-right"></span></a>
+                      <a href="#" class="atbd-pagination__option"></a>
+                    </li>
+                  </ul>
+                </nav>
               </div>
             </div>
           </div>
-          <div class="tab-pane fade" id="timeline" role="tabpanel" aria-labelledby="timeline-tab">
 
-          </div>
-          <div class="tab-pane fade" id="activity" role="tabpanel" aria-labelledby="activity-tab">
 
-          </div>
-          <div class="tab-pane fade" id="late" role="tabpanel" aria-labelledby="late-tab">
 
-          </div>
-          <div class="tab-pane fade" id="early" role="tabpanel" aria-labelledby="early-tab">
-
-          </div>
         </div>
       </div>
     </div>
 
+  </div>
+  <div class="modal-info-delete modal fade show" id="modal-info-delete" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-info" role="document">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div class="modal-info-body d-flex">
+            <div class="modal-info-icon warning">
+              <span data-feather="info"></span>
+            </div>
+            <div class="modal-info-text">
+              <h6>Voulez-vous supprimer <span id="modal-nom-display"></span>?</h6>
+            </div>
+          </div>
+        </div>
+        <form action="/project/delete" method="post">
+          <div class="modal-footer">
+            <input type="hidden" class="form-control" id="modal-id" name="id" readonly>
+            <button type="button" class="btn btn-danger btn-outlined btn-sm" data-dismiss="modal">Non</button>
+            <button type="submit" class="btn btn-success btn-outlined btn-sm" >Oui</button>
+
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
   <footer class="footer-wrapper">
     <div class="container-fluid">
@@ -379,7 +374,38 @@
         </span>
 </div>
 <div class="overlay-dark-sidebar"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+  $(document).ready(function(){
+    $("#myInput").on("keyup", function() {
+      var value = $(this).val().toLowerCase();
+      $(".project-item").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+  });
+</script>
+<script>
+  $(document).ready(function() {
+    $('#modal-info-delete').on('show.bs.modal', function (event) {
+      const button = $(event.relatedTarget);
+      const idValue = button.attr('data-id');
+      const nomValue = button.attr('data-nom');
 
+      $("#modal-nom-display").text(nomValue);
+      $("#modal-id").val(idValue);
+    });
+
+    // When the 'Yes' button in the modal is clicked, retrieve the 'id' value and do something with it
+    $(".btn-success").click(function() {
+      const idValue = $("#modal-id").val();
+      const nomValue = $("#modal-nom-display").text();
+      // Now you can use the 'idValue' and 'nomValue' variables in your code to perform the necessary action with the ID and name.
+      console.log("ID to be deleted:", idValue);
+      console.log("Name to be deleted:", nomValue);
+    });
+  });
+</script>
 <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDduF2tLXicDEPDMAtC6-NLOekX0A5vlnY"></script>
 <!-- inject:js-->
 <script src="assets/vendor_assets/js/jquery/jquery-3.5.1.min.js"></script>
@@ -429,7 +455,7 @@
 <script src="assets/theme_assets/js/main.js"></script>
 <!-- endinject-->
 </body>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 
 <script th:inline="javascript">
   $(document).ready(function() {

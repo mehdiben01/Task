@@ -162,7 +162,7 @@
 
                                 <div class="form-group mb-20">
                                   <label>Date de debut</label>
-                                  <input type="date" class="form-control" id="dateDebutInput" name="dated" th:min="${tache.project.date_debut}" placeholder="date de debut" th:value="${tache.dated}" required th:classappend="${#fields.hasErrors('dated')} ? 'is-invalid'">
+                                  <input type="date" class="form-control" id="dateDebutInput" name="dated" th:min="${tache.project.dated}" placeholder="date de debut" th:value="${tache.dated}" required th:classappend="${#fields.hasErrors('dated')} ? 'is-invalid'">
                                   <div class="invalid-feedback">
                                     <span th:if="${#fields.hasErrors('dated')}" th:errors="*{dated}"></span>
                                     La date de debut est requis.
@@ -170,7 +170,7 @@
                                 </div>
                                 <div class="form-group mb-20">
                                   <label>Date de fin</label>
-                                  <input type="date" class="form-control" id="dateFinInput" name="datef" th:max="${tache.project.date_fin}" placeholder="date de fin" th:value="${tache.datef}" required th:classappend="${#fields.hasErrors('datef')} ? 'is-invalid'">
+                                  <input type="date" class="form-control" id="dateFinInput" name="datef" th:max="${tache.project.datef}" placeholder="date de fin" th:value="${tache.datef}" required th:classappend="${#fields.hasErrors('datef')} ? 'is-invalid'">
                                   <div class="invalid-feedback">
                                     <span th:if="${#fields.hasErrors('datef')}" th:errors="*{datef}"></span>
                                     La date de fin est requis.
@@ -180,17 +180,17 @@
                                   <div class="skillsOption">
                                     <label for="etat">Etat</label>
                                     <select class="js-example-basic-single js-states form-control" id="etat" name="etat"  required  th:classappend="${#fields.hasErrors('etat')} ? 'is-invalid'">
-                                      <option value="Pas encore commencé" th:selected="${tache.etat == 0}">Pas encore commencé</option>
-                                      <option value="10" th:selected="${tache.etat == 10}">10%</option>
-                                      <option value="20" th:selected="${tache.etat == 20}">20%</option>
-                                      <option value="30" th:selected="${tache.etat == 30}">30%</option>
-                                      <option value="40" th:selected="${tache.etat == 40}">40%</option>
-                                      <option value="50" th:selected="${tache.etat == 50}">50%</option>
-                                      <option value="60" th:selected="${tache.etat == 60}">60%</option>
-                                      <option value="70" th:selected="${tache.etat == 70}">70%</option>
-                                      <option value="80" th:selected="${tache.etat == 80}">80%</option>
-                                      <option value="90" th:selected="${tache.etat == 90}">90%</option>
-                                      <option value="100" th:selected="${tache.etat == 100}">100%</option>
+                                      <option th:value="0" th:selected="${tache.etat == 0}">Pas encore commencé</option>
+                                      <option th:value="10" th:selected="${tache.etat == 10}">10%</option>
+                                      <option th:value="20" th:selected="${tache.etat == 20}">20%</option>
+                                      <option th:value="30" th:selected="${tache.etat == 30}">30%</option>
+                                      <option th:value="40" th:selected="${tache.etat == 40}">40%</option>
+                                      <option th:value="50" th:selected="${tache.etat == 50}">50%</option>
+                                      <option th:value="60" th:selected="${tache.etat == 60}">60%</option>
+                                      <option th:value="70" th:selected="${tache.etat == 70}">70%</option>
+                                      <option th:value="80" th:selected="${tache.etat == 80}">80%</option>
+                                      <option th:value="90" th:selected="${tache.etat == 90}">90%</option>
+                                      <option th:value="100" th:selected="${tache.etat == 100}">100%</option>
                                     </select>
                                   </div>
                                 </div>

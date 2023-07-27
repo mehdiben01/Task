@@ -23,7 +23,7 @@ public class TacheService {
     }
 
     public long countTask(){
-        return tacheRepository.count();
+        return tacheRepository.countByIsDeleted("0");
     }
 
     public Tache getTacheById(Integer id) {

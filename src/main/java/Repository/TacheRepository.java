@@ -18,8 +18,10 @@ public interface TacheRepository extends JpaRepository<Tache, Integer> {
     boolean existsByTitleAndDescriptionAndDatedAndDatefAndUsersAndProjectAndEtat(String title, String description, String dated, String datef,  Utilisateur users, Project project, Integer etat);
     List<Tache> findAllByIsDeleted(String isDeleted);
 
-    long count();
+    long countByIsDeleted(String isDeleted);
 
     Optional<Tache> getTacheById(Integer id);
+
+
 
 }

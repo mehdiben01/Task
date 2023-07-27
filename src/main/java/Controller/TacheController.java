@@ -60,6 +60,7 @@ public class TacheController {
         model.addAttribute("users",utilisateurService.getAllUtilisateurs() );
         model.addAttribute("projects", projects.getAllProject());
         model.addAttribute("task",tacheService.getAllTask());
+        model.addAttribute("counttache", tacheService.countTask());
         model.addAttribute("activePage", "tache");
         return "admin/tache";
     }

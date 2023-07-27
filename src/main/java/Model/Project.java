@@ -20,9 +20,9 @@ public class Project {
     @Column(nullable = false)
     private String description;
     @Column(nullable = false)
-    private String date_debut;
+    private String dated;
     @Column(nullable = false)
-    private String date_fin;
+    private String datef;
 
     private String isDeleted = "0";
 
