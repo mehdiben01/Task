@@ -72,6 +72,9 @@ public class TacheController {
         // Retrieve the project's start and end dates
         List<Object[]> projectDatesList = projectRepository.findProjectDatesById(tache.getProject().getId());
 
+        tache.setTitle(tache.getTitle().toLowerCase());
+        tache.setDescription(tache.getDescription().toLowerCase());
+
 
 
         Object[] projectDates = projectDatesList.get(0); // Retrieve the first row
@@ -89,6 +92,12 @@ public class TacheController {
         LocalDate projectEndDate = LocalDate.parse(projectDates[1].toString());
         if (taskEndDate.isAfter(projectEndDate)) {
             redirectAttributes.addFlashAttribute("errors", "Vérifier les dates du projet.");
+            return "redirect:/tache";
+        }
+
+        boolean NPexiste = tacheRepository.existsByTitleAndDescriptionAndProjectAndUsersNot(tache.getTitle().toLowerCase(), tache.getDescription().toLowerCase(),  tache.getProject(), tache.getUsers());
+        if (NPexiste) {
+            redirectAttributes.addFlashAttribute("message", "Donnée existe déjà.");
             return "redirect:/tache";
         }
 
@@ -129,18 +138,19 @@ public class TacheController {
             return "redirect:/DetailTache/" + existingTache.getId();
         }
 
-        boolean DejaExiste = tacheRepository.existsByTitleAndDescriptionAndDatedAndDatefAndUsersAndProjectAndEtat(updateTache.getTitle(), updateTache.getDescription(), updateTache.getDated(), updateTache.getDatef(), updateTache.getUsers(), updateTache.getProject(), updateTache.getEtat());
+        boolean DejaExiste = tacheRepository.existsByTitleAndDescriptionAndDatedAndDatefAndUsersAndProjectAndEtat(updateTache.getTitle().toLowerCase(), updateTache.getDescription().toLowerCase(), updateTache.getDated(), updateTache.getDatef(), updateTache.getUsers(), updateTache.getProject(), updateTache.getEtat());
         if (DejaExiste) {
             redirectAttributes.addFlashAttribute("message", "Donnée existe déjà.");
             return "redirect:/DetailTache/" + existingTache.getId();
         }
-        boolean NPexiste = tacheRepository.existsByTitleAndProjectAndUsersAndIdNot(updateTache.getTitle(), updateTache.getProject(), updateTache.getUsers(), updateTache.getId());
+
+        boolean NPexiste = tacheRepository.existsByTitleAndDescriptionAndProjectAndUsersNot(updateTache.getTitle().toLowerCase(), updateTache.getDescription().toLowerCase(),  updateTache.getProject(), updateTache.getUsers());
         if (NPexiste) {
             redirectAttributes.addFlashAttribute("message", "Donnée existe déjà.");
             return "redirect:/DetailTache/" + existingTache.getId();
         }else {
-            existingTache.setTitle(updateTache.getTitle());
-            existingTache.setDescription(updateTache.getDescription());
+            existingTache.setTitle(updateTache.getTitle().toLowerCase());
+            existingTache.setDescription(updateTache.getDescription().toLowerCase());
             existingTache.setDated(updateTache.getDated());
             existingTache.setDatef(updateTache.getDatef());
             existingTache.setEtat(updateTache.getEtat());
@@ -151,5 +161,18 @@ public class TacheController {
         tacheService.save(existingTache);
         return  "redirect:/DetailTache/" + existingTache.getId();
 
+    }
+
+    @PostMapping("/tache/delete")
+    public String tacheSupp(@ModelAttribute("tache") Tache tache, RedirectAttributes redirectAttributes, Model model, BindingResult bindingResult){
+        Tache existingTache = tacheService.getTacheById(tache.getId());
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("message", "Il y a des erreurs de validation.");
+            return "redirect:/tache" ;
+        }
+        existingTache.setIsDeleted("1");
+        tacheRepository.save(existingTache);
+        return "redirect:/tache";
     }
 }

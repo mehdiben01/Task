@@ -13,7 +13,7 @@ public interface TacheRepository extends JpaRepository<Tache, Integer> {
 
     boolean existsByTitleAndProjectAndUsers(String title, Project project, Utilisateur users );
 
-    boolean existsByTitleAndProjectAndUsersAndIdNot(String title, Project project, Utilisateur users, Integer id );
+    boolean existsByTitleAndDescriptionAndProjectAndUsersNot(String title,String description, Project project, Utilisateur users );
 
     boolean existsByTitleAndDescriptionAndDatedAndDatefAndUsersAndProjectAndEtat(String title, String description, String dated, String datef,  Utilisateur users, Project project, Integer etat);
     List<Tache> findAllByIsDeleted(String isDeleted);
