@@ -100,9 +100,9 @@
               </div>
 
 
-              <form  class="d-flex align-items-center user-member__form my-sm-0 my-2">
+              <form class="d-flex align-items-center user-member__form my-sm-0 my-2">
                 <span data-feather="search"></span>
-                <input class="form-control mr-sm-2 border-0 box-shadow-none" type="search" id="myInput"  placeholder="Search" aria-label="Search">
+                <input class="form-control mr-sm-2 border-0 box-shadow-none" type="search" id="myInput" placeholder="Search" aria-label="Search">
               </form>
 
             </div>
@@ -266,7 +266,34 @@
         </div>
 
       </div>
-
+      <div class="row" th:if="${utilisateurs.size() > 0}">
+        <div class="col-lg-12">
+          <div class="d-flex justify-content-sm-end justify-content-star mt-1 mb-30">
+            <nav class="atbd-page">
+              <ul class="atbd-pagination d-flex">
+                <li class="atbd-pagination__item">
+                  <a href="#" class="atbd-pagination__link pagination-control"><span class="la la-angle-left"></span></a>
+                  <a href="#" class="atbd-pagination__link" th:if="${currentPage > 0}"
+                     th:href="@{/team(page=${currentPage - 1})}">
+                    <span class="page-number">Précédent</span>
+                  </a>
+                  <a href="#" class="atbd-pagination__link" th:each="pageNumber : ${#numbers.sequence(0, totalPages - 1)}"
+                     th:href="@{/team(page=${pageNumber})}"
+                     th:classappend="${pageNumber == currentPage} ? 'active' : ''">
+                    <span class="page-number" th:text="${pageNumber + 1}"></span>
+                  </a>
+                  <a href="#" class="atbd-pagination__link" th:if="${currentPage < totalPages - 1}"
+                     th:href="@{/team(page=${currentPage + 1})}">
+                    <span class="page-number">Suivant</span>
+                  </a>
+                  <a href="#" class="atbd-pagination__link pagination-control"><span class="la la-angle-right"></span></a>
+                  <a href="#" class="atbd-pagination__option"></a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
 
     </div>
 

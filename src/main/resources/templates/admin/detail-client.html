@@ -165,6 +165,14 @@
                                   <input type="text" class="form-control" id="company1" name="company" placeholder="Entreprise" th:value="${clients.company}" pattern="[A-Za-zÀ-ÿ\s]+"   required  th:classappend="${#fields.hasErrors('company')} ? 'is-invalid'">
                                 </div>
                                 <div class="form-group mb-20">
+                                  <label for="departement">Département</label>
+                                  <input type="tel" class="form-control" id="departement" name="departement" placeholder="Département" th:value="${clients.departement}" pattern="[A-Za-zÀ-ÿ\s]+" required th:classappend="${#fields.hasErrors('departement')} ? 'is-invalid'">
+                                  <div class="invalid-feedback">
+                                    <span th:if="${#fields.hasErrors('departement')}" th:errors="*{departement}"></span>
+                                    La département est requis.
+                                  </div>
+                                </div>
+                                <div class="form-group mb-20">
                                   <label for="names">Email</label>
                                   <input type="email" class="form-control" id="email" name="email" placeholder="Email" th:value="${clients.email}" readonly>
                                 </div>

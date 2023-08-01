@@ -47,6 +47,7 @@ public class ClientController {
         return "admin/client";
     }
 
+
     @PostMapping("/client/save")
     public String saveClient(@ModelAttribute @Valid Client client, @RequestParam("logo") MultipartFile imageFile, HttpServletRequest request, RedirectAttributes redirectAttributes , BindingResult bindingResult, Model model ) {
         if (bindingResult.hasErrors()) {
@@ -56,6 +57,7 @@ public class ClientController {
         client.setNom(client.getNom().toUpperCase());
         client.setCompany(client.getCompany().toUpperCase());
         client.setEmail(client.getEmail().toLowerCase());
+        client.setDepartement(client.getDepartement().toLowerCase());
         // Vérifier si l'utilisateur existe déjà
         boolean champExiste = clientRepository.existsByEmailOrTelOrCompany(client.getEmail().toLowerCase(), client.getTel(), client.getCompany().toUpperCase());
         if (champExiste) {

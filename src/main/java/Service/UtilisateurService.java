@@ -3,6 +3,8 @@ package Service;
 import Model.Utilisateur;
 import Repository.UtilisateurRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,6 +24,10 @@ public class UtilisateurService {
         return utilisateurRepository.findAllByIsDeletedAndType("0", "Staff");
     }
 
+    public Page<Utilisateur> getAllUsersPagi(Pageable pageable){
+        return utilisateurRepository.findAllByIsDeletedAndType("0", "Staff", pageable);
+    }
+
     public long countStaff(){
         return utilisateurRepository.countByTypeAndIsDeleted("Staff", "0");
     }
@@ -29,6 +35,7 @@ public class UtilisateurService {
         return utilisateurRepository.getUtilisateurById(id)
                 .orElseThrow(() -> new NoSuchElementException("Utilisateur not found with ID: " + id));
     }
+
 
 
 

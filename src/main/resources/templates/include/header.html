@@ -1041,11 +1041,32 @@
                             <span class="menu-text">Tâches</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="/projet" th:class="${activePage == 'projet' || activePage == 'detailProject'} ? 'active' : ''">
+                    <li class="has-child">
+                        <a  th:class="${activePage == 'projet' || activePage == 'projet-retarde' || activePage == 'DetailProjet' || activePage == 'projet-noncommence' || activePage == 'EditProjet' || activePage == 'projet-termine' || activePage == 'projet-encours' || activePage == 'projet-annule'} ? 'active' : ''">
                             <span data-feather="target" class="nav-icon"></span>
-                            <span class="menu-text">Projets</span>
+                            <span class="menu-text">Project</span>
+                            <span class="toggle-icon"></span>
                         </a>
+                        <ul>
+                            <li>
+                                <a href="/projet" th:class="${activePage == 'projet'} ? 'active' : ''">Les projets</a>
+                            </li>
+                            <li>
+                                <a href="/projet-termine" th:class="${activePage == 'projet-termine'} ? 'active' : ''">Projet terminé</a>
+                            </li>
+                            <li>
+                                <a href="/projet-encours" th:class="${activePage == 'projet-encours'} ? 'active' : ''">Projet en cours</a>
+                            </li>
+                            <li>
+                                <a href="/projet-noncommence" th:class="${activePage == 'projet-noncommence'} ? 'active' : ''">Projet non commencé</a>
+                            </li>
+                            <li>
+                                <a href="/projet-annule" th:class="${activePage == 'projet-annule'} ? 'active' : ''">Projet annulé</a>
+                            </li>
+                            <li>
+                                <a href="/projet-retarde" th:class="${activePage == 'projet-retarde'} ? 'active' : ''">Projet retardé</a>
+                            </li>
+                        </ul>
                     </li>
 
              

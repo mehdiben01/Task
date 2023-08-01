@@ -30,13 +30,54 @@ public class ProjectService {
     public long countProjects(){
         return projectRepository.countByIsDeleted("0");
     }
-
-    public Page<Object[]> getExistingProjectsAndAverageEtat(Pageable pageable) {
-        return projectRepository.selectExistingProjectsAndAverageEtat(pageable);
+    public long countAllProjects(){
+        return projectRepository.count();
     }
+
+    public long countProjectsDeleted(){
+        return projectRepository.countByIsDeleted("1");
+    }
+
+    public List<Object[]> getExistingProjectsAndAverageEtat(){
+        return projectRepository.selectExistingProjectsAndAverageEtat();
+    }
+    public Page<Object[]> getExistingProjectsAndAverageEtatByTitle(String searchText, Pageable pageable) {
+        return projectRepository.selectExistingProjectsAndAverageEtatByTitle(searchText, pageable);
+    }
+
+    public Page<Object[]> getProjectTermine(String search, Pageable pageable){
+        return projectRepository.selectExistingProjectsTermine(search, pageable);
+    }
+
+    public Page<Object[]> getProjectEnCours(String search, Pageable pageable){
+        return projectRepository.selectExistingProjectsEnCours(search,pageable);
+    }
+
+    public Page<Object[]> getProjectAnnule(String search, Pageable pageable){
+        return projectRepository.selectExistingProjectsAnnule(search,pageable);
+    }
+
+    public Page<Object[]> getProjectNcommence(String search, Pageable pageable){
+        return projectRepository.selectExistingProjectsNCommence(search, pageable);
+    }
+
+    public Page<Object[]> getProjectRetarde(String search, Pageable pageable){
+        return projectRepository.selectExistingProjectsRetarde(search,pageable);
+    }
+
     public Project getProjectById(Integer id) {
         return projectRepository.getProjectById(id)
                 .orElseThrow(() -> new NoSuchElementException("Tache not found with ID: " + id));
+    }
+
+
+    public List<Object[]> getProjectDetailsById(Integer id) {
+        // Appeler la méthode du repository pour récupérer les détails du projet par ID
+        return projectRepository.selectDetailProjct(id);
+    }
+
+    public long countPR(){
+        return projectRepository.countPR();
     }
 
 

@@ -5,6 +5,7 @@ import Model.Project;
 import Repository.ProjectRepository;
 import Service.ClientService;
 import Service.ProjectService;
+import Service.TacheService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,15 +18,22 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Controller
 public class ProjectController {
 
+    int elementsPerPage = 6;
+
     @Autowired
     private ProjectService projectService;
     @Autowired
     private ProjectRepository projectRepository;
+
+    @Autowired
+    private TacheService tacheService;
 
     @Autowired
     private ClientService clientService;
@@ -42,24 +50,140 @@ public class ProjectController {
     private ClientService service;
 
     @GetMapping("/projet")
-    public String getProjet(Model model, @RequestParam(defaultValue = "0") int page) {
-        int pageSize = 3; // Number of projects to display per page
-        PageRequest pageable = PageRequest.of(page, pageSize);
+    public String getProjet(Model model, @RequestParam(required = false) String search,
+                            @RequestParam(defaultValue = "0") int page) {
 
-        // Retrieve existing projects with average etat using pagination
-        Page<Object[]> existingProjectsAndAverageEtat = projectService.getExistingProjectsAndAverageEtat(pageable);
-        model.addAttribute("countproj",projectService.countProjects());
-        model.addAttribute("projects", existingProjectsAndAverageEtat.getContent());
+
+        Project project = new Project();
+        model.addAttribute("project", project);
+        model.addAttribute("clients", service.getAllClient());
+        model.addAttribute("countproj", projectService.countAllProjects());
+
+        Page<Object[]> existingProjectsAndAverageEtatPage;
+
+        if (search != null && !search.isEmpty()) {
+            existingProjectsAndAverageEtatPage = projectService.getExistingProjectsAndAverageEtatByTitle(search, PageRequest.of(page, elementsPerPage));
+        } else {
+            existingProjectsAndAverageEtatPage = projectService.getExistingProjectsAndAverageEtatByTitle("", PageRequest.of(page, elementsPerPage));
+        }
+
+        model.addAttribute("projects", existingProjectsAndAverageEtatPage.getContent());
         model.addAttribute("activePage", "projet");
         model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", existingProjectsAndAverageEtat.getTotalPages());
-
-        // Add an empty Project object to the model
-        model.addAttribute("project", new Project());
+        model.addAttribute("totalPages", existingProjectsAndAverageEtatPage.getTotalPages());
+        model.addAttribute("search", search); // Add the search parameter to the model
 
         return "admin/project";
     }
 
+    @GetMapping("/projet-termine")
+    public String getProjetTermine(Model model, @RequestParam(required = false) String search,
+                            @RequestParam(defaultValue = "0") int page) {
+        Project project = new Project();
+        model.addAttribute("project", project);
+        model.addAttribute("clients", service.getAllClient());
+        model.addAttribute("countproj", projectService.countProjects());
+        Page<Object[]> existingProjectsTermine;
+        if (search != null && !search.isEmpty()) {
+            existingProjectsTermine = projectService.getProjectTermine(search, PageRequest.of(page, elementsPerPage));
+        } else {
+            existingProjectsTermine = projectService.getProjectTermine("", PageRequest.of(page, elementsPerPage));
+        }
+        model.addAttribute("projects", existingProjectsTermine.getContent());
+        model.addAttribute("activePage", "projet-termine");
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", existingProjectsTermine.getTotalPages());
+        model.addAttribute("search", search); // Add the search parameter to the model
+        model.addAttribute("countTer",tacheService.countPTermine());
+        return "admin/project-termine";
+    }
+
+    @GetMapping("/projet-encours")
+    public String getProjetEnCours(Model model, @RequestParam(required = false) String search,
+                                   @RequestParam(defaultValue = "0") int page) {
+        Project project = new Project();
+        model.addAttribute("project", project);
+        model.addAttribute("clients", service.getAllClient());
+        model.addAttribute("countproj", projectService.countProjects());
+        Page<Object[]> existingProjectsEnCours;
+        if (search != null && !search.isEmpty()) {
+            existingProjectsEnCours = projectService.getProjectEnCours(search, PageRequest.of(page, elementsPerPage));
+        } else {
+            existingProjectsEnCours = projectService.getProjectEnCours("", PageRequest.of(page, elementsPerPage));
+        }
+        model.addAttribute("projects", existingProjectsEnCours.getContent());
+        model.addAttribute("activePage", "projet-encours");
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", existingProjectsEnCours.getTotalPages());
+        model.addAttribute("search", search); // Add the search parameter to the model
+        model.addAttribute("countEnC",tacheService.countENC());
+        return "admin/project-encours";
+    }
+    @GetMapping("/projet-noncommence")
+    public String getProjetNcommence(Model model, @RequestParam(required = false) String search,
+                                   @RequestParam(defaultValue = "0") int page) {
+        Project project = new Project();
+        model.addAttribute("project", project);
+        model.addAttribute("clients", service.getAllClient());
+        model.addAttribute("countproj", projectService.countProjects());
+        Page<Object[]> existingProjectsNcommence;
+        if (search != null && !search.isEmpty()) {
+            existingProjectsNcommence = projectService.getProjectNcommence(search, PageRequest.of(page, elementsPerPage));
+        } else {
+            existingProjectsNcommence = projectService.getProjectNcommence("", PageRequest.of(page, elementsPerPage));
+        }
+        model.addAttribute("projects", existingProjectsNcommence.getContent());
+        model.addAttribute("activePage", "projet-noncommence");
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", existingProjectsNcommence.getTotalPages());
+        model.addAttribute("search", search); // Add the search parameter to the model
+        model.addAttribute("countNonC",tacheService.countNonc());
+        return "admin/project-noncommence";
+    }
+
+    @GetMapping("/projet-annule")
+    public String getProjetAnnule(Model model, @RequestParam(required = false) String search,
+                                  @RequestParam(defaultValue = "0") int page) {
+        Project project = new Project();
+        model.addAttribute("project", project);
+        model.addAttribute("clients", service.getAllClient());
+        model.addAttribute("countproj", projectService.countProjects());
+        Page<Object[]> existingProjectsAnnule;
+        if (search != null && !search.isEmpty()) {
+            existingProjectsAnnule = projectService.getProjectAnnule(search, PageRequest.of(page, elementsPerPage));
+        } else {
+            existingProjectsAnnule = projectService.getProjectAnnule("", PageRequest.of(page, elementsPerPage));
+        }
+        model.addAttribute("projects", existingProjectsAnnule.getContent());
+        model.addAttribute("activePage", "projet-annule");
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", existingProjectsAnnule.getTotalPages());
+        model.addAttribute("search", search); // Add the search parameter to the model
+        model.addAttribute("countAnnule",projectService.countProjectsDeleted());
+        return "admin/project-annule";
+    }
+
+    @GetMapping("/projet-retarde")
+    public String getProjetRetarde(Model model, @RequestParam(required = false) String search,
+                                  @RequestParam(defaultValue = "0") int page) {
+        Project project = new Project();
+        model.addAttribute("project", project);
+        model.addAttribute("clients", service.getAllClient());
+        model.addAttribute("countproj", projectService.countProjects());
+        Page<Object[]> existingProjectsRetarde;
+        if (search != null && !search.isEmpty()) {
+            existingProjectsRetarde = projectService.getProjectRetarde(search, PageRequest.of(page, elementsPerPage));
+        } else {
+            existingProjectsRetarde = projectService.getProjectRetarde("", PageRequest.of(page, elementsPerPage));
+        }
+        model.addAttribute("projects", existingProjectsRetarde.getContent());
+        model.addAttribute("activePage", "projet-retarde");
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", existingProjectsRetarde.getTotalPages());
+        model.addAttribute("search", search); // Add the search parameter to the model
+        model.addAttribute("countret",projectService.countPR());
+        return "admin/project-retarde";
+    }
 
 
     @PostMapping("/project/save")
@@ -85,14 +209,35 @@ public class ProjectController {
         return "redirect:/projet";
     }
 
-    @GetMapping("DetailProject/{id}")
+    @GetMapping("DetailProjet/{id}")
     public String getDetailProject(@PathVariable("id") Integer id, Model model){
+        List<Object[]> project = projectService.getProjectDetailsById(id);
+        // Transmettre les données récupérées à la vue
+        model.addAttribute("project", project);
+        Project projet = (Project) project.get(0)[0];
+
+        // Récupérer la date de fin du projet
+        LocalDate dateFinProjet = LocalDate.parse(projet.getDatef());
+
+        // Calculer la différence entre la date de fin du projet et la date actuelle
+        long joursRestants = ChronoUnit.DAYS.between(LocalDate.now(), dateFinProjet);
+
+        // Transmettre le nombre de jours restants au modèle
+        model.addAttribute("joursRestants", joursRestants);
+        Project projects = projectService.getProjectById(id);
+        model.addAttribute("projects", projects);
+        model.addAttribute("activePage","DetailProjet");
+        return "admin/detail-projet";
+    }
+
+    @GetMapping("EditProject/{id}")
+    public String getEditProject(@PathVariable("id") Integer id, Model model){
         Project project = projectService.getProjectById(id);
         model.addAttribute("project", project);
         List<Client> clients = clientService.getAllClient();
         model.addAttribute("clients", clients);
-        model.addAttribute("activePage", "detailProject");
-        return "admin/detail-project";
+        model.addAttribute("activePage", "EditProjet");
+        return "admin/edit-project";
     }
 
     @PostMapping("/project/update")
@@ -100,27 +245,27 @@ public class ProjectController {
         Project existingProject = projectService.getProjectById(updateProject.getId());
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("message", "Donnée existe déjà.");
-            return "redirect:/DetailProject/" + existingProject.getId();
+            return "redirect:/EditProject/" + existingProject.getId();
         }
         boolean TDCNExiste = projectRepository.existsByTitleAndDescriptionAndClientsNot(updateProject.getTitle().toUpperCase(), updateProject.getDescription().toLowerCase(), updateProject.getClients());
         if(TDCNExiste){
             redirectAttributes.addFlashAttribute("message", "Donnée existe déjà.");
-            return "redirect:/DetailProject/" + existingProject.getId();
+            return "redirect:/EditProject/" + existingProject.getId();
         }
         boolean TCExiste = projectRepository.existsByTitleAndClients(updateProject.getTitle().toUpperCase(), updateProject.getClients());
         if(TCExiste){
             redirectAttributes.addFlashAttribute("message", "Donnée existe déjà.");
-            return "redirect:/DetailProject/" + existingProject.getId();
+            return "redirect:/EditProject/" + existingProject.getId();
         }
         boolean TCNExiste = projectRepository.existsByTitleAndClients(updateProject.getTitle().toUpperCase(), updateProject.getClients());
         if(TCNExiste){
             redirectAttributes.addFlashAttribute("message", "Donnée existe déjà.");
-            return "redirect:/DetailProject/" + existingProject.getId();
+            return "redirect:/EditProject/" + existingProject.getId();
         }
         boolean DejaExiste = projectRepository.existsByTitleAndDescriptionAndDatedAndDatefAndClients(updateProject.getTitle().toUpperCase(), updateProject.getDescription().toLowerCase(), updateProject.getDated(),updateProject.getDatef(), updateProject.getClients());
         if (DejaExiste) {
             redirectAttributes.addFlashAttribute("message", "Donnée existe déjà.");
-            return "redirect:/DetailProject/" + existingProject.getId();
+            return "redirect:/EditProject/" + existingProject.getId();
         }else{
             existingProject.setTitle(updateProject.getTitle().toUpperCase());
             existingProject.setDescription(updateProject.getDescription().toLowerCase());
@@ -129,7 +274,7 @@ public class ProjectController {
             existingProject.setClients(updateProject.getClients());
         }
         projectService.save(existingProject);
-        return "redirect:/DetailProject/" + existingProject.getId();
+        return "redirect:/EditProject/" + existingProject.getId();
 
     }
 
@@ -138,7 +283,7 @@ public class ProjectController {
         Project existingProject = projectService.getProjectById(deleteP.getId());
         if (bindingResult.hasErrors()) {
             model.addAttribute("message", "Il y a des erreurs de validation.");
-            return "redirect:/tache" ;
+            return "redirect:/projet" ;
         }
         existingProject.setIsDeleted("1");
         projectService.save(existingProject);

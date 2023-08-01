@@ -4,6 +4,8 @@ import Model.Utilisateur;
 import Repository.UtilisateurRepository;
 import Service.UtilisateurService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,7 +19,6 @@ import javax.validation.Valid;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.List;
 
 
 @Controller
@@ -41,13 +42,17 @@ public class UtilisateurController {
     private UtilisateurService service;
 
     @GetMapping("/team")
-    public String getTeam(Model model){
+    public String getTeam(Model model, @RequestParam(defaultValue = "0") int page){
+        int pageSize = 6; // Number of projects to display per page
+        PageRequest pageable = PageRequest.of(page, pageSize);
         Utilisateur utilisateur = new Utilisateur();
         model.addAttribute("utilisateur", utilisateur);
-        List<Utilisateur> utilisateurs = service.getAllUtilisateurs();
-        model.addAttribute("utilisateurs", utilisateurs);
+        Page<Utilisateur> utilisateurs = service.getAllUsersPagi(pageable);
+        model.addAttribute("utilisateurs", utilisateurs.getContent());
         model.addAttribute("countStaff", utilisateurService.countStaff());
         model.addAttribute("activePage", "team");
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", utilisateurs.getTotalPages());
         return "admin/equipe";
     }
 

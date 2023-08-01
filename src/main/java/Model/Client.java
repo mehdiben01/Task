@@ -28,6 +28,8 @@ public class Client  {
     @Column(nullable = false)
     private String company;
     @Column(nullable = false)
+    private String departement;
+    @Column(nullable = false)
     @Transient
     private MultipartFile logo;
 

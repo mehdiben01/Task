@@ -26,6 +26,20 @@ public class TacheService {
         return tacheRepository.countByIsDeleted("0");
     }
 
+    public long countPTermine(){
+        return tacheRepository.countPTermine();
+    }
+
+    public long countENC(){
+        return tacheRepository.countENC();
+    }
+
+    public long countNonc(){
+        return tacheRepository.countNonC();
+    }
+
+
+
     public Tache getTacheById(Integer id) {
         return tacheRepository.getTacheById(id)
                 .orElseThrow(() -> new NoSuchElementException("Tache not found with ID: " + id));
