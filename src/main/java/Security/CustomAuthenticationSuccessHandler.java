@@ -22,7 +22,7 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
 
         if (authorities.stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"))) {
-            setDefaultTargetUrl("/admin/team");
+            setDefaultTargetUrl("/profil");
         } else {
             setDefaultTargetUrl("/");
         }

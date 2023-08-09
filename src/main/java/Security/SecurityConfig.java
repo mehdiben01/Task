@@ -8,9 +8,19 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.authentication.www.DigestAuthenticationFilter;
+
+import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 
 @Configuration
 @EnableWebSecurity
@@ -33,6 +43,8 @@ public class SecurityConfig  {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
+                .addFilterBefore(new LogoutOnLoginFilter(), BasicAuthenticationFilter.class)
+                .addFilterBefore(new LogoutOnLoginFilter(), DigestAuthenticationFilter.class)
                 .formLogin()
                 .loginPage("/login")  // Specify the URL of your custom login page
                 .successHandler(customAuthenticationSuccessHandler)
@@ -59,5 +71,24 @@ public class SecurityConfig  {
 
         return httpSecurity.build();
     }
+
+    private class LogoutOnLoginFilter implements Filter {
+
+        @Override
+        public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+            HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+            if (httpServletRequest.getRequestURI().equals("/login")) {
+                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+                if (authentication != null && authentication.isAuthenticated()) {
+                    LogoutHandler logoutHandler = new SecurityContextLogoutHandler();
+                    logoutHandler.logout(httpServletRequest, null, authentication);
+                }
+            }
+
+            chain.doFilter(request, response);
+        }
+    }
+
+
 
 }
