@@ -1,25 +1,33 @@
 package Controller;
 
 import Model.Client;
+import Model.Utilisateur;
 import Repository.ClientRepository;
 import Service.ClientService;
+import Service.UtilisateurService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.List;
 
 @Controller
 public class ClientController {
+
+    int elementsPerPage = 6;
 
     private final ClientRepository clientRepository;
 
@@ -36,15 +44,64 @@ public class ClientController {
     @Autowired
     private ClientService service;
 
+    @Autowired
+    private UtilisateurService utilisateurService;
+
+    @ModelAttribute
+    public void addCommonUserAttributes(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            String username = authentication.getName();
+            Utilisateur utilisateur = utilisateurService.loadUserByUsername(username);
+
+            if (utilisateur != null) {
+                model.addAttribute("username", username);
+                model.addAttribute("fullName", utilisateur.getFullName());
+                model.addAttribute("profession", utilisateur.getProfession());
+                model.addAttribute("imagePath", utilisateur.getCheminImage());
+                // You can add more attributes here
+            }
+        }
+    }
+
+
     @GetMapping("/client")
-    public String getClient(Model model){
+    public String getClient(Model model, @RequestParam(required = false) String search,
+                            @RequestParam(defaultValue = "0") int page){
         Client client = new Client();
         model.addAttribute("client", client);
-        List<Client> clients = service.getAllClient();
-        model.addAttribute("clients", clients);
-        model.addAttribute("countclients", service.CountClients());
+        Page<Object[]> existingClients;
+        if (search != null && !search.isEmpty()) {
+            existingClients = clientService.getAllClients(search, PageRequest.of(page, elementsPerPage));
+        } else {
+            existingClients = clientService.getAllClients("", PageRequest.of(page, elementsPerPage));
+        }
+        model.addAttribute("clients", existingClients.getContent());
+        model.addAttribute("countclient", existingClients.getTotalElements());
+        model.addAttribute("search", search);
         model.addAttribute("activePage", "client");
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", existingClients.getTotalPages());
         return "admin/client";
+    }
+    @GetMapping("/client-annule")
+    public String getClientSupp(Model model, @RequestParam(required = false) String search,
+                            @RequestParam(defaultValue = "0") int page){
+        Client client = new Client();
+        model.addAttribute("client", client);
+        Page<Object[]> existingClientSupp;
+        if (search != null && !search.isEmpty()) {
+            existingClientSupp = clientService.getAllClientsSupp(search, PageRequest.of(page, elementsPerPage));
+        } else {
+            existingClientSupp = clientService.getAllClientsSupp("", PageRequest.of(page, elementsPerPage));
+        }
+        model.addAttribute("clients", existingClientSupp.getContent());
+        model.addAttribute("countclient", existingClientSupp.getTotalElements());
+        model.addAttribute("search", search);
+        model.addAttribute("activePage", "client-annule");
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", existingClientSupp.getTotalPages());
+        return "admin/client-annule";
     }
 
 

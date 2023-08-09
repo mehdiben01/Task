@@ -52,6 +52,11 @@
   <!-- endinject -->
 
   <link rel="icon" type="image/png" sizes="16x16" href="img/favicon.png">
+  <style>
+    .dropdown {
+      background-color: white;
+    }
+  </style>
 </head>
 
 <body class="layout-light side-menu overlayScroll">
@@ -93,19 +98,44 @@
           <div class="breadcrumb-main user-member justify-content-sm-between ">
             <div class=" d-flex flex-wrap justify-content-center breadcrumb-main__wrapper">
               <div class="d-flex align-items-center user-member__title justify-content-center mr-sm-25">
-                <h4 class="fw-500 breadcrumb-title">La liste des projets non commencés</h4>
-                <span class="sub-title ml-sm-25 pl-sm-25" th:text="${countNonC + ' Projet(s)'}"></span>
+                <span class="sub-title ml-sm-25 pl-sm-25" th:text="${countproj + ' Projet(s)'}"></span>
               </div>
 
-              <form class="d-flex align-items-center user-member__form my-sm-0 my-2" th:action="@{/projet-noncommence}" method="get">
-                <span data-feather="search"></span>
-                <input class="form-control mr-sm-2 border-0 box-shadow-none" type="search" name="search" th:value="${search}" placeholder="Search" aria-label="Search">
-              </form>
 
 
 
 
 
+
+            </div>
+            <div class=" d-flex flex-wrap justify-content-center breadcrumb-main__wrapper">
+            <form class="d-flex align-items-center user-member__form my-sm-0 my-2" th:action="@{/projet-noncommence}" method="get">
+              <span data-feather="search"></span>
+              <input class="form-control mr-sm-2 border-0 box-shadow-none" type="search" name="search" th:value="${search}" placeholder="Search" aria-label="Search">
+            </form>
+            </div>
+            <div class=" d-flex flex-wrap justify-content-center breadcrumb-main__wrapper">
+            <div class="dropdown d-inline-block ml-2">
+              <button class="btn btn-outline-lighten btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <!-- Utilisation de la syntaxe conditionnelle pour afficher le nom de la page active -->
+                <span th:text="${activePage == 'projet' ? 'La liste des projets' :
+      activePage == 'projet-termine' ? 'La liste des projet terminé' :
+      activePage == 'projet-encours' ? 'La liste des projet en cours' :
+      activePage == 'projet-noncommence' ? 'La liste des projet non commencé' :
+      activePage == 'projet-annule' ? 'La liste des projet annulé' :
+      activePage == 'projet-retarde' ? 'La liste des projet retardé' :
+      'Sélectionner un code'}"></span>
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <ul>
+                  <li><a class="dropdown-item" href="/projet" >La liste des projets</a></li>
+                  <li><a class="dropdown-item" href="/projet-termine" >La liste des projet terminé</a></li>
+                  <li><a class="dropdown-item" href="/projet-encours" >La liste des projet en cours</a></li>
+                  <li><a class="dropdown-item" href="/projet-noncommence" >La liste des projet non commencé</a></li>
+                  <li><a class="dropdown-item" href="/projet-retarde">La liste des projet retardé</a></li>
+                </ul>
+              </div>
+            </div>
             </div>
             <div class="action-btn">
               <a href="#" class="btn px-15 btn-primary" data-toggle="modal" data-target="#new-member">
@@ -216,41 +246,41 @@
                   <div class="border-bottom px-30">
                     <div class="media user-group-media d-flex justify-content-between">
                       <div class="media-body d-flex align-items-center text-capitalize">
-                        <a th:href="@{/DetailProjet/{id}(id=${project.id})}">
-                          <h6 class="mt-0  fw-500 media-ui__title" th:text="${project.title}"></h6>
+                        <a th:href="@{/DetailProjet/{id}(id=${project[0].id})}">
+                          <h6 class="mt-0  fw-500 media-ui__title" th:text="${project[0].title}"></h6>
                         </a>
                         <span class="media-badge text-uppercase color-white bg-warning" >Pas encore commencé</span>
                       </div>
                     </div>
                     <div class="user-group-people mt-15 text-capitalize">
-                      <p th:text="${project.description}"></p>
+                      <p th:text="${project[0].description}"></p>
                       <div class="user-group-project">
                         <div class="d-flex align-items-center user-group-progress-top">
                           <div class="media-ui__start">
                             <span class="color-light fs-12">Start Date</span>
-                            <p class="fs-14 fw-500 color-dark mb-0" th:text="${project.dated}"></p>
+                            <p class="fs-14 fw-500 color-dark mb-0" th:text="${project[0].dated}"></p>
                           </div>
                           <div class="media-ui__end">
                             <span class="color-light fs-12">end date</span>
-                            <p class="fs-16 fw-500 color-success mb-0" th:text="${project.datef}"></p>
+                            <p class="fs-16 fw-500 color-success mb-0" th:text="${project[0].datef}"></p>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-
                   <div class="ap-button account-profile-cards__button button-group d-flex justify-content-center flex-wrap pt-20">
-                    <a th:href="@{/DetailProjet/{id}(id=${project.id})}">
+                    <a th:href="@{/DetailProjet/{id}(id=${project[0].id})}">
                       <button type="button" class="border text-capitalize px-25 color-gray transparent shadow2 radius-md">
                         Voir</button></a>
-                    <a th:href="@{/EditProject/{id}(id=${project.id})}">
+                    <a th:href="@{/EditProject/{id}(id=${project[0].id})}">
                       <button type="button" class="border text-capitalize px-25 color-gray transparent shadow2 radius-md">
                         Editer</button></a>
                     <button type="submit" class="border text-capitalize px-25 color-gray transparent shadow2 radius-md" data-toggle="modal" data-target="#modal-info-delete"
-                            th:data-id="${project.id}" th:data-nom="${project.title+' de '+project.clients.company}">
+                            th:data-id="${project[0].id}" th:data-nom="${project[0].title+' de '+project[0].clients.company}">
                       Supprimer</button>
 
                   </div>
+
                 </div>
 
               </div>

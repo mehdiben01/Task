@@ -6,13 +6,11 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Tache {
-
+public class TacheSupprimee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -28,16 +26,16 @@ public class Tache {
     @Column(nullable = false)
     private int etat;
 
-    private String datedu="0";
+    private String datedu;
 
-    private String datefu="0";
+    private String datefu;
+
+
     @ManyToOne
     private Project project;
 
     @ManyToOne
     private Utilisateur users;
-
-
 
 
 

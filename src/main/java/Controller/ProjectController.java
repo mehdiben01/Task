@@ -2,13 +2,17 @@ package Controller;
 
 import Model.Client;
 import Model.Project;
+import Model.Utilisateur;
 import Repository.ProjectRepository;
 import Service.ClientService;
 import Service.ProjectService;
 import Service.TacheService;
+import Service.UtilisateurService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -49,6 +53,27 @@ public class ProjectController {
     @Autowired
     private ClientService service;
 
+    @Autowired
+    private UtilisateurService utilisateurService;
+
+    @ModelAttribute
+    public void addCommonUserAttributes(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            String username = authentication.getName();
+            Utilisateur utilisateur = utilisateurService.loadUserByUsername(username);
+
+            if (utilisateur != null) {
+                model.addAttribute("username", username);
+                model.addAttribute("fullName", utilisateur.getFullName());
+                model.addAttribute("profession", utilisateur.getProfession());
+                model.addAttribute("imagePath", utilisateur.getCheminImage());
+                // You can add more attributes here
+            }
+        }
+    }
+
+
     @GetMapping("/projet")
     public String getProjet(Model model, @RequestParam(required = false) String search,
                             @RequestParam(defaultValue = "0") int page) {
@@ -57,7 +82,7 @@ public class ProjectController {
         Project project = new Project();
         model.addAttribute("project", project);
         model.addAttribute("clients", service.getAllClient());
-        model.addAttribute("countproj", projectService.countAllProjects());
+
 
         Page<Object[]> existingProjectsAndAverageEtatPage;
 
@@ -68,6 +93,7 @@ public class ProjectController {
         }
 
         model.addAttribute("projects", existingProjectsAndAverageEtatPage.getContent());
+        model.addAttribute("countproj", existingProjectsAndAverageEtatPage.getTotalElements());
         model.addAttribute("activePage", "projet");
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", existingProjectsAndAverageEtatPage.getTotalPages());
@@ -82,7 +108,7 @@ public class ProjectController {
         Project project = new Project();
         model.addAttribute("project", project);
         model.addAttribute("clients", service.getAllClient());
-        model.addAttribute("countproj", projectService.countProjects());
+
         Page<Object[]> existingProjectsTermine;
         if (search != null && !search.isEmpty()) {
             existingProjectsTermine = projectService.getProjectTermine(search, PageRequest.of(page, elementsPerPage));
@@ -91,6 +117,7 @@ public class ProjectController {
         }
         model.addAttribute("projects", existingProjectsTermine.getContent());
         model.addAttribute("activePage", "projet-termine");
+        model.addAttribute("countproj", existingProjectsTermine.getTotalElements());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", existingProjectsTermine.getTotalPages());
         model.addAttribute("search", search); // Add the search parameter to the model
@@ -104,14 +131,14 @@ public class ProjectController {
         Project project = new Project();
         model.addAttribute("project", project);
         model.addAttribute("clients", service.getAllClient());
-        model.addAttribute("countproj", projectService.countProjects());
-        Page<Object[]> existingProjectsEnCours;
+              Page<Object[]> existingProjectsEnCours;
         if (search != null && !search.isEmpty()) {
             existingProjectsEnCours = projectService.getProjectEnCours(search, PageRequest.of(page, elementsPerPage));
         } else {
             existingProjectsEnCours = projectService.getProjectEnCours("", PageRequest.of(page, elementsPerPage));
         }
         model.addAttribute("projects", existingProjectsEnCours.getContent());
+        model.addAttribute("countproj", existingProjectsEnCours.getTotalElements());
         model.addAttribute("activePage", "projet-encours");
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", existingProjectsEnCours.getTotalPages());
@@ -125,7 +152,6 @@ public class ProjectController {
         Project project = new Project();
         model.addAttribute("project", project);
         model.addAttribute("clients", service.getAllClient());
-        model.addAttribute("countproj", projectService.countProjects());
         Page<Object[]> existingProjectsNcommence;
         if (search != null && !search.isEmpty()) {
             existingProjectsNcommence = projectService.getProjectNcommence(search, PageRequest.of(page, elementsPerPage));
@@ -133,6 +159,7 @@ public class ProjectController {
             existingProjectsNcommence = projectService.getProjectNcommence("", PageRequest.of(page, elementsPerPage));
         }
         model.addAttribute("projects", existingProjectsNcommence.getContent());
+        model.addAttribute("countproj", existingProjectsNcommence.getTotalElements());
         model.addAttribute("activePage", "projet-noncommence");
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", existingProjectsNcommence.getTotalPages());
@@ -147,7 +174,6 @@ public class ProjectController {
         Project project = new Project();
         model.addAttribute("project", project);
         model.addAttribute("clients", service.getAllClient());
-        model.addAttribute("countproj", projectService.countProjects());
         Page<Object[]> existingProjectsAnnule;
         if (search != null && !search.isEmpty()) {
             existingProjectsAnnule = projectService.getProjectAnnule(search, PageRequest.of(page, elementsPerPage));
@@ -155,6 +181,7 @@ public class ProjectController {
             existingProjectsAnnule = projectService.getProjectAnnule("", PageRequest.of(page, elementsPerPage));
         }
         model.addAttribute("projects", existingProjectsAnnule.getContent());
+        model.addAttribute("countproj", existingProjectsAnnule.getTotalElements());
         model.addAttribute("activePage", "projet-annule");
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", existingProjectsAnnule.getTotalPages());
@@ -169,7 +196,6 @@ public class ProjectController {
         Project project = new Project();
         model.addAttribute("project", project);
         model.addAttribute("clients", service.getAllClient());
-        model.addAttribute("countproj", projectService.countProjects());
         Page<Object[]> existingProjectsRetarde;
         if (search != null && !search.isEmpty()) {
             existingProjectsRetarde = projectService.getProjectRetarde(search, PageRequest.of(page, elementsPerPage));
@@ -181,7 +207,7 @@ public class ProjectController {
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", existingProjectsRetarde.getTotalPages());
         model.addAttribute("search", search); // Add the search parameter to the model
-        model.addAttribute("countret",projectService.countPR());
+        model.addAttribute("countproj", existingProjectsRetarde.getTotalElements());
         return "admin/project-retarde";
     }
 

@@ -4,15 +4,21 @@ import Model.Utilisateur;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
 
 
 public interface UtilisateurRepository extends JpaRepository<Utilisateur, Integer> {
+
+    Utilisateur findByUsername(String username);
     boolean existsByEmailOrTel( String email, String tel);
 
-    boolean existsByNomAndPrenomAndProfessionAndDatenAndTelAndType(String nom,  String prenom, String profession, String daten, String tel, String type);
+    Utilisateur findByEmail(String email);
+
+    boolean existsByNomAndPrenomAndProfessionAndDatenAndTel(String nom,  String prenom, String profession, String daten, String tel);
 
     boolean existsByNomAndPrenomAndIdNot(String nom,String prenom, Integer id);
 
@@ -21,14 +27,37 @@ public interface UtilisateurRepository extends JpaRepository<Utilisateur, Intege
     boolean existsByPassword(String password);
 
   boolean existsByNomAndPrenom(String nom, String prenom);
-    List<Utilisateur> findAllByIsDeletedAndType(String isDeleted, String type);
+    List<Utilisateur> findAllByIsDeleted(String isDeleted);
 
-    Page<Utilisateur> findAllByIsDeletedAndType(String isDeleted, String type, Pageable pageable);
+    Page<Utilisateur> findAllByIsDeleted(String isDeleted,  Pageable pageable);
 
-    long countByTypeAndIsDeleted(String type , String isDeleted);
+    long countByIsDeleted(String isDeleted);
 
 
     Optional<Utilisateur> getUtilisateurById(Integer id);
+
+
+    @Query("SELECT u , count(u.id) "+
+            "FROM Utilisateur u "+
+            "WHERE u.isDeleted ='0' "+
+            "AND (LOWER(u.nom) LIKE %:search% "+
+            "OR LOWER(u.prenom) LIKE %:search% "+
+            "OR LOWER(u.tel) LIKE %:search%" +
+            "OR LOWER(u.email) LIKE %:search%" +
+            "OR LOWER(u.profession) LIKE %:search%) " +
+            "GROUP BY u.id ")
+    Page<Object[]> findAllUsers(@Param("search") String search, Pageable pageable);
+
+    @Query("SELECT u , count(u.id) "+
+            "FROM Utilisateur u "+
+            "WHERE u.isDeleted ='1' "+
+            "AND (LOWER(u.nom) LIKE %:search% "+
+            "OR LOWER(u.prenom) LIKE %:search% "+
+            "OR LOWER(u.tel) LIKE %:search%" +
+            "OR LOWER(u.email) LIKE %:search%" +
+            "OR LOWER(u.profession) LIKE %:search%) " +
+            "GROUP BY u.id ")
+    Page<Object[]> findAllUserSupp(@Param("search") String search, Pageable pageable);
 
 
 

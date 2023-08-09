@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
-public class ProjectService {
+public class ProjectService{
 
     @Autowired
     private ProjectRepository projectRepository;
@@ -41,8 +41,8 @@ public class ProjectService {
     public List<Object[]> getExistingProjectsAndAverageEtat(){
         return projectRepository.selectExistingProjectsAndAverageEtat();
     }
-    public Page<Object[]> getExistingProjectsAndAverageEtatByTitle(String searchText, Pageable pageable) {
-        return projectRepository.selectExistingProjectsAndAverageEtatByTitle(searchText, pageable);
+    public Page<Object[]> getExistingProjectsAndAverageEtatByTitle(String search, Pageable pageable) {
+        return projectRepository.selectExistingProjectsAndAverageEtatByTitle(search, pageable);
     }
 
     public Page<Object[]> getProjectTermine(String search, Pageable pageable){
@@ -79,6 +79,8 @@ public class ProjectService {
     public long countPR(){
         return projectRepository.countPR();
     }
+
+
 
 
 

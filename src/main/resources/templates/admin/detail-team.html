@@ -155,7 +155,7 @@
                         <div class="row justify-content-center">
                           <div class="col-xxl-6 col-lg-8 col-sm-10">
                             <div class="edit-profile__body mx-lg-20">
-                              <form action="/user/update" method="post" th:object="${utilisateur}" class="was-validated">
+                              <form th:action="@{/user/update}" method="post" th:object="${utilisateur}" class="was-validated">
                                 <input type="hidden" class="form-control" id="id"  name="id" th:value="${utilisateur.id}">
                                 <div class="form-group mb-20">
                                   <label for="names">name</label>
@@ -204,10 +204,12 @@
                                 </div>
                                 <div class="form-group mb-20">
                                   <div class="skillsOption">
-                                    <label for="skillsOption">Type</label>
-                                    <select class="js-example-basic-single js-states form-control" id="skillsOption" name="type"  required  th:classappend="${#fields.hasErrors('type')} ? 'is-invalid'">
-                                      <option value="Admin" th:selected="${utilisateur.type == 'Admin'}">Admin</option>
-                                      <option value="Staff" th:selected="${utilisateur.type == 'Staff'}">Staff</option>
+                                    <label for="skillsOption">Role</label>
+                                    <select class="js-example-basic-single js-states form-control" id="rolesOption" name="roles" required>
+                                      <option th:each="role : ${roles}"
+                                              th:value="${role.id}"
+                                              th:selected="${utilisateur.roles.contains(role)}"
+                                              th:text="${role.role}"></option>
                                     </select>
                                   </div>
                                 </div>

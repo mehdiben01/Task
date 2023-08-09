@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="modal-body">
+  <div class="new-member-modal">
+    <form action="/register" method="post" th:object="${utilisateur}" enctype="multipart/form-data" class="was-validated">
+      <div class="form-group mb-20">
+        <label class="mb-15">Nom</label>
+        <input type="text" class="form-control" placeholder="Nom" th:field="*{nom}" name="nom" pattern="[A-Za-z\s]+" required
+               th:classappend="${#fields.hasErrors('nom')} ? 'is-invalid'">
+        <div class="invalid-feedback">
+          <span th:if="${#fields.hasErrors('nom')}" th:errors="*{nom}"></span>
+          Le nom est requis.
+        </div>
+      </div>
+      <div class="form-group mb-20">
+        <label class="mb-15">Prénom</label>
+        <input type="text" class="form-control" placeholder="Prénom" th:field="*{prenom}" name="prenom" pattern="[A-Za-z\s]+" required
+               th:classappend="${#fields.hasErrors('prenom')} ? 'is-invalid'">
+        <div class="invalid-feedback">
+          <span th:if="${#fields.hasErrors('prenom')}" th:errors="*{prenom}"></span>
+          Le prénom est requis.
+        </div>
+      </div>
+      <!-- Ajouter la validation et les messages d'erreur pour les autres champs -->
+      <div class="form-group mb-20">
+        <label class="mb-15">Date de naissance</label>
+        <input type="date" class="form-control" placeholder="Date De Naissance" th:field="*{daten}" name="daten" min="1900-01-01" max="2023-12-31" required
+               th:classappend="${#fields.hasErrors('daten')} ? 'is-invalid'">
+        <div class="invalid-feedback">
+          <span th:if="${#fields.hasErrors('daten')}" th:errors="*{daten}"></span>
+          La date de naissance est requise.
+        </div>
+      </div>
+      <div class="form-group mb-20">
+        <label class="mb-15">Téléphone</label>
+        <input type="text" class="form-control" placeholder="Téléphone" th:field="*{tel}" name="tel" pattern="[0-9]{10}" required
+               th:classappend="${#fields.hasErrors('tel')} ? 'is-invalid'">
+        <div class="invalid-feedback">
+          <span th:if="${#fields.hasErrors('tel')}" th:errors="*{tel}"></span>
+          Le téléphone est requis.
+        </div>
+      </div>
+      <div class="form-group mb-20">
+        <label class="mb-15">Email</label>
+        <input type="email" class="form-control" placeholder="Email" th:field="*{email}" name="email" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" required
+               th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'">
+        <div class="invalid-feedback">
+          <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+          L'email est requis.
+        </div>
+      </div>
+      <div class="form-group mb-20">
+        <label class="mb-15">Mot de passe</label>
+        <input type="password" class="form-control" placeholder="Mot De Passe" th:field="*{password}" name="password" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$" required
+               th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'">
+        <div class="invalid-feedback">
+          <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+          Le mot de passe est requis.
+        </div>
+      </div>
+      <div class="form-group mb-20">
+        <label class="mb-15">Type</label>
+        <div class="category-member">
+          <select th:field="*{type}" name="type" class="js-example-basic-single js-states form-control"
+                  th:classappend="${#fields.hasErrors('type')} ? 'is-invalid'" required>
+            <option value="">Sélectionner le type</option>
+            <option value="Admin">Admin</option>
+            <option value="Staff">Staff</option>
+          </select>
+        </div>
+        <div class="invalid-feedback">
+          <span th:if="${#fields.hasErrors('type')}" th:errors="*{type}"></span>
+          Le type est requis.
+        </div>
+      </div>
+      <div class="form-group mb-20">
+        <label class="mb-15">Profession</label>
+        <input type="text" class="form-control" placeholder="Profession" th:field="*{profession}" name="profession" pattern="[A-Za-zÀ-ÿ\s]+" required
+               th:classappend="${#fields.hasErrors('profession')} ? 'is-invalid'">
+        <div class="invalid-feedback">
+          <span th:if="${#fields.hasErrors('profession')}" th:errors="*{profession}"></span>
+          La profession est requise.
+        </div>
+      </div>
+      <div class="form-group mb-20">
+        <div class="custom-file">
+          <label for="formFile" class="form-label">Image</label>
+          <input class="form-control" type="file" th:field="*{image}" name="image" id="formFile" required
+                 th:classappend="${#fields.hasErrors('image')} ? 'is-invalid'">
+          <div class="invalid-feedback">
+            <span th:if="${#fields.hasErrors('image')}" th:errors="*{image}"></span>
+            L'image est requise.
+          </div>
+        </div>
+      </div>
+      <div class="button-group d-flex pt-25">
+        <button type="submit" class="btn btn-primary btn-default btn-squared text-capitalize">Ajouter</button>
+
+      </div>
+    </form>
+
+  </div>
+</div>
+</body>
+</html>

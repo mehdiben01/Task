@@ -2,10 +2,14 @@ package Controller;
 
 import Model.Utilisateur;
 import Repository.UtilisateurRepository;
+import Service.RoleService;
 import Service.UtilisateurService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,17 +26,22 @@ import java.io.IOException;
 
 
 @Controller
+@RequestMapping("/admin")
+public class UtilisateurController  {
 
-public class UtilisateurController {
+    private PasswordEncoder passwordEncoder;
+
+    int elementsPerPage = 6;
     @Autowired
     private final UtilisateurRepository utilisateurRepository;
     @Autowired
     private final UtilisateurService utilisateurService;
 
     @Autowired
-    public UtilisateurController(UtilisateurRepository utilisateurRepository, UtilisateurService utilisateurService) {
+    public UtilisateurController(UtilisateurRepository utilisateurRepository, UtilisateurService utilisateurService, PasswordEncoder passwordEncoder) {
         this.utilisateurRepository = utilisateurRepository;
         this.utilisateurService = utilisateurService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Autowired
@@ -41,19 +50,69 @@ public class UtilisateurController {
     @Autowired
     private UtilisateurService service;
 
+    @Autowired
+    private RoleService roleService;
+
+    @ModelAttribute
+    public void addCommonUserAttributes(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            String username = authentication.getName();
+            Utilisateur utilisateur = utilisateurService.loadUserByUsername(username);
+
+            if (utilisateur != null) {
+                model.addAttribute("username", username);
+                model.addAttribute("fullName", utilisateur.getFullName());
+                model.addAttribute("profession", utilisateur.getProfession());
+                model.addAttribute("imagePath", utilisateur.getCheminImage());
+                // You can add more attributes here
+            }
+        }
+    }
+
+
+
+
+
     @GetMapping("/team")
-    public String getTeam(Model model, @RequestParam(defaultValue = "0") int page){
-        int pageSize = 6; // Number of projects to display per page
-        PageRequest pageable = PageRequest.of(page, pageSize);
+    public String getTeam(Model model, @RequestParam(required = false) String search,
+                          @RequestParam(defaultValue = "0") int page) {
+
         Utilisateur utilisateur = new Utilisateur();
         model.addAttribute("utilisateur", utilisateur);
-        Page<Utilisateur> utilisateurs = service.getAllUsersPagi(pageable);
-        model.addAttribute("utilisateurs", utilisateurs.getContent());
-        model.addAttribute("countStaff", utilisateurService.countStaff());
+        model.addAttribute("roles", roleService.GetAllRole());
+        Page<Object[]> existingUtilisateurs;
+        if (search != null && !search.isEmpty()) {
+            existingUtilisateurs = utilisateurService.getUtilisateur(search, PageRequest.of(page, elementsPerPage));
+        } else {
+            existingUtilisateurs = utilisateurService.getUtilisateur("", PageRequest.of(page, elementsPerPage));
+        }
+        model.addAttribute("utilisateurs", existingUtilisateurs.getContent());
+        model.addAttribute("countStaff", existingUtilisateurs.getTotalElements());
         model.addAttribute("activePage", "team");
         model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", utilisateurs.getTotalPages());
+        model.addAttribute("totalPages", existingUtilisateurs.getTotalPages());
         return "admin/equipe";
+    }
+
+    @GetMapping("/team-annule")
+    public String getTeamSupp(Model model, @RequestParam(required = false) String search,
+                          @RequestParam(defaultValue = "0") int page){
+
+        Utilisateur utilisateur = new Utilisateur();
+        model.addAttribute("utilisateur", utilisateur);
+        Page<Object[]> existingUtilisateurSupp;
+        if (search != null && !search.isEmpty()) {
+            existingUtilisateurSupp = utilisateurService.getUtilisateurSupp(search, PageRequest.of(page, elementsPerPage));
+        } else {
+            existingUtilisateurSupp = utilisateurService.getUtilisateurSupp("", PageRequest.of(page, elementsPerPage));
+        }
+        model.addAttribute("utilisateurs", existingUtilisateurSupp.getContent());
+        model.addAttribute("countStaff", existingUtilisateurSupp.getTotalElements());
+        model.addAttribute("activePage", "team-annule");
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", existingUtilisateurSupp.getTotalPages());
+        return "admin/equipe-annule";
     }
 
 
@@ -67,9 +126,11 @@ public class UtilisateurController {
             return "redirect:/team";
         }
         utilisateur.setNom(utilisateur.getNom().toUpperCase());
-        utilisateur.setPassword(utilisateur.getPrenom().toLowerCase());
+        utilisateur.setPrenom(utilisateur.getPrenom().toLowerCase());
         utilisateur.setEmail(utilisateur.getEmail().toLowerCase());
         utilisateur.setProfession(utilisateur.getProfession().toLowerCase());
+        utilisateur.setPassword(passwordEncoder.encode(utilisateur.getPassword()));
+
         // Vérifier si l'utilisateur existe déjà
         boolean champExiste = utilisateurRepository.existsByEmailOrTel( utilisateur.getEmail(), utilisateur.getTel());
         if (champExiste) {
@@ -129,6 +190,7 @@ public class UtilisateurController {
         // Add the utilisateur to the model
         model.addAttribute("utilisateur", utilisateur);
         model.addAttribute("activePage","detailTeam");
+        model.addAttribute("roles", roleService.GetAllRole());
         return "admin/detail-team";
     }
 
@@ -143,7 +205,7 @@ public class UtilisateurController {
         }
 
         // Vérifier si l'utilisateur existe déjà
-        boolean DataExiste = utilisateurRepository.existsByNomAndPrenomAndProfessionAndDatenAndTelAndType(updatedUtilisateur.getNom().toUpperCase(),updatedUtilisateur.getPrenom().toLowerCase(),updatedUtilisateur.getProfession().toLowerCase(),updatedUtilisateur.getDaten(),updatedUtilisateur.getTel(), updatedUtilisateur.getType());
+        boolean DataExiste = utilisateurRepository.existsByNomAndPrenomAndProfessionAndDatenAndTel(updatedUtilisateur.getNom().toUpperCase(),updatedUtilisateur.getPrenom().toLowerCase(),updatedUtilisateur.getProfession().toLowerCase(),updatedUtilisateur.getDaten(),updatedUtilisateur.getTel());
         if (DataExiste) {
             // Gérer le cas où l'utilisateur existe déjà
             redirectAttributes.addFlashAttribute("message", "Donnée existe déjà.");
@@ -156,7 +218,8 @@ public class UtilisateurController {
             existingUtilisateur.setEmail(updatedUtilisateur.getEmail().toLowerCase());
             existingUtilisateur.setDaten(updatedUtilisateur.getDaten());
             existingUtilisateur.setTel(updatedUtilisateur.getTel());
-            existingUtilisateur.setType(updatedUtilisateur.getType());
+            existingUtilisateur.setRoles(updatedUtilisateur.getRoles());
+
         }
         boolean NomExiste = utilisateurRepository.existsByNomAndPrenomAndIdNot(updatedUtilisateur.getNom().toUpperCase(),updatedUtilisateur.getPrenom().toLowerCase(), updatedUtilisateur.getId());
         if (NomExiste) {

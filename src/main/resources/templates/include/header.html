@@ -1,5 +1,5 @@
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <div th:fragment="header">
     <header class="header-top">
         <nav class="navbar navbar-light">
@@ -947,22 +947,22 @@
                     <!-- ends: .nav-flag-select -->
                     <li class="nav-author">
                         <div class="dropdown-custom">
-                            <a href="javascript:;" class="nav-item-toggle"><img th:src="@{/img/author-nav.jpg}" alt="" class="rounded-circle"></a>
+                            <a href="javascript:;" class="nav-item-toggle"><img th:src="${imagePath}" alt="" class="rounded-circle"></a>
                             <div class="dropdown-wrapper">
                                 <div class="nav-author__info">
                                     <div class="author-img">
-                                        <img th:src="@{/img/author-nav.jpg}" alt="" class="rounded-circle">
+                                        <img th:src="${imagePath}" alt="" class="rounded-circle">
                                     </div>
                                     <div>
-                                        <h6>Abdullah Bin Talha</h6>
-                                        <span>UI Designer</span>
+                                        <h6 th:text="'Bienvenue, ' + ${#httpServletRequest.remoteUser}"></h6>
+                                        <span th:text="${#strings.toUpperCase(profession)}"></span>
                                     </div>
                                 </div>
                                 <div class="nav-author__options">
                                     <ul>
                                         <li>
-                                            <a href="">
-                                                <span data-feather="user"></span> Profile</a>
+                                            <a th:href="@{/profil}">
+                                                <span data-feather="user"></span> Profil</a>
                                         </li>
                                         <li>
                                             <a href="">
@@ -981,8 +981,10 @@
                                                 <span data-feather="bell"></span> Help</a>
                                         </li>
                                     </ul>
-                                    <a href="" class="nav-author__signout">
-                                        <span data-feather="log-out"></span> Sign Out</a>
+                                    <a th:href="@{/logout}" class="nav-author__signout">
+                                        <span data-feather="log-out"></span> Sign Out
+                                    </a>
+
                                 </div>
                             </div>
                             <!-- ends: .dropdown-wrapper -->
@@ -1023,53 +1025,67 @@
                         <span class="menu-text">Profile Settings</span>
                     </a>
                     </li>
-                    <li>
-                        <a href="/team" th:class="${activePage == 'team'|| activePage == 'detailTeam'} ? 'active' : ''">
+                    <li class="has-child" th:if="${#request.isUserInRole('ADMIN')}">
+                        <a href="/team" th:class="${activePage == 'team'|| activePage == 'detailTeam' || activePage == 'team-annule'} ? 'active' : ''">
                             <span data-feather="users" class="nav-icon"></span>
                             <span class="menu-text">Equipes</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/client" th:class="${activePage == 'client' || activePage == 'detailClient'} ? 'active' : ''">
-                            <span data-feather="user-check" class="nav-icon"></span>
-                            <span class="menu-text">Clients</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/tache" th:class="${activePage == 'tache' || activePage == 'detailTache'} ? 'active' : ''">
-                            <span data-feather="clipboard" class="nav-icon"></span>
-                            <span class="menu-text">Tâches</span>
-                        </a>
-                    </li>
-                    <li class="has-child">
-                        <a  th:class="${activePage == 'projet' || activePage == 'projet-retarde' || activePage == 'DetailProjet' || activePage == 'projet-noncommence' || activePage == 'EditProjet' || activePage == 'projet-termine' || activePage == 'projet-encours' || activePage == 'projet-annule'} ? 'active' : ''">
-                            <span data-feather="target" class="nav-icon"></span>
-                            <span class="menu-text">Project</span>
                             <span class="toggle-icon"></span>
                         </a>
                         <ul>
                             <li>
-                                <a href="/projet" th:class="${activePage == 'projet'} ? 'active' : ''">Les projets</a>
+                                <a href="/admin/team" th:class="${activePage == 'team'  ||  activePage == 'detailTeam' } ? 'active' : ''">Les membres</a>
                             </li>
                             <li>
-                                <a href="/projet-termine" th:class="${activePage == 'projet-termine'} ? 'active' : ''">Projet terminé</a>
-                            </li>
-                            <li>
-                                <a href="/projet-encours" th:class="${activePage == 'projet-encours'} ? 'active' : ''">Projet en cours</a>
-                            </li>
-                            <li>
-                                <a href="/projet-noncommence" th:class="${activePage == 'projet-noncommence'} ? 'active' : ''">Projet non commencé</a>
-                            </li>
-                            <li>
-                                <a href="/projet-annule" th:class="${activePage == 'projet-annule'} ? 'active' : ''">Projet annulé</a>
-                            </li>
-                            <li>
-                                <a href="/projet-retarde" th:class="${activePage == 'projet-retarde'} ? 'active' : ''">Projet retardé</a>
+                                <a href="/team-annule" th:class="${activePage == 'team-annule' ? 'active' : ''}">Corbeille</a>
                             </li>
                         </ul>
                     </li>
-
-             
+                    <li class="has-child">
+                        <a href="/client" th:class="${activePage == 'client'  ||  activePage == 'detailClient' ||  activePage == 'client-annule'} ? 'active' : ''">
+                            <span data-feather="user-check" class="nav-icon"></span>
+                            <span class="menu-text">Clients</span>
+                            <span class="toggle-icon"></span>
+                        </a>
+                        <ul>
+                            <li>
+                                <a href="/client" th:class="${activePage == 'client'  ||  activePage == 'detailClient' } ? 'active' : ''">Les clients</a>
+                            </li>
+                            <li>
+                                <a href="/client-annule" th:class="${activePage == 'client-annule' ? 'active' : ''}">Corbeille</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="has-child">
+                        <a href="/tache" th:class="${activePage == 'tache' || activePage == 'tache-retarde' || activePage == 'Detailtache' || activePage == 'tache-noncommence' || activePage == 'Edittache' || activePage == 'tache-termine' || activePage == 'tache-encours' || activePage == 'tache-annule' || activePage == 'tache-termineretard' } ? 'active' : ''">
+                            <span data-feather="clipboard" class="nav-icon"></span>
+                            <span class="menu-text">Taches</span>
+                            <span class="toggle-icon"></span>
+                        </a>
+                        <ul>
+                            <li>
+                                <a href="/tache" th:class="${activePage == 'tache' || activePage == 'tache-retarde' || activePage == 'Detailtache' || activePage == 'tache-noncommence' || activePage == 'Edittache' || activePage == 'tache-termine' || activePage == 'tache-encours'  || activePage == 'tache-termineretard' } ? 'active' : ''">Les taches</a>
+                            </li>
+                            <li>
+                                <a href="/tache-annule" th:class="${activePage == 'tache-annule' ? 'active' : ''}">Corbeille</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="has-child">
+                        <a href="/projet" th:class="${activePage == 'projet' || activePage == 'projet-retarde' || activePage == 'DetailProjet' || activePage == 'projet-noncommence' || activePage == 'EditProjet' || activePage == 'projet-termine' || activePage == 'projet-encours' || activePage == 'projet-annule'} ? 'active' : ''">
+                            <span data-feather="target" class="nav-icon"></span>
+                            <span class="menu-text">Projets</span>
+                            <span class="toggle-icon"></span>
+                        </a>
+                        <ul>
+                            <li>
+                                <a href="/projet" th:class="${activePage == 'projet' || activePage == 'projet-retarde' || activePage == 'DetailProjet' || activePage == 'projet-noncommence' || activePage == 'EditProjet' || activePage == 'projet-termine' || activePage == 'projet-encours' } ? 'active' : ''">Les projets</a>
+                            </li>
+                            <li>
+                                <a href="/projet-annule" th:class="${activePage == 'projet-annule' ? 'active' : ''}">Corbeille</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
                 </ul>
             </div>
         </div>

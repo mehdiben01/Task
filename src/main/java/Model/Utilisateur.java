@@ -31,8 +31,9 @@ public class Utilisateur {
     private String email;
     @Column(nullable = false)
     private String password;
-    @Column(nullable = false)
-    private String type;
+    @Column(unique = true)
+    private String username;
+
 
     private String isDeleted ="0";
 
@@ -42,9 +43,22 @@ public class Utilisateur {
     @Column(nullable = false)
     private String profession;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    private List<Role> roles;
+
     @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Tache> taches;
 
+    public String getFullName() {
+        return this.nom + " " + this.prenom; // Adjust this based on your actual field names in the Utilisateur model
+    }
 
+    public String getProfession(){
+        return this.profession;
+    }
+
+    public String getCheminImage(){
+        return this.cheminImage;
+    }
 
 }

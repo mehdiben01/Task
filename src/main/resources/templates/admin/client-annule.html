@@ -8,9 +8,8 @@
     <title>StrikingDash</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-          rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-          crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
     <!-- inject:css-->
 
     <link rel="stylesheet" href="assets/vendor_assets/css/bootstrap/bootstrap.css">
@@ -52,11 +51,6 @@
     <!-- endinject -->
 
     <link rel="icon" type="image/png" sizes="16x16" href="img/favicon.png">
-    <style>
-        .dropdown {
-            background-color: white;
-        }
-    </style>
 </head>
 
 <body class="layout-light side-menu overlayScroll">
@@ -72,11 +66,13 @@
 <main class="main-content">
 
 
+
     <div class="contents">
 
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-12"><br>
+
 
                     <div class="container-fluid">
                         <!-- Autres contenus de la page -->
@@ -98,116 +94,98 @@
                     <div class="breadcrumb-main user-member justify-content-sm-between ">
                         <div class=" d-flex flex-wrap justify-content-center breadcrumb-main__wrapper">
                             <div class="d-flex align-items-center user-member__title justify-content-center mr-sm-25">
-                                <span class="sub-title ml-sm-25 pl-sm-25" th:text="${countproj + ' Projet(s)'}"></span>
+                                <h4 class="text-capitalize fw-500 breadcrumb-title">Corbeille</h4>
+                                <span class="sub-title ml-sm-25 pl-sm-25" th:text="${countclient + ' clients '}"></span>
                             </div>
 
+                            <form class="d-flex align-items-center user-member__form my-sm-0 my-2" th:action="@{/client-annule}" method="get">
+                                <span data-feather="search"></span>
+                                <input class="form-control mr-sm-2 border-0 box-shadow-none" type="search" name="search" th:value="${search}" placeholder="Search" aria-label="Search">
+                            </form>
 
-
-
-
-
-
-                        </div>
-                        <div class=" d-flex flex-wrap justify-content-center breadcrumb-main__wrapper">
-                        <form class="d-flex align-items-center user-member__form my-sm-0 my-2" th:action="@{/projet-retarde}" method="get">
-                            <span data-feather="search"></span>
-                            <input class="form-control mr-sm-2 border-0 box-shadow-none" type="search" name="search" th:value="${search}" placeholder="Search" aria-label="Search">
-                        </form>
-                        </div>
-                        <div class=" d-flex flex-wrap justify-content-center breadcrumb-main__wrapper">
-                        <div class="dropdown d-inline-block ml-2">
-                            <button class="btn btn-outline-lighten btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <!-- Utilisation de la syntaxe conditionnelle pour afficher le nom de la page active -->
-                                <span th:text="${activePage == 'projet' ? 'La liste des projets' :
-      activePage == 'projet-termine' ? 'La liste des projet terminé' :
-      activePage == 'projet-encours' ? 'La liste des projet en cours' :
-      activePage == 'projet-noncommence' ? 'La liste des projet non commencé' :
-      activePage == 'projet-annule' ? 'La liste des projet annulé' :
-      activePage == 'projet-retarde' ? 'La liste des projet retardé' :
-      'Sélectionner un code'}"></span>
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <ul>
-                                    <li><a class="dropdown-item" href="/projet" >La liste des projets</a></li>
-                                    <li><a class="dropdown-item" href="/projet-termine" >La liste des projet terminé</a></li>
-                                    <li><a class="dropdown-item" href="/projet-encours" >La liste des projet en cours</a></li>
-                                    <li><a class="dropdown-item" href="/projet-noncommence" >La liste des projet non commencé</a></li>
-                                    <li><a class="dropdown-item" href="/projet-retarde">La liste des projet retardé</a></li>
-                                </ul>
-                            </div>
-                        </div>
                         </div>
                         <div class="action-btn">
                             <a href="#" class="btn px-15 btn-primary" data-toggle="modal" data-target="#new-member">
-                                <i class="las la-plus fs-16"></i>Créer un projet</a>
+                                <i class="las la-plus fs-16"></i>Add New Client</a>
 
                             <!-- Modal -->
                             <div class="modal fade new-member" id="new-member" role="dialog" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content  radius-xl">
                                         <div class="modal-header">
-                                            <h6 class="modal-title fw-500" id="staticBackdropLabel">Ajouter Un Membre</h6>
+                                            <h6 class="modal-title fw-500" id="staticBackdropLabel">Ajouter Un Client</h6>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span data-feather="x"></span>
                                             </button>
                                         </div>
                                         <div class="modal-body">
                                             <div class="new-member-modal">
-                                                <form action="/project/save" method="post" th:object="${project}" enctype="multipart/form-data" class="was-validated">
+                                                <form action="/client/save" method="post" th:object="${client}" enctype="multipart/form-data" class="was-validated">
                                                     <div class="form-group mb-20">
-                                                        <label class="mb-15">Titre</label>
-                                                        <input type="text" class="form-control" placeholder="Nom" th:field="*{title}" name="nom" pattern="[A-Za-zÀ-ÿ\s]+" required
-                                                               th:classappend="${#fields.hasErrors('title')} ? 'is-invalid'">
+                                                        <label class="mb-15">Nom</label>
+                                                        <input type="text" class="form-control" placeholder="Nom" th:field="*{nom}" name="nom" pattern="[A-Za-z\s]+" required
+                                                               th:classappend="${#fields.hasErrors('nom')} ? 'is-invalid'">
                                                         <div class="invalid-feedback">
-                                                            <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></span>
-                                                            Le titre est requis.
+                                                            <span th:if="${#fields.hasErrors('nom')}" th:errors="*{nom}"></span>
+                                                            Le nom est requis.
                                                         </div>
                                                     </div>
                                                     <div class="form-group mb-20">
-                                                        <label class="mb-15">Description</label>
-                                                        <textarea class="form-control" placeholder="Description" th:field="*{description}" name="description" required th:classappend="${#fields.hasErrors('description')} ? 'is-invalid'" maxlength="300"></textarea>
+                                                        <label class="mb-15">Prénom</label>
+                                                        <input type="text" class="form-control" placeholder="Prénom" th:field="*{prenom}" name="prenom" pattern="[A-Za-z\s]+" required
+                                                               th:classappend="${#fields.hasErrors('prenom')} ? 'is-invalid'">
                                                         <div class="invalid-feedback">
-                                                            <span th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></span>
-                                                            La description est requis.
-                                                        </div>
-                                                    </div>
-                                                    <!-- Ajouter la validation et les messages d'erreur pour les autres champs -->
-                                                    <div class="form-group mb-20">
-                                                        <label class="mb-15">Date de début</label>
-                                                        <input type="date" class="form-control" placeholder="Date De debut" th:field="*{dated}" name="date_debut" required
-                                                               th:classappend="${#fields.hasErrors('dated')} ? 'is-invalid'" id="dateDebutInput">
-                                                        <div class="invalid-feedback">
-                                                            <span th:if="${#fields.hasErrors('dated')}" th:errors="*{dated}"></span>
-                                                            La date de début est requise.
+                                                            <span th:if="${#fields.hasErrors('prenom')}" th:errors="*{prenom}"></span>
+                                                            Le prénom est requis.
                                                         </div>
                                                     </div>
                                                     <div class="form-group mb-20">
-                                                        <label class="mb-15">Date de fin</label>
-                                                        <input type="date" class="form-control" placeholder="Date De fin" th:field="*{datef}" name="date_fin"  required
-                                                               th:classappend="${#fields.hasErrors('datef')} ? 'is-invalid'" id="dateFinInput">
+                                                        <label class="mb-15">Email</label>
+                                                        <input type="email" class="form-control" placeholder="Email" th:field="*{email}" name="email" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" required
+                                                               th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'">
                                                         <div class="invalid-feedback">
-                                                            <span th:if="${#fields.hasErrors('datef')}" th:errors="*{datef}"></span>
-                                                            La date de fin est requise.
+                                                            <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+                                                            L'email est requis.
                                                         </div>
                                                     </div>
-
-
                                                     <div class="form-group mb-20">
-                                                        <label class="mb-15">Client</label>
-                                                        <div class="category-member">
-                                                            <select th:field="*{clients}" name="client" class="js-example-basic-single js-states form-control"
-                                                                    th:classappend="${#fields.hasErrors('clients')} ? 'is-invalid'" required>
-                                                                <option value="">Sélectionner un client</option>
-                                                                <option th:each="client : ${clients}" th:value="${client.id}" th:text="${client.nom}"></option>
-                                                            </select>
-                                                        </div>
+                                                        <label class="mb-15">Téléphone</label>
+                                                        <input type="text" class="form-control" placeholder="Téléphone" th:field="*{tel}" name="tel" pattern="[0-9]{10}" required
+                                                               th:classappend="${#fields.hasErrors('tel')} ? 'is-invalid'">
                                                         <div class="invalid-feedback">
-                                                            <span th:if="${#fields.hasErrors('clients')}" th:errors="*{clients}"></span>
-                                                            Le client est requis.
+                                                            <span th:if="${#fields.hasErrors('tel')}" th:errors="*{tel}"></span>
+                                                            Le téléphone est requis.
                                                         </div>
                                                     </div>
-
-
+                                                    <div class="form-group mb-20">
+                                                        <label class="mb-15">Entreprise</label>
+                                                        <input type="text" class="form-control" placeholder="Entreprise" th:field="*{company}" name="company" pattern="[A-Za-z\s]+" required
+                                                               th:classappend="${#fields.hasErrors('company')} ? 'is-invalid'">
+                                                        <div class="invalid-feedback">
+                                                            <span th:if="${#fields.hasErrors('company')}" th:errors="*{company}"></span>
+                                                            L'entreprise est requise.
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group mb-20">
+                                                        <label class="mb-15">Département</label>
+                                                        <input type="text" class="form-control" placeholder="Département" th:field="*{departement}" name="departement" pattern="[A-Za-z\s]+" required
+                                                               th:classappend="${#fields.hasErrors('departement')} ? 'is-invalid'">
+                                                        <div class="invalid-feedback">
+                                                            <span th:if="${#fields.hasErrors('departement')}" th:errors="*{departement}"></span>
+                                                            La département est requise.
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group mb-20">
+                                                        <div class="custom-file">
+                                                            <label for="formFile" class="form-label">Logo</label>
+                                                            <input class="form-control" type="file" th:field="*{logo}" name="logo" id="formFile" required
+                                                                   th:classappend="${#fields.hasErrors('logo')} ? 'is-invalid'">
+                                                            <div class="invalid-feedback">
+                                                                <span th:if="${#fields.hasErrors('logo')}" th:errors="*{logo}"></span>
+                                                                Logo est requise.
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                     <div class="button-group d-flex pt-25">
                                                         <button type="submit" class="btn btn-primary btn-default btn-squared text-capitalize">Ajouter</button>
 
@@ -225,107 +203,76 @@
                         </div>
                     </div>
 
-
                 </div>
             </div>
+            <div class="row" >
+                <div class="col-xxl-3 col-lg-4 col-md-6 mb-25" th:each="clients : ${clients}" >
+                    <!-- Profile Acoount -->
+                    <div class="card">
+                        <div class="card-body text-center pt-30 px-25 pb-0">
 
-
-
-            <!-- Tab Menu End -->
-            <div class="projects-tab-content projects-tab-content--progress">
-                <div class="tab-content mt-25" id="ap-tabContent">
-
-                    <div class="container">
-                        <div th:if="${projects.isEmpty()}">
-                            <p>Aucun projet trouvé.</p>
-                        </div>
-
-                        <div class="row" id="project-list"th:unless="${projects.isEmpty()}">
-                            <div class="col-xl-4 mb-25 col-md-6 project-item" th:each="project : ${projects}">
-                                <div class="user-group radius-xl bg-white media-ui media-ui--completed pt-30 pb-25">
-                                    <div class="border-bottom px-30">
-                                        <div class="media user-group-media d-flex justify-content-between">
-                                            <div class="media-body d-flex align-items-center text-capitalize">
-                                                <a th:href="@{/DetailProjet/{id}(id=${project[0].id})}">
-                                                    <h6 class="mt-0  fw-500 media-ui__title" th:text="${project[0].title}"></h6>
-                                                </a>
-                                                <span class="media-badge text-uppercase color-white bg-danger" >Retardé</span>
-                                            </div>
-                                        </div>
-                                        <div class="user-group-people mt-15 text-capitalize">
-                                            <p th:text="${project[0].description}"></p>
-                                            <div class="user-group-project">
-                                                <div class="d-flex align-items-center user-group-progress-top">
-                                                    <div class="media-ui__start">
-                                                        <span class="color-light fs-12">Start Date</span>
-                                                        <p class="fs-14 fw-500 color-dark mb-0" th:text="${project[0].dated}"></p>
-                                                    </div>
-                                                    <div class="media-ui__end">
-                                                        <span class="color-light fs-12">end date</span>
-                                                        <p class="fs-16 fw-500 color-success mb-0" th:text="${project[0].datef}"></p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="ap-button account-profile-cards__button button-group d-flex justify-content-center flex-wrap pt-20">
-                                        <a th:href="@{/DetailProjet/{id}(id=${project[0].id})}">
-                                            <button type="button" class="border text-capitalize px-25 color-gray transparent shadow2 radius-md">
-                                                Voir</button></a>
-                                        <a th:href="@{/EditProject/{id}(id=${project[0].id})}">
-                                            <button type="button" class="border text-capitalize px-25 color-gray transparent shadow2 radius-md">
-                                                Editer</button></a>
-                                        <button type="submit" class="border text-capitalize px-25 color-gray transparent shadow2 radius-md" data-toggle="modal" data-target="#modal-info-delete"
-                                                th:data-id="${project[0].id}" th:data-nom="${project[0].title+' de '+project[0].clients.company}">
-                                            Supprimer</button>
-
-                                    </div>
+                            <div class="account-profile-cards  ">
+                                <div class="ap-img d-flex justify-content-center">
+                                    <!-- Profile picture image-->
+                                    <img class="ap-img__main bg-opacity-primary  wh-120 rounded-circle mb-3 " th:src="${clients[0].cheminImage}"  alt="profile">
                                 </div>
+                                <div class="ap-nameAddress">
+                                    <h6 class="ap-nameAddress__title" th:text="${#strings.capitalize(clients[0].prenom)} + ' ' + ${clients[0].nom}"></h6>
+                                    <p class="ap-nameAddress__subTitle  fs-14 pt-1 m-0 " th:text="${clients[0].company}"></p>
+                                </div>
+                                <div class="ap-button account-profile-cards__button button-group d-flex justify-content-center flex-wrap pt-20">
+                                    <a th:href="@{/DetailClient/{id}(id=${clients[0].id})}">
+                                        <button type="button" class="border text-capitalize px-25 color-gray transparent shadow2 radius-md">
+                                            Editer</button></a>
+                                    <button type="submit" class="border text-capitalize px-25 color-gray transparent shadow2 radius-md" data-toggle="modal" data-target="#modal-info-delete"
+                                            th:data-id="${clients[0].id}" th:data-nom="${clients[0].company}">
+                                        Supprimer</button>
 
+                                </div>
+                                <br>
                             </div>
+
+
                         </div>
                     </div>
-                    <!-- Barre de pagination (affichée seulement si nécessaire) -->
-                    <div class="row" th:if="${projects.size() > 0}">
-                        <div class="col-lg-12">
-                            <div class="d-flex justify-content-sm-end justify-content-star mt-1 mb-30">
-                                <nav class="atbd-page">
-                                    <ul class="atbd-pagination d-flex">
-                                        <li class="atbd-pagination__item">
-                                            <a href="#" class="atbd-pagination__link pagination-control">
-                                                <span class="la la-angle-left"></span>
-                                            </a>
-                                            <a href="#" class="atbd-pagination__link" th:if="${currentPage > 0}"
-                                               th:href="@{/projet-retarde(search=${search}, page=${currentPage - 1})}">
-                                                <span class="page-number">Précédent</span>
-                                            </a>
-                                            <span th:each="pageNumber : ${#numbers.sequence(0, totalPages - 1)}">
-                            <a href="#" class="atbd-pagination__link" th:href="@{/projet-retarde(search=${search}, page=${pageNumber})}"
+                    <!-- Profile Acoount End -->
+
+                </div>
+                <div class="row" th:if="${clients.size() > 0}">
+                    <div class="col-lg-12">
+                        <div class="d-flex justify-content-sm-end justify-content-star mt-1 mb-30">
+                            <nav class="atbd-page">
+                                <ul class="atbd-pagination d-flex">
+                                    <li class="atbd-pagination__item">
+                                        <a href="#" class="atbd-pagination__link pagination-control">
+                                            <span class="la la-angle-left"></span>
+                                        </a>
+                                        <a href="#" class="atbd-pagination__link" th:if="${currentPage > 0}"
+                                           th:href="@{/client-annule(search=${search}, page=${currentPage - 1})}">
+                                            <span class="page-number">Précédent</span>
+                                        </a>
+                                        <span th:each="pageNumber : ${#numbers.sequence(0, totalPages - 1)}">
+                            <a href="#" class="atbd-pagination__link" th:href="@{/client-annule(search=${search}, page=${pageNumber})}"
                                th:classappend="${pageNumber == currentPage} ? 'active' : ''">
                                 <span class="page-number" th:text="${pageNumber + 1}"></span>
                             </a>
                         </span>
-                                            <a href="#" class="atbd-pagination__link" th:if="${currentPage < totalPages - 1}"
-                                               th:href="@{/projet-retarde(search=${search}, page=${currentPage + 1})}">
-                                                <span class="page-number">Suivant</span>
-                                            </a>
-                                            <a href="#" class="atbd-pagination__link pagination-control">
-                                                <span class="la la-angle-right"></span>
-                                            </a>
-                                            <a href="#" class="atbd-pagination__option"></a>
-                                        </li>
-                                    </ul>
-                                </nav>
-                            </div>
+                                        <a href="#" class="atbd-pagination__link" th:if="${currentPage < totalPages - 1}"
+                                           th:href="@{/client-annule(search=${search}, page=${currentPage + 1})}">
+                                            <span class="page-number">Suivant</span>
+                                        </a>
+                                        <a href="#" class="atbd-pagination__link pagination-control">
+                                            <span class="la la-angle-right"></span>
+                                        </a>
+                                        <a href="#" class="atbd-pagination__option"></a>
+                                    </li>
+                                </ul>
+                            </nav>
                         </div>
                     </div>
-
-
-
-
                 </div>
             </div>
+
         </div>
 
     </div>
@@ -342,7 +289,7 @@
                         </div>
                     </div>
                 </div>
-                <form action="/project/delete" method="post">
+                <form action="/client/delete" method="post">
                     <div class="modal-footer">
                         <input type="hidden" class="form-control" id="modal-id" name="id" readonly>
                         <button type="button" class="btn btn-danger btn-outlined btn-sm" data-dismiss="modal">Non</button>
@@ -394,16 +341,6 @@
 </div>
 <div class="overlay-dark-sidebar"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script>
-    $(document).ready(function(){
-        $("#myInput").on("keyup", function() {
-            var value = $(this).val().toLowerCase();
-            $(".project-item").filter(function() {
-                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-            });
-        });
-    });
-</script>
 <script>
     $(document).ready(function() {
         $('#modal-info-delete').on('show.bs.modal', function (event) {
@@ -473,31 +410,19 @@
 <script src="assets/theme_assets/js/leaflet-init.js"></script>
 <script src="assets/theme_assets/js/main.js"></script>
 <!-- endinject-->
-</body>
-<!-- Include jQuery (if not already included) -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-
-
-
-<script th:inline="javascript">
-    $(document).ready(function() {
-        $('#dateDebutInput').change(function() {
-            var dateDebut = new Date($(this).val());
-            var dateFinInput = $('#dateFinInput');
-            var minDate = new Date(dateDebut.getTime() + 86400000); // Ajoute 1 jour à la date de début
-            dateFinInput.attr('min', formatDate(minDate));
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+<script>
+    $(document).ready(function(){
+        $("#myInput").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("#myTable div").filter(function() {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
         });
     });
-
-    function formatDate(date) {
-        var year = date.getFullYear();
-        var month = (date.getMonth() + 1).toString().padStart(2, '0');
-        var day = date.getDate().toString().padStart(2, '0');
-        return `${year}-${month}-${day}`;
-    }
 </script>
-
-
+</body>
 
 </html>
