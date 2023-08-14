@@ -14,9 +14,9 @@ import java.util.Optional;
 public interface UtilisateurRepository extends JpaRepository<Utilisateur, Integer> {
 
     Utilisateur findByUsername(String username);
-    boolean existsByEmailOrTel( String email, String tel);
+    boolean existsByUsernameOrTel( String username, String tel);
 
-    Utilisateur findByEmail(String email);
+
 
     boolean existsByNomAndPrenomAndProfessionAndDatenAndTel(String nom,  String prenom, String profession, String daten, String tel);
 
@@ -39,11 +39,13 @@ public interface UtilisateurRepository extends JpaRepository<Utilisateur, Intege
 
     @Query("SELECT u , count(u.id) "+
             "FROM Utilisateur u "+
+            "JOIN u.roles r " +
             "WHERE u.isDeleted ='0' "+
+            "AND r.role = 'USER' " +
             "AND (LOWER(u.nom) LIKE %:search% "+
             "OR LOWER(u.prenom) LIKE %:search% "+
             "OR LOWER(u.tel) LIKE %:search%" +
-            "OR LOWER(u.email) LIKE %:search%" +
+            "OR LOWER(u.username) LIKE %:search%" +
             "OR LOWER(u.profession) LIKE %:search%) " +
             "GROUP BY u.id ")
     Page<Object[]> findAllUsers(@Param("search") String search, Pageable pageable);
@@ -54,7 +56,7 @@ public interface UtilisateurRepository extends JpaRepository<Utilisateur, Intege
             "AND (LOWER(u.nom) LIKE %:search% "+
             "OR LOWER(u.prenom) LIKE %:search% "+
             "OR LOWER(u.tel) LIKE %:search%" +
-            "OR LOWER(u.email) LIKE %:search%" +
+            "OR LOWER(u.username) LIKE %:search%" +
             "OR LOWER(u.profession) LIKE %:search%) " +
             "GROUP BY u.id ")
     Page<Object[]> findAllUserSupp(@Param("search") String search, Pageable pageable);

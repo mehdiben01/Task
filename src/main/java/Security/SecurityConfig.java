@@ -29,13 +29,14 @@ import java.io.IOException;
 public class SecurityConfig  {
 
 
+
+
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
     private UserDetailsServiceImp userDetailsService;
-
-
 
     @Autowired
     private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
@@ -58,7 +59,7 @@ public class SecurityConfig  {
                 .permitAll()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/assets/**", "/images/**", "/img/**", "/img_clients/**", "/json/**", "/maps/**", "/style.css")
+                .antMatchers("/assets/**", "/images/**", "/img/**", "/img_clients/**", "/json/**", "/maps/**", "/style.css","/auth/login/**")
                 .permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest()
@@ -71,6 +72,8 @@ public class SecurityConfig  {
 
         return httpSecurity.build();
     }
+
+
 
     private class LogoutOnLoginFilter implements Filter {
 
@@ -88,6 +91,9 @@ public class SecurityConfig  {
             chain.doFilter(request, response);
         }
     }
+
+
+
 
 
 

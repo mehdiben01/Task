@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
+@RequestMapping("/admin")
 public class TacheController {
 
     int elementsPerPage = 6;

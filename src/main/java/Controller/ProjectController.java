@@ -27,6 +27,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Controller
+@RequestMapping("/admin")
 public class ProjectController {
 
     int elementsPerPage = 6;

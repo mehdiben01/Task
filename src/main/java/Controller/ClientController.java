@@ -25,6 +25,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 @Controller
+@RequestMapping("/admin")
 public class ClientController {
 
     int elementsPerPage = 6;

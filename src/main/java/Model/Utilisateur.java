@@ -28,8 +28,6 @@ public class Utilisateur {
     @Column(nullable = false)
     private String tel;
     @Column(nullable = false)
-    private String email;
-    @Column(nullable = false)
     private String password;
     @Column(unique = true)
     private String username;
@@ -60,5 +58,7 @@ public class Utilisateur {
     public String getCheminImage(){
         return this.cheminImage;
     }
+
+
 
 }

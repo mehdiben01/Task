@@ -123,33 +123,33 @@ public class UtilisateurController  {
     public String saveUtilisateur(@ModelAttribute @Valid Utilisateur utilisateur, @RequestParam("image") MultipartFile imageFile, HttpServletRequest request, RedirectAttributes redirectAttributes , BindingResult bindingResult, Model model ) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("message", "Il y a des erreurs de validation.");
-            return "redirect:/team";
+            return "redirect:/admin/team";
         }
         utilisateur.setNom(utilisateur.getNom().toUpperCase());
         utilisateur.setPrenom(utilisateur.getPrenom().toLowerCase());
-        utilisateur.setEmail(utilisateur.getEmail().toLowerCase());
         utilisateur.setProfession(utilisateur.getProfession().toLowerCase());
         utilisateur.setPassword(passwordEncoder.encode(utilisateur.getPassword()));
+        utilisateur.setUsername(utilisateur.getPrenom().toLowerCase().replace(" ","")+""+utilisateur.getNom().toLowerCase().replace(" ","")+""+utilisateur.getDaten().substring((int) 8.10));
 
         // Vérifier si l'utilisateur existe déjà
-        boolean champExiste = utilisateurRepository.existsByEmailOrTel( utilisateur.getEmail(), utilisateur.getTel());
+        boolean champExiste = utilisateurRepository.existsByUsernameOrTel(utilisateur.getUsername(),  utilisateur.getTel());
         if (champExiste) {
             // Gérer le cas où l'utilisateur existe déjà
             redirectAttributes.addFlashAttribute("message", "L'utilisateur existe déjà.");
-            return "redirect:/team";
+            return "redirect:/admin/team";
         }
         boolean NomExiste = utilisateurRepository.existsByNomAndPrenom( utilisateur.getNom(), utilisateur.getPrenom());
         if (NomExiste) {
             // Gérer le cas où l'utilisateur existe déjà
             redirectAttributes.addFlashAttribute("message", "L'utilisateur existe déjà.");
-            return "redirect:/team";
+            return "redirect:/admin/team";
         }
         if (!imageFile.isEmpty()) {
             long maxSize = 2 * 1024 * 1024; // 2 Mo en octets
             if (imageFile.getSize() > maxSize) {
                 // Gérer le cas où la taille de l'image dépasse 2 Mo
                 redirectAttributes.addFlashAttribute("message", "La taille de l'image ne peut pas dépasser 2 Mo.");
-                return "redirect:/team";
+                return "redirect:/admin/team";
             }
             try {
                 String nomImage = imageFile.getOriginalFilename();
@@ -180,7 +180,7 @@ public class UtilisateurController  {
         redirectAttributes.addFlashAttribute("messagesu", "L'utilisateur a été ajouté avec succès.");
         service.save(utilisateur);
 
-        return "redirect:/team";
+        return "redirect:/admin/team";
     }
 
     @GetMapping("/DetailTeam/{id}")
@@ -201,7 +201,7 @@ public class UtilisateurController  {
         Utilisateur existingUtilisateur = utilisateurService.getUtilisateurById(updatedUtilisateur.getId());
         if (bindingResult.hasErrors()) {
             model.addAttribute("message", "Il y a des erreurs de validation.");
-            return "redirect:/DetailTeam/" + existingUtilisateur.getId();
+            return "redirect:/admin/DetailTeam/" + existingUtilisateur.getId();
         }
 
         // Vérifier si l'utilisateur existe déjà
@@ -209,29 +209,29 @@ public class UtilisateurController  {
         if (DataExiste) {
             // Gérer le cas où l'utilisateur existe déjà
             redirectAttributes.addFlashAttribute("message", "Donnée existe déjà.");
-            return "redirect:/DetailTeam/" + existingUtilisateur.getId();
+            return "redirect:/admin/DetailTeam/" + existingUtilisateur.getId();
         }else{
             // Mettre à jour les attributs de l'utilisateur existant avec les nouvelles valeurs
             existingUtilisateur.setNom(updatedUtilisateur.getNom().toUpperCase());
             existingUtilisateur.setPrenom(updatedUtilisateur.getPrenom().toLowerCase());
             existingUtilisateur.setProfession(updatedUtilisateur.getProfession().toLowerCase());
-            existingUtilisateur.setEmail(updatedUtilisateur.getEmail().toLowerCase());
             existingUtilisateur.setDaten(updatedUtilisateur.getDaten());
             existingUtilisateur.setTel(updatedUtilisateur.getTel());
             existingUtilisateur.setRoles(updatedUtilisateur.getRoles());
+            existingUtilisateur.setUsername(updatedUtilisateur.getPrenom().toLowerCase().replace(" ","")+""+updatedUtilisateur.getNom().toLowerCase().replace(" ","")+""+updatedUtilisateur.getDaten().substring(8,10));
 
         }
         boolean NomExiste = utilisateurRepository.existsByNomAndPrenomAndIdNot(updatedUtilisateur.getNom().toUpperCase(),updatedUtilisateur.getPrenom().toLowerCase(), updatedUtilisateur.getId());
         if (NomExiste) {
             // Gérer le cas où l'utilisateur existe déjà
             redirectAttributes.addFlashAttribute("message", "Donnée existe déjà .");
-            return "redirect:/DetailTeam/" + existingUtilisateur.getId();
+            return "redirect:/admin/DetailTeam/" + existingUtilisateur.getId();
         }
         boolean TelExiste = utilisateurRepository.existsByTelAndIdNot(updatedUtilisateur.getTel(), updatedUtilisateur.getId());
         if (TelExiste) {
             // Gérer le cas où l'utilisateur existe déjà
             redirectAttributes.addFlashAttribute("message", "Donnée existe déjà .");
-            return "redirect:/DetailTeam/" + existingUtilisateur.getId();
+            return "redirect:/admin/DetailTeam/" + existingUtilisateur.getId();
         }
 
 
@@ -239,7 +239,7 @@ public class UtilisateurController  {
         // Enregistrer les modifications dans la base de données
         utilisateurService.save(existingUtilisateur);
 
-        return "redirect:/DetailTeam/" + existingUtilisateur.getId();
+        return "redirect:/admin/DetailTeam/" + existingUtilisateur.getId();
     }
 
 
@@ -279,7 +279,7 @@ public class UtilisateurController  {
             }
         }
         utilisateurService.save(existingUtilisateur);
-        return "redirect:/DetailTeam/" + existingUtilisateur.getId();
+        return "redirect:/admin/DetailTeam/" + existingUtilisateur.getId();
     }
 
 
@@ -291,12 +291,12 @@ public class UtilisateurController  {
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("message", "Il y a des erreurs de validation.");
-            return "redirect:/DetailTeam/" + existingUtilisateur.getId();
+            return "redirect:/admin/DetailTeam/" + existingUtilisateur.getId();
         }
 
 
         // Mettre à jour les attributs de l'utilisateur existant avec les nouvelles valeurs
-        existingUtilisateur.setPassword(updatedUtilisateur.getPassword());
+        existingUtilisateur.setPassword(passwordEncoder.encode(updatedUtilisateur.getPassword()));
 
 
         // Vérifier si l'utilisateur existe déjà
@@ -304,12 +304,12 @@ public class UtilisateurController  {
         if (PassExiste) {
             // Gérer le cas où l'utilisateur existe déjà
             redirectAttributes.addFlashAttribute("message", "Changer le mot de passe.");
-            return "redirect:/DetailTeam/" + existingUtilisateur.getId();
+            return "redirect:/admin/DetailTeam/" + existingUtilisateur.getId();
         }
         // Enregistrer les modifications dans la base de données
         utilisateurService.save(existingUtilisateur);
 
-        return "redirect:/DetailTeam/" + existingUtilisateur.getId();
+        return "redirect:/admin/DetailTeam/" + existingUtilisateur.getId();
     }
 
     @PostMapping("/user/delete")
@@ -320,7 +320,7 @@ public class UtilisateurController  {
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("message", "Il y a des erreurs de validation.");
-            return "redirect:/DetailTeam/" + existingUtilisateur.getId();
+            return "redirect:/admin/DetailTeam/" + existingUtilisateur.getId();
         }
 
 
@@ -330,7 +330,7 @@ public class UtilisateurController  {
         // Enregistrer les modifications dans la base de données
         utilisateurService.save(existingUtilisateur);
 
-        return "redirect:/team";
+        return "redirect:/admin/team";
     }
 
 

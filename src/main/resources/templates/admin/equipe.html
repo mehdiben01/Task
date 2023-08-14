@@ -84,7 +84,7 @@
               </div>
 
 
-              <form class="d-flex align-items-center user-member__form my-sm-0 my-2" th:action="@{/team}" method="get">
+              <form class="d-flex align-items-center user-member__form my-sm-0 my-2" th:action="@{/admin/team}" method="get">
                 <span data-feather="search"></span>
                 <input class="form-control mr-sm-2 border-0 box-shadow-none" type="search" name="search" th:value="${search}" placeholder="Search" aria-label="Search" required>
               </form>
@@ -106,16 +106,8 @@
                     </div>
                     <div class="modal-body">
                       <div class="new-member-modal">
-                        <form th:action="@{/user/save}" method="post" th:object="${utilisateur}" enctype="multipart/form-data" class="was-validated">
-                          <div class="form-group mb-20">
-                            <label class="mb-15">Username</label>
-                            <input type="text" class="form-control" placeholder="Nom" th:field="*{username}" name="nom" pattern="[A-Za-z\s]+" required
-                                   th:classappend="${#fields.hasErrors('username')} ? 'is-invalid'">
-                            <div class="invalid-feedback">
-                              <span th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></span>
-                              Le username est requis.
-                            </div>
-                          </div>
+                        <form th:action="@{/admin/user/save}" method="post" th:object="${utilisateur}" enctype="multipart/form-data" class="was-validated">
+
                           <div class="form-group mb-20">
                             <label class="mb-15">Nom</label>
                             <input type="text" class="form-control" placeholder="Nom" th:field="*{nom}" name="nom" pattern="[A-Za-z\s]+" required
@@ -151,15 +143,6 @@
                             <div class="invalid-feedback">
                               <span th:if="${#fields.hasErrors('tel')}" th:errors="*{tel}"></span>
                               Le téléphone est requis.
-                            </div>
-                          </div>
-                          <div class="form-group mb-20">
-                            <label class="mb-15">Email</label>
-                            <input type="email" class="form-control" placeholder="Email" th:field="*{email}" name="email" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" required
-                                   th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'">
-                            <div class="invalid-feedback">
-                              <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
-                              L'email est requis.
                             </div>
                           </div>
                           <div class="form-group mb-20">
@@ -240,7 +223,7 @@
                   <p class="ap-nameAddress__subTitle  fs-14 pt-1 m-0 " th:text="${#strings.capitalize(utilisateurs[0].profession)}"></p>
                 </div>
                 <div class="ap-button account-profile-cards__button button-group d-flex justify-content-center flex-wrap pt-20">
-                  <a th:href="@{/DetailTeam/{id}(id=${utilisateurs[0].id})}">
+                  <a th:href="@{/admin/DetailTeam/{id}(id=${utilisateurs[0].id})}">
                     <button type="button" class="btn btn-outline-lighten btn-outline-lighten__height">
                       Editer</button>
                   </a>
@@ -266,16 +249,16 @@
                 <li class="atbd-pagination__item">
                   <a href="#" class="atbd-pagination__link pagination-control"><span class="la la-angle-left"></span></a>
                   <a href="#" class="atbd-pagination__link" th:if="${currentPage > 0}"
-                     th:href="@{/team(page=${currentPage - 1})}">
+                     th:href="@{/admin/team(page=${currentPage - 1})}">
                     <span class="page-number">Précédent</span>
                   </a>
                   <a href="#" class="atbd-pagination__link" th:each="pageNumber : ${#numbers.sequence(0, totalPages - 1)}"
-                     th:href="@{/team(page=${pageNumber})}"
+                     th:href="@{/admin/team(page=${pageNumber})}"
                      th:classappend="${pageNumber == currentPage} ? 'active' : ''">
                     <span class="page-number" th:text="${pageNumber + 1}"></span>
                   </a>
                   <a href="#" class="atbd-pagination__link" th:if="${currentPage < totalPages - 1}"
-                     th:href="@{/team(page=${currentPage + 1})}">
+                     th:href="@{/admin/team(page=${currentPage + 1})}">
                     <span class="page-number">Suivant</span>
                   </a>
                   <a href="#" class="atbd-pagination__link pagination-control"><span class="la la-angle-right"></span></a>
@@ -308,7 +291,7 @@
 
           </div>
         </div>
-        <form action="/user/delete" method="post">
+        <form th:action="@{/admin/user/delete}" method="post">
         <div class="modal-footer">
           <input type="hidden" class="form-control" id="modal-id" name="id" readonly>
           <button type="button" class="btn btn-danger btn-outlined btn-sm" data-dismiss="modal">Non</button>

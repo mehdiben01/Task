@@ -2,6 +2,8 @@ package Service;
 
 import Model.Utilisateur;
 import lombok.AllArgsConstructor;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,7 +20,12 @@ public class UserDetailsServiceImp implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Utilisateur utilisateur = utilisateurService.loadUserByUsername(username);
-        if(utilisateur==null) throw new UsernameNotFoundException(String.format("User not found",username));
+        if (utilisateur == null) {
+            throw new BadCredentialsException("Nom d'utilisateur ou mot de passe invalide");
+        }
+        if ("1".equals(utilisateur.getIsDeleted())) {
+            throw new DisabledException("L'administrateur a désactivé votre compte");
+        }
         String[] roles = utilisateur.getRoles().stream().map(u -> u.getRole()).toArray(String[]::new);
         UserDetails userDetails = User
                 .withUsername(utilisateur.getUsername())
@@ -26,6 +33,9 @@ public class UserDetailsServiceImp implements UserDetailsService {
                 .roles(roles).build();
         return userDetails;
     }
+
+
+
 
 
 }
