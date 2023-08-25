@@ -1,9 +1,10 @@
-package Controller;
+package AdminController;
 
 import Model.Client;
 import Model.Utilisateur;
 import Repository.ClientRepository;
 import Service.ClientService;
+import Service.ImageService;
 import Service.UtilisateurService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,12 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 @Controller
 @RequestMapping("/admin")
@@ -34,19 +31,21 @@ public class ClientController {
 
     private final ClientService clientService;
 
+    private final ClientService service;
+
+    private final UtilisateurService utilisateurService;
+    private final ImageService imageService;
+
     @Autowired
-    public ClientController(ClientRepository clientRepository, ClientService clientService) {
+    public ClientController(ClientRepository clientRepository, ClientService clientService, ClientService service, UtilisateurService utilisateurService, ImageService imageService) {
         this.clientRepository = clientRepository;
         this.clientService = clientService;
+        this.service = service;
+        this.utilisateurService = utilisateurService;
+        this.imageService = imageService;
     }
-    @Autowired
-    private ServletContext servletContext;
 
-    @Autowired
-    private ClientService service;
 
-    @Autowired
-    private UtilisateurService utilisateurService;
 
     @ModelAttribute
     public void addCommonUserAttributes(Model model) {
@@ -121,43 +120,19 @@ public class ClientController {
         if (champExiste) {
             // Gérer le cas où l'utilisateur existe déjà
             redirectAttributes.addFlashAttribute("message", "Client existe déjà.");
-            return "redirect:/client";
+            return "redirect:/admin/client";
         }
         boolean NomExiste = clientRepository.existsByNomAndPrenomAndIdNot(client.getNom().toUpperCase(), client.getPrenom().toLowerCase(), client.getId());
         if (NomExiste) {
             // Gérer le cas où l'utilisateur existe déjà
             redirectAttributes.addFlashAttribute("message", "Nom existe déjà.");
-            return "redirect:/client";
+            return "redirect:/admin/client";
         }
         if (!imageFile.isEmpty()) {
-            long maxSize = 2 * 1024 * 1024; // 2 Mo en octets
-            if (imageFile.getSize() > maxSize) {
-                // Gérer le cas où la taille de l'image dépasse 2 Mo
-                redirectAttributes.addFlashAttribute("message", "La taille de l'image ne peut pas dépasser 2 Mo.");
-                return "redirect:/client";
-            }
-            try {
-                String nomImage = imageFile.getOriginalFilename();
-                String dossierDestination = "/img_clients/";
-                String cheminDestination = System.getProperty("user.dir") + "/src/main/resources/static" + dossierDestination + nomImage;
-
-                // Créer les répertoires si nécessaire
-                File dossier = new File(dossierDestination);
-                dossier.mkdirs();
-
-                // Créer le fichier de destination
-                File fichierDestination = new File(cheminDestination);
-
-                // Enregistrer le contenu de l'image dans le fichier de destination
-                FileOutputStream fos = new FileOutputStream(fichierDestination);
-                fos.write(imageFile.getBytes());
-                fos.close();
-
-                // Définir le chemin de l'image dans l'objet utilisateur
-                client.setCheminImage(dossierDestination + nomImage);
-            } catch (IOException e) {
-                e.printStackTrace();
-                // Gérer l'erreur lors de l'enregistrement du fichier
+            boolean imageUpdateResult = imageService.updateImage(client, imageFile);
+            if (!imageUpdateResult) {
+                redirectAttributes.addFlashAttribute("message", ImageService.IMAGE_SIZE_ERROR_MESSAGE);
+                return "redirect:/admin/team";
             }
         }
 
@@ -165,17 +140,17 @@ public class ClientController {
         redirectAttributes.addFlashAttribute("messagesu", "le client a été ajouté avec succès.");
         service.save(client);
 
-        return "redirect:/client";
+        return "redirect:/admin/client";
     }
 
-    @GetMapping("/DetailClient/{id}")
+    @GetMapping("/EditClient/{id}")
     public String getDetailClient(@PathVariable("id") Integer id, Model model){
         Client client = clientService.getClientById(id);
         model.addAttribute("clients", client);
         Client clients = new Client();
         model.addAttribute("client", clients);
         model.addAttribute("activePage", "detailClient");
-        return "admin/detail-client";
+        return "admin/edit-client";
     }
 
     @PostMapping("/client/update")
@@ -184,15 +159,15 @@ public class ClientController {
         Client existingClient = clientService.getClientById(updateclient.getId());
         if (bindingResult.hasErrors()) {
             model.addAttribute("message", "Il y a des erreurs de validation.");
-            return "redirect:/DetailClient/" + existingClient.getId();
+            return "redirect:/admin/EditClient/" + existingClient.getId();
         }
 
         // Vérifier si l'utilisateur existe déjà
         boolean ClientExiste = clientRepository.existsByNomAndPrenomAndEmailAndTelAndCompany(updateclient.getNom().toUpperCase(),updateclient.getPrenom().toLowerCase(),updateclient.getEmail(),updateclient.getTel(),updateclient.getCompany().toUpperCase());
         if (ClientExiste) {
             // Gérer le cas où l'utilisateur existe déjà
-            redirectAttributes.addFlashAttribute("message", "Donnée existe déjà.");
-            return "redirect:/DetailClient/" + existingClient.getId();
+            redirectAttributes.addFlashAttribute("message", "Les données existent déjà.");
+            return "redirect:/admin/EditClient/" + existingClient.getId();
         }else {
 
             existingClient.setNom(updateclient.getNom().toUpperCase());
@@ -205,92 +180,97 @@ public class ClientController {
         if (NomExiste) {
             // Gérer le cas où l'utilisateur existe déjà
             redirectAttributes.addFlashAttribute("message", "Nom existe déjà.");
-            return "redirect:/DetailClient/" + existingClient.getId();
+            return "redirect:/admin/EditClient/" + existingClient.getId();
         }
 
         boolean TelExiste = clientRepository.existsByTelAndIdNot(updateclient.getTel(), updateclient.getId());
         if (TelExiste) {
             // Gérer le cas où l'utilisateur existe déjà
             redirectAttributes.addFlashAttribute("message", "Tel existe déjà.");
-            return "redirect:/DetailClient/" + existingClient.getId();
+            return "redirect:/admin/EditClient/" + existingClient.getId();
         }
 
         boolean CompnayExiste = clientRepository.existsByCompanyAndIdNot(updateclient.getCompany().toUpperCase(), updateclient.getId());
         if (CompnayExiste) {
             // Gérer le cas où l'utilisateur existe déjà
             redirectAttributes.addFlashAttribute("message", "Entreprise existe déjà.");
-            return "redirect:/DetailClient/" + existingClient.getId();
+            return "redirect:/admin/EditClient/" + existingClient.getId();
         }
 
 
 
-
+        redirectAttributes.addFlashAttribute("messagepro", "Les données ont été mises à jour avec succès.");
         // Enregistrer les modifications dans la base de données
         clientService.save(existingClient);
 
-        return "redirect:/DetailClient/" + existingClient.getId();
+        return "redirect:/admin/EditClient/" + existingClient.getId();
 
     }
 
 
     @PostMapping("/update/imagec")
-    public String updateImageUser(@ModelAttribute("utilisateur") @Valid Client updateClient, @RequestParam("image") MultipartFile imageFile , RedirectAttributes redirectAttributes, BindingResult bindingResult, Model model) {
+    public String updateImageUser(@ModelAttribute("client") @Valid Client updateClient, @RequestParam("image") MultipartFile imageFile , RedirectAttributes redirectAttributes, BindingResult bindingResult, Model model) {
 
         // Récupérer l'utilisateur existant à partir de la base de données
         Client existingClient = clientService.getClientById(updateClient.getId());
 
         // Vérifier si un nouveau fichier d'image a été sélectionné
-        if (!imageFile.isEmpty()) {
-            try {
-                String nomImage = imageFile.getOriginalFilename();
-                String dossierDestination = "/images/";
-                String cheminDestination = System.getProperty("user.dir") + "/src/main/resources/static" + dossierDestination + nomImage;
+        boolean updateSuccess = imageService.updateImage(existingClient, imageFile);
 
-                // Créer les répertoires si nécessaire
-                File dossier = new File(dossierDestination);
-                dossier.mkdirs();
 
-                // Créer le fichier de destination
-                File fichierDestination = new File(cheminDestination);
-
-                // Enregistrer le contenu de l'image dans le fichier de destination
-                FileOutputStream fos = new FileOutputStream(fichierDestination);
-                fos.write(imageFile.getBytes());
-                fos.close();
-
-                // Définir le chemin de l'image dans l'objet utilisateur
-                existingClient.setCheminImage(dossierDestination + nomImage);
-
-                // Enregistrer l'utilisateur mis à jour dans la base de données
-
-            } catch (IOException e) {
-                e.printStackTrace();
-                // Gérer l'erreur lors de l'enregistrement du fichier
-            }
+        if (imageFile.getSize() > 2 * 1024 * 1024) {
+            redirectAttributes.addFlashAttribute("message", ImageService.IMAGE_SIZE_ERROR_MESSAGE);
+        } else if (!updateSuccess) {
+            redirectAttributes.addFlashAttribute("message", ImageService.IMAGE_SAVE_ERROR_MESSAGE);
         }
-        clientService.save(existingClient);
-        return "redirect:/DetailClient/" + existingClient.getId();
+        else {
+            redirectAttributes.addFlashAttribute("messagepro", "Votre photo de profil a été mise à jour avec succès.");
+            clientService.save(existingClient);
+        }
+
+        return "redirect:/admin/EditClient/" + existingClient.getId();
     }
 
     @PostMapping("/client/delete")
-    public String DeleteUser(@ModelAttribute("utilisateur") Client updateClient , RedirectAttributes redirectAttributes, BindingResult bindingResult, Model model  ) {
+    public String DeleteClient(@ModelAttribute("clilent") Client updateClient , RedirectAttributes redirectAttributes, BindingResult bindingResult, Model model  ) {
 
         // Récupérer l'utilisateur existant à partir de la base de données
         Client existingClient = clientService.getClientById(updateClient.getId());
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("message", "Il y a des erreurs de validation.");
-            return "redirect:/DetailClient/" + existingClient.getId();
+            return "redirect:/admin/EditClient/" + existingClient.getId();
         }
 
-
+        redirectAttributes.addFlashAttribute("messagesu", "Le compte a été fermé avec succès.");
         // Mettre à jour les attributs de l'utilisateur existant avec les nouvelles valeurs
         existingClient.setIsDeleted("1");
 
         // Enregistrer les modifications dans la base de données
         clientService.save(existingClient);
 
-        return "redirect:/client";
+        return "redirect:/admin/client";
+    }
+
+    @PostMapping("/client/recup")
+    public String RecupClient(@ModelAttribute("client") Client updateClient , RedirectAttributes redirectAttributes, BindingResult bindingResult, Model model  ) {
+
+        // Récupérer l'utilisateur existant à partir de la base de données
+        Client existingClient = clientService.getClientById(updateClient.getId());
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("message", "Il y a des erreurs de validation.");
+            return "redirect:/admin/client-annule";
+        }
+
+        redirectAttributes.addFlashAttribute("messagesu", "Le compte a été récupéré avec succès.");
+        // Mettre à jour les attributs de l'utilisateur existant avec les nouvelles valeurs
+        existingClient.setIsDeleted("0");
+
+        // Enregistrer les modifications dans la base de données
+        clientService.save(existingClient);
+
+        return "redirect:/admin/client-annule";
     }
 
 

@@ -33,7 +33,16 @@
   <link th:href="@{/style.css}" rel="stylesheet">
 
   <!-- endinject -->
-
+  <style>
+    .field-icon {
+      float: right;
+      margin-left: -25px;
+      margin-top: -25px;
+      position: relative;
+      z-index: 2;
+      margin-right: 15px;
+    }
+  </style>
 
   <link rel="icon" type="image/png" sizes="16x16" href="img/favicon.png">
 </head>
@@ -86,7 +95,7 @@
 
               <form class="d-flex align-items-center user-member__form my-sm-0 my-2" th:action="@{/admin/team}" method="get">
                 <span data-feather="search"></span>
-                <input class="form-control mr-sm-2 border-0 box-shadow-none" type="search" name="search" th:value="${search}" placeholder="Search" aria-label="Search" required>
+                <input class="form-control mr-sm-2 border-0 box-shadow-none" type="search" name="search" th:value="${search}" placeholder="Recherche" aria-label="Search" required>
               </form>
 
             </div>
@@ -147,8 +156,9 @@
                           </div>
                           <div class="form-group mb-20">
                             <label class="mb-15">Mot de passe</label>
-                            <input type="password" class="form-control" placeholder="Mot De Passe" th:field="*{password}" name="password" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$" required
+                            <input id="password-field" type="password" class="form-control" placeholder="Mot De Passe" th:field="*{password}" name="password" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$" required
                                    th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'">
+                            <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
                             <div class="invalid-feedback">
                               <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
                               Le mot de passe est requis.
@@ -223,10 +233,12 @@
                   <p class="ap-nameAddress__subTitle  fs-14 pt-1 m-0 " th:text="${#strings.capitalize(utilisateurs[0].profession)}"></p>
                 </div>
                 <div class="ap-button account-profile-cards__button button-group d-flex justify-content-center flex-wrap pt-20">
-                  <a th:href="@{/admin/DetailTeam/{id}(id=${utilisateurs[0].id})}">
+                  <a th:href="@{/admin/DetailTeam/{username}(username=${utilisateurs[0].username})}">
                     <button type="button" class="btn btn-outline-lighten btn-outline-lighten__height">
-                      Editer</button>
+                      Editer
+                    </button>
                   </a>
+
 
                   <input type="hidden" class="form-control" id="id" placeholder="id" name="id" th:value="${utilisateurs[0].id}">
                   <button type="submit" class="btn btn-outline-lighten btn-outline-lighten__height" data-toggle="modal" data-target="#modal-info-delete" th:data-id="${utilisateurs[0].id}" th:data-nom="${utilisateurs[0].nom}">Supprimer</button>
@@ -267,6 +279,11 @@
               </ul>
             </nav>
           </div>
+        </div>
+      </div>
+      <div class="row" th:unless="${utilisateurs.size() > 0}">
+        <div class="col-lg-12"><br>
+          <p class="text-center">Aucun membre trouvé.</p>
         </div>
       </div>
 
@@ -368,7 +385,7 @@
 
 
 
-<script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDduF2tLXicDEPDMAtC6-NLOekX0A5vlnY"></script>
+
 <!-- inject:js-->
 <script th:src="@{/assets/vendor_assets/js/jquery/jquery-3.5.1.min.js}"></script>
 <script th:src="@{/assets/vendor_assets/js/jquery/jquery-ui.js}"></script>
@@ -428,6 +445,16 @@
       });
     });
   });
+</script>
+<script>
+  function myFunction() {
+    var x = document.getElementById("toggle-password");
+    if (x.type === "password") {
+      x.type = "text";
+    } else {
+      x.type = "password";
+    }
+  }
 </script>
 </body>
 

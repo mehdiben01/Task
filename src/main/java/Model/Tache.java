@@ -28,7 +28,9 @@ public class Tache {
     @Column(nullable = false)
     private int etat;
 
-    private String datedu="0";
+    private String datedu="3000";
+
+    private String isDeleted="0";
 
     private String datefu="0";
     @ManyToOne

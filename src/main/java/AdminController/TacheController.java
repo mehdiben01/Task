@@ -1,11 +1,11 @@
-package Controller;
+package AdminController;
 
 import Model.Project;
 import Model.Tache;
+import Model.TacheSupprimee;
 import Model.Utilisateur;
 import Repository.ProjectRepository;
 import Repository.TacheRepository;
-import Repository.TacheSupprimeeRepository;
 import Service.ProjectService;
 import Service.TacheService;
 import Service.TacheSupprimeeService;
@@ -13,6 +13,7 @@ import Service.UtilisateurService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -21,7 +22,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.time.LocalDate;
@@ -35,35 +35,29 @@ public class TacheController {
     int elementsPerPage = 6;
 
     List<String> errors = new ArrayList<>();
-    @Autowired
-    private TacheRepository tacheRepository;
-    @Autowired
+    private final TacheRepository tacheRepository;
 
-    private TacheService tacheService;
-    @Autowired
-    private ProjectRepository projectRepository;
+    private final TacheService tacheService;
+    private final ProjectRepository projectRepository;
 
-    @Autowired
-    private TacheSupprimeeService tacheSupprimeeService;
+    private final TacheSupprimeeService tacheSupprimeeService;
+
+
 
     @Autowired
-    private TacheSupprimeeRepository tacheSupprimeeRepository;
-
-    @Autowired
-    public  TacheController(TacheRepository tacheRepository, TacheService tacheService, TacheSupprimeeService tacheSupprimeeService){
+    public  TacheController(TacheRepository tacheRepository, TacheService tacheService, TacheSupprimeeService tacheSupprimeeService,  ProjectRepository projectRepository,   UtilisateurService utilisateurService, ProjectService projects){
         this.tacheRepository = tacheRepository;
         this.tacheService = tacheService;
+        this.projectRepository = projectRepository;
         this.tacheSupprimeeService = tacheSupprimeeService;
+        this.utilisateurService = utilisateurService;
+        this.projects = projects;
     }
 
-    @Autowired
-    private ServletContext servletContext;
 
-    @Autowired
-    private UtilisateurService utilisateurService;
+    private final UtilisateurService utilisateurService;
 
-    @Autowired
-    private ProjectService projects;
+    private final ProjectService projects;
 
 
     @ModelAttribute
@@ -85,6 +79,7 @@ public class TacheController {
 
 
 
+
     @GetMapping("/tache")
     public String getTache(Model model, @RequestParam(required = false) String search,
                            @RequestParam(defaultValue = "0") int page){
@@ -95,7 +90,7 @@ public class TacheController {
         model.addAttribute("activePage", "tache");
         Page<Object[]> existingTache;
         if (search != null && !search.isEmpty()) {
-            existingTache = tacheService.getAllTask(search, PageRequest.of(page, elementsPerPage));
+            existingTache = tacheService.getAllTask(search, Pageable.unpaged());
         } else {
             existingTache = tacheService.getAllTask("", PageRequest.of(page, elementsPerPage));
         }
@@ -236,7 +231,7 @@ public class TacheController {
     public String saveUtilisateur(@ModelAttribute @Valid Tache tache, HttpServletRequest request, RedirectAttributes redirectAttributes , BindingResult bindingResult, Model model ) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("message", "Il y a des erreurs de validation.");
-            return "redirect:/tache";
+            return "redirect:/admin/tache";
         }
         // Retrieve the project's start and end dates
         List<Object[]> projectDatesList = projectRepository.findProjectDatesById(tache.getProject().getId());
@@ -248,42 +243,50 @@ public class TacheController {
         LocalDate projectStartDate = LocalDate.parse(projectDates[0].toString());
         if (taskStartDate.isBefore(projectStartDate)) {
             redirectAttributes.addFlashAttribute("errors", "Vérifier les dates du projet.");
-            return "redirect:/tache";
+            return "redirect:/admin/tache";
         }
         // Check if the task's end date is before the project's end date
         LocalDate taskEndDate = LocalDate.parse(tache.getDatef());
         LocalDate projectEndDate = LocalDate.parse(projectDates[1].toString());
         if (taskEndDate.isAfter(projectEndDate)) {
             redirectAttributes.addFlashAttribute("errors", "Vérifier les dates du projet.");
-            return "redirect:/tache";
+            return "redirect:/admin/tache";
         }
         boolean NPexiste = tacheRepository.existsByTitleAndDescriptionAndProjectAndUsersNot(tache.getTitle().toLowerCase(), tache.getDescription().toLowerCase(),  tache.getProject(), tache.getUsers());
         if (NPexiste) {
             redirectAttributes.addFlashAttribute("message", "Donnée existe déjà.");
-            return "redirect:/tache";
+            return "redirect:/admin/tache";
         }
         // Vérifier si l'utilisateur existe déjà
         boolean champExiste = tacheRepository.existsByTitleAndProjectAndUsers(tache.getTitle(), tache.getProject(), tache.getUsers());
         if (champExiste) {
             // Gérer le cas où l'utilisateur existe déjà
             redirectAttributes.addFlashAttribute("message", "La tache existe déjà.");
-            return "redirect:/tache";
+            return "redirect:/admin/tache";
         }
         // Enregistrer l'utilisateur en utilisant votre service
         redirectAttributes.addFlashAttribute("messagesu", "La tache a été ajouté avec succès.");
         tacheService.save(tache);
-        return "redirect:/tache";
+        return "redirect:/admin/tache";
+    }
+
+    @GetMapping("DetailTache/{id}")
+    public String getDetailTache(@PathVariable("id") Integer id, Model model){
+        Tache tache = tacheService.getTacheById(id);
+        model.addAttribute("tache", tache);
+        model.addAttribute("activePage","tache");
+        return "admin/detail-tache";
     }
 
     @GetMapping("EditTache/{id}")
-    public String getDetailTache(@PathVariable("id") Integer id, Model model){
+    public String getEditTache(@PathVariable("id") Integer id, Model model){
         Tache tache = tacheService.getTacheById(id);
         model.addAttribute("tache", tache);
         List<Utilisateur> utilisateur = utilisateurService.getAllUtilisateurs();
         model.addAttribute("utilisateur", utilisateur);
         List<Project> project = projects.getAllProject();
         model.addAttribute("project",project);
-        model.addAttribute("activePage","detailTache");
+        model.addAttribute("activePage","tache");
         return "admin/edit-tache";
     }
 
@@ -292,17 +295,17 @@ public class TacheController {
        Tache existingTache = tacheService.getTacheById(updateTache.getId());
         if (bindingResult.hasErrors()) {
             model.addAttribute("message", "Il y a des erreurs de validation.");
-            return "redirect:/EditTache/" + existingTache.getId();
+            return "redirect:/admin/EditTache/" + existingTache.getId();
         }
         boolean DejaExiste = tacheRepository.existsByTitleAndDescriptionAndDatedAndDatefAndUsersAndProjectAndEtat(updateTache.getTitle().toLowerCase(), updateTache.getDescription().toLowerCase(), updateTache.getDated(), updateTache.getDatef(), updateTache.getUsers(), updateTache.getProject(), updateTache.getEtat());
         if (DejaExiste) {
             redirectAttributes.addFlashAttribute("message", "Donnée existe déjà.");
-            return "redirect:/EditTache/" + existingTache.getId();
+            return "redirect:/admin/EditTache/" + existingTache.getId();
         }
         boolean NPexiste = tacheRepository.existsByTitleAndDescriptionAndProjectAndUsersNot(updateTache.getTitle().toLowerCase(), updateTache.getDescription().toLowerCase(),  updateTache.getProject(), updateTache.getUsers());
         if (NPexiste) {
             redirectAttributes.addFlashAttribute("message", "Donnée existe déjà.");
-            return "redirect:/EditTache/" + existingTache.getId();
+            return "redirect:/admin/EditTache/" + existingTache.getId();
         }
          if (existingTache.getEtat() == 0 && updateTache.getEtat() != 0) {
             existingTache.setDatedu(updateTache.getDatedu());
@@ -310,6 +313,9 @@ public class TacheController {
          if (existingTache.getEtat() != 100 && updateTache.getEtat() == 100) {
              existingTache.setDatefu(updateTache.getDatedu());
          }
+        if (updateTache.getEtat() == 0) {
+            existingTache.setDatedu("0");
+        }
              existingTache.setTitle(updateTache.getTitle().toLowerCase());
              existingTache.setDescription(updateTache.getDescription().toLowerCase());
              existingTache.setDated(updateTache.getDated());
@@ -317,26 +323,36 @@ public class TacheController {
              existingTache.setEtat(updateTache.getEtat());
              existingTache.setProject(updateTache.getProject());
              existingTache.setUsers(updateTache.getUsers());
-
-               tacheService.save(existingTache);
-        return  "redirect:/EditTache/" + existingTache.getId();
+             tacheService.save(existingTache);
+        return  "redirect:/admin/EditTache/" + existingTache.getId();
     }
 
     @PostMapping("/tache/delete")
-    public String tacheSupp(@ModelAttribute("tache") Tache tache, RedirectAttributes redirectAttributes, Model model, BindingResult bindingResult){
+    public String TacheSupp(@ModelAttribute("tache") Tache tache, RedirectAttributes redirectAttributes, Model model, BindingResult bindingResult){
         Tache existingTache = tacheService.getTacheById(tache.getId());
 
         if (bindingResult.hasErrors()) {
-            model.addAttribute("message", "Il y a des erreurs de validation.");
-            return "redirect:/tache" ;
+            redirectAttributes.addFlashAttribute("message", "Il y a des erreurs de validation.");
+            return "redirect:/admin/tache" ;
         }
-        tacheService.deleteProjectById(tache.getId());
+        tacheService.deleteTacheById(tache.getId());
 
         tacheSupprimeeService.transferTacheSupprimee(existingTache);
-        return "redirect:/tache";
+        return "redirect:/admin/tache";
     }
 
+    @PostMapping("/tache/recup")
+    public String TacheRecup(@ModelAttribute("tache") TacheSupprimee tacheSupprimee, RedirectAttributes redirectAttributes, Model model, BindingResult bindingResult){
+        TacheSupprimee existingTachesupp = tacheSupprimeeService.getTachesuppById(tacheSupprimee.getId());
 
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("message", "Il y a des erreurs de validation.");
+            return "redirect:/admin/tache-annule" ;
+        }
 
+        tacheSupprimeeService.deleteTacheSuppById(tacheSupprimee.getId());
 
+        tacheService.transferTache(existingTachesupp);
+        return "redirect:/admin/tache-annule";
+    }
 }

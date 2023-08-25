@@ -62,6 +62,7 @@ public class SecurityConfig  {
                 .antMatchers("/assets/**", "/images/**", "/img/**", "/img_clients/**", "/json/**", "/maps/**", "/style.css","/auth/login/**")
                 .permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers("/user/**").hasRole("USER")
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -69,13 +70,10 @@ public class SecurityConfig  {
                 .accessDeniedPage("/denied")  // Specify the access denied page URL
                 .and()
                 .userDetailsService(userDetailsService);
-
         return httpSecurity.build();
     }
 
-
-
-    private class LogoutOnLoginFilter implements Filter {
+    private static class LogoutOnLoginFilter implements Filter {
 
         @Override
         public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {

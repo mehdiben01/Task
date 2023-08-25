@@ -1,4 +1,4 @@
-package Controller;
+package AdminController;
 
 import Model.Client;
 import Model.Project;
@@ -19,7 +19,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.time.LocalDate;
@@ -32,30 +31,27 @@ public class ProjectController {
 
     int elementsPerPage = 6;
 
-    @Autowired
-    private ProjectService projectService;
-    @Autowired
-    private ProjectRepository projectRepository;
+    private final ProjectService projectService;
+    private final ProjectRepository projectRepository;
+
+    private final TacheService tacheService;
+
+    private final ClientService clientService;
 
     @Autowired
-    private TacheService tacheService;
-
-    @Autowired
-    private ClientService clientService;
-
-    @Autowired
-    public ProjectController(ProjectService projectService, ProjectRepository projectRepository){
-        this.projectRepository = projectRepository;
+    public ProjectController(ProjectService projectService, ProjectRepository projectRepository,  TacheService tacheService, ClientService clientService, ClientService service, UtilisateurService utilisateurService){
         this.projectService = projectService;
+        this.projectRepository = projectRepository;
+        this.tacheService = tacheService;
+        this.clientService = clientService;
+        this.service = service;
+        this.utilisateurService = utilisateurService;
     }
 
-    @Autowired
-    private ServletContext servletContext;
-    @Autowired
-    private ClientService service;
 
-    @Autowired
-    private UtilisateurService utilisateurService;
+    private final ClientService service;
+
+    private final UtilisateurService utilisateurService;
 
     @ModelAttribute
     public void addCommonUserAttributes(Model model) {
@@ -121,8 +117,7 @@ public class ProjectController {
         model.addAttribute("countproj", existingProjectsTermine.getTotalElements());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", existingProjectsTermine.getTotalPages());
-        model.addAttribute("search", search); // Add the search parameter to the model
-        model.addAttribute("countTer",tacheService.countPTermine());
+        model.addAttribute("search", search);
         return "admin/project-termine";
     }
 
@@ -144,7 +139,6 @@ public class ProjectController {
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", existingProjectsEnCours.getTotalPages());
         model.addAttribute("search", search); // Add the search parameter to the model
-        model.addAttribute("countEnC",tacheService.countENC());
         return "admin/project-encours";
     }
     @GetMapping("/projet-noncommence")
@@ -165,7 +159,6 @@ public class ProjectController {
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", existingProjectsNcommence.getTotalPages());
         model.addAttribute("search", search); // Add the search parameter to the model
-        model.addAttribute("countNonC",tacheService.countNonc());
         return "admin/project-noncommence";
     }
 
@@ -227,13 +220,14 @@ public class ProjectController {
             return "redirect:/projet";
         }
 
-
+        project.setTitle(project.getTitle().toUpperCase());
+        project.setDescription(project.getDescription().toLowerCase());
 
         // Enregistrer l'utilisateur en utilisant votre service
         redirectAttributes.addFlashAttribute("messagesu", "Le projet a été ajouté avec succès.");
         projectService.save(project);
 
-        return "redirect:/projet";
+        return "redirect:/admin/projet";
     }
 
     @GetMapping("DetailProjet/{id}")
@@ -272,27 +266,22 @@ public class ProjectController {
         Project existingProject = projectService.getProjectById(updateProject.getId());
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("message", "Donnée existe déjà.");
-            return "redirect:/EditProject/" + existingProject.getId();
+            return "redirect:/admin/EditProject/" + existingProject.getId();
         }
         boolean TDCNExiste = projectRepository.existsByTitleAndDescriptionAndClientsNot(updateProject.getTitle().toUpperCase(), updateProject.getDescription().toLowerCase(), updateProject.getClients());
         if(TDCNExiste){
             redirectAttributes.addFlashAttribute("message", "Donnée existe déjà.");
-            return "redirect:/EditProject/" + existingProject.getId();
+            return "redirect:/admin/EditProject/" + existingProject.getId();
         }
-        boolean TCExiste = projectRepository.existsByTitleAndClients(updateProject.getTitle().toUpperCase(), updateProject.getClients());
-        if(TCExiste){
-            redirectAttributes.addFlashAttribute("message", "Donnée existe déjà.");
-            return "redirect:/EditProject/" + existingProject.getId();
-        }
-        boolean TCNExiste = projectRepository.existsByTitleAndClients(updateProject.getTitle().toUpperCase(), updateProject.getClients());
+        boolean TCNExiste = projectRepository.existsByTitleAndIdNot(updateProject.getTitle().toUpperCase(), updateProject.getId());
         if(TCNExiste){
             redirectAttributes.addFlashAttribute("message", "Donnée existe déjà.");
-            return "redirect:/EditProject/" + existingProject.getId();
+            return "redirect:/admin/EditProject/" + existingProject.getId();
         }
         boolean DejaExiste = projectRepository.existsByTitleAndDescriptionAndDatedAndDatefAndClients(updateProject.getTitle().toUpperCase(), updateProject.getDescription().toLowerCase(), updateProject.getDated(),updateProject.getDatef(), updateProject.getClients());
         if (DejaExiste) {
             redirectAttributes.addFlashAttribute("message", "Donnée existe déjà.");
-            return "redirect:/EditProject/" + existingProject.getId();
+            return "redirect:/admin/EditProject/" + existingProject.getId();
         }else{
             existingProject.setTitle(updateProject.getTitle().toUpperCase());
             existingProject.setDescription(updateProject.getDescription().toLowerCase());
@@ -300,21 +289,37 @@ public class ProjectController {
             existingProject.setDatef(updateProject.getDatef());
             existingProject.setClients(updateProject.getClients());
         }
+        redirectAttributes.addFlashAttribute("messagesu", "Le projet a été mis à jour avec succès.");
         projectService.save(existingProject);
-        return "redirect:/EditProject/" + existingProject.getId();
+        return "redirect:/admin/EditProject/" + existingProject.getId();
 
     }
 
     @PostMapping("/project/delete")
-    public String projectDelete(@ModelAttribute("project") Project deleteP, RedirectAttributes redirectAttributes, Model model, BindingResult bindingResult ){
-        Project existingProject = projectService.getProjectById(deleteP.getId());
+    public String projectDelete(@ModelAttribute("project") Project projetc, RedirectAttributes redirectAttributes, Model model, BindingResult bindingResult ){
+        Project existingProject = projectService.getProjectById(projetc.getId());
         if (bindingResult.hasErrors()) {
-            model.addAttribute("message", "Il y a des erreurs de validation.");
+            redirectAttributes.addFlashAttribute("message", "Il y a des erreurs de validation.");
             return "redirect:/projet" ;
         }
+        redirectAttributes.addFlashAttribute("messagesu", "Le projet a été annuler avec succès.");
         existingProject.setIsDeleted("1");
         projectService.save(existingProject);
-        return "redirect:/projet";
+        return "redirect:/admin/projet";
+
+    }
+
+    @PostMapping("/project/recup")
+    public String projectRecup(@ModelAttribute("project") Project projetc, RedirectAttributes redirectAttributes, Model model, BindingResult bindingResult ){
+        Project existingProject = projectService.getProjectById(projetc.getId());
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("message", "Il y a des erreurs de validation.");
+            return "redirect:/admin/projet" ;
+        }
+        redirectAttributes.addFlashAttribute("messagesu", "Le projet a été récuperer avec succès.");
+        existingProject.setIsDeleted("0");
+        projectService.save(existingProject);
+        return "redirect:/admin/projet";
 
     }
 

@@ -29,6 +29,8 @@ public interface ClientRepository extends JpaRepository<Client, Integer> {
 
     Optional<Client> getClientById(Integer id);
 
+
+
     @Query("SELECT c , count(c.id) "+
            "FROM Client c "+
             "WHERE c.isDeleted ='0' "+

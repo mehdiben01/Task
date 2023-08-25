@@ -34,13 +34,16 @@
     <!-- endinject -->
 
     <link rel="icon" type="image/png" sizes="16x16" href="img/favicon.png">
-    <style>
-        .dropdown {
-            background-color: white;
-        }
-    </style>
 </head>
-
+<style>
+    .dropdown {
+        display: inline-block;
+        background-color: white;
+    }
+    .media-ui--completed .test{
+        background: #fa8b0c;
+    }
+</style>
 <body class="layout-light side-menu overlayScroll">
 <div class="mobile-search">
     <form class="search-form">
@@ -80,7 +83,7 @@
                     <div class="breadcrumb-main user-member justify-content-sm-between ">
                         <div class=" d-flex flex-wrap justify-content-center breadcrumb-main__wrapper">
                             <div class="d-flex align-items-center user-member__title justify-content-center mr-sm-25">
-                                <span class="sub-title ml-sm-25 pl-sm-25" th:text="${countproj + ' Projet(s)'}"></span>
+                                <span class="sub-title ml-sm-25 pl-sm-25" th:text="${count+' taches'}"></span>
                             </div>
 
 
@@ -88,40 +91,37 @@
 
 
 
-
                         </div>
                         <div class=" d-flex flex-wrap justify-content-center breadcrumb-main__wrapper">
-                        <form class="d-flex align-items-center user-member__form my-sm-0 my-2" th:action="@{/admin/projet-retarde}" method="get">
-                            <span data-feather="search"></span>
-                            <input class="form-control mr-sm-2 border-0 box-shadow-none" type="search" name="search" th:value="${search}" placeholder="Recherche" aria-label="Search">
-                        </form>
+                            <form class="d-flex align-items-center user-member__form my-sm-0 my-2" th:action="@{/user/tacheu-termine}" method="get">
+                                <span data-feather="search"></span>
+                                <input class="form-control mr-sm-2 border-0 box-shadow-none" type="search" name="search" th:value="${search}" placeholder="Recherche" aria-label="Search">
+                            </form>
                         </div>
                         <div class=" d-flex flex-wrap justify-content-center breadcrumb-main__wrapper">
-                        <div class="dropdown d-inline-block ml-2">
-                            <button class="btn btn-outline-lighten btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <!-- Utilisation de la syntaxe conditionnelle pour afficher le nom de la page active -->
-                                <span th:text="${activePage == 'projet' ? 'La liste des projets' :
-      activePage == 'projet-termine' ? 'La liste des projet terminé' :
-      activePage == 'projet-encours' ? 'La liste des projet en cours' :
-      activePage == 'projet-noncommence' ? 'La liste des projet non commencé' :
-      activePage == 'projet-annule' ? 'La liste des projet annulé' :
-      activePage == 'projet-retarde' ? 'La liste des projet retardé' :
+                            <div class="dropdown d-inline-block ml-2">
+                                <button class="btn btn-outline-lighten btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <!-- Utilisation de la syntaxe conditionnelle pour afficher le nom de la page active -->
+                                    <span th:text="${activePage == 'tacheu' ? 'La liste des taches' :
+      activePage == 'tacheu-termine' ? 'La liste des taches terminé' :
+      activePage == 'tacheu-encours' ? 'La liste des taches en cours' :
+      activePage == 'tacheu-noncommence' ? 'La liste des taches non commencé' :
       'Sélectionner un code'}"></span>
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <ul>
-                                    <li><a class="dropdown-item" href="/admin/projet" >La liste des projets</a></li>
-                                    <li><a class="dropdown-item" href="/admin/projet-termine" >La liste des projet terminé</a></li>
-                                    <li><a class="dropdown-item" href="/admin/projet-encours" >La liste des projet en cours</a></li>
-                                    <li><a class="dropdown-item" href="/admin/projet-noncommence" >La liste des projet non commencé</a></li>
-                                    <li><a class="dropdown-item" href="/admin/projet-retarde">La liste des projet retardé</a></li>
-                                </ul>
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <ul>
+                                        <li><a class="dropdown-item" href="/user/tacheu" >La liste des taches</a></li>
+                                        <li><a class="dropdown-item" href="/user/tacheu-termine" >La liste des taches terminé</a></li>
+                                        <li><a class="dropdown-item" href="/user/tacheu-encours" >La liste des taches en cours</a></li>
+                                        <li><a class="dropdown-item" href="/user/tacheu-noncommence" >La liste des taches non commencé</a></li>
+                                    </ul>
+                                </div>
                             </div>
-                        </div>
                         </div>
                         <div class="action-btn">
                             <a href="#" class="btn px-15 btn-primary" data-toggle="modal" data-target="#new-member">
-                                <i class="las la-plus fs-16"></i>Créer un projet</a>
+                                <i class="las la-plus fs-16"></i>Créer une tache</a>
+
 
                             <!-- Modal -->
                             <div class="modal fade new-member" id="new-member" role="dialog" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -132,71 +132,6 @@
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span data-feather="x"></span>
                                             </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div class="new-member-modal">
-                                                <form th:action="@{/admin/project/save}" method="post" th:object="${project}" enctype="multipart/form-data" class="was-validated">
-                                                    <div class="form-group mb-20">
-                                                        <label class="mb-15">Titre</label>
-                                                        <input type="text" class="form-control" placeholder="Nom" th:field="*{title}" name="nom" pattern="[A-Za-zÀ-ÿ\s]+" required
-                                                               th:classappend="${#fields.hasErrors('title')} ? 'is-invalid'">
-                                                        <div class="invalid-feedback">
-                                                            <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></span>
-                                                            Le titre est requis.
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group mb-20">
-                                                        <label class="mb-15">Description</label>
-                                                        <textarea class="form-control" placeholder="Description" th:field="*{description}" name="description" required th:classappend="${#fields.hasErrors('description')} ? 'is-invalid'" maxlength="300"></textarea>
-                                                        <div class="invalid-feedback">
-                                                            <span th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></span>
-                                                            La description est requis.
-                                                        </div>
-                                                    </div>
-                                                    <!-- Ajouter la validation et les messages d'erreur pour les autres champs -->
-                                                    <div class="form-group mb-20">
-                                                        <label class="mb-15">Date de début</label>
-                                                        <input type="date" class="form-control" placeholder="Date De debut" th:field="*{dated}" name="date_debut" required
-                                                               th:classappend="${#fields.hasErrors('dated')} ? 'is-invalid'" id="dateDebutInput">
-                                                        <div class="invalid-feedback">
-                                                            <span th:if="${#fields.hasErrors('dated')}" th:errors="*{dated}"></span>
-                                                            La date de début est requise.
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group mb-20">
-                                                        <label class="mb-15">Date de fin</label>
-                                                        <input type="date" class="form-control" placeholder="Date De fin" th:field="*{datef}" name="date_fin"  required
-                                                               th:classappend="${#fields.hasErrors('datef')} ? 'is-invalid'" id="dateFinInput">
-                                                        <div class="invalid-feedback">
-                                                            <span th:if="${#fields.hasErrors('datef')}" th:errors="*{datef}"></span>
-                                                            La date de fin est requise.
-                                                        </div>
-                                                    </div>
-
-
-                                                    <div class="form-group mb-20">
-                                                        <label class="mb-15">Client</label>
-                                                        <div class="category-member">
-                                                            <select th:field="*{clients}" name="client" class="js-example-basic-single js-states form-control"
-                                                                    th:classappend="${#fields.hasErrors('clients')} ? 'is-invalid'" required>
-                                                                <option value="">Sélectionner un client</option>
-                                                                <option th:each="client : ${clients}" th:value="${client.id}" th:text="${client.nom}"></option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="invalid-feedback">
-                                                            <span th:if="${#fields.hasErrors('clients')}" th:errors="*{clients}"></span>
-                                                            Le client est requis.
-                                                        </div>
-                                                    </div>
-
-
-                                                    <div class="button-group d-flex pt-25">
-                                                        <button type="submit" class="btn btn-primary btn-default btn-squared text-capitalize">Ajouter</button>
-
-                                                    </div>
-                                                </form>
-
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -218,58 +153,114 @@
                 <div class="tab-content mt-25" id="ap-tabContent">
 
                     <div class="container">
-                        <div th:if="${projects.isEmpty()}">
-                            <p class="text-center">Aucun projet trouvé.</p>
-                        </div>
 
-                        <div class="row" id="project-list"th:unless="${projects.isEmpty()}">
-                            <div class="col-xl-4 mb-25 col-md-6 project-item" th:each="project : ${projects}">
+
+                        <div class="row" id="project-list" th:if="${task.size() > 0}">
+                            <div class="col-xl-4 mb-25 col-md-6 project-item" th:each="task : ${task}">
                                 <div class="user-group radius-xl bg-white media-ui media-ui--completed pt-30 pb-25">
                                     <div class="border-bottom px-30">
                                         <div class="media user-group-media d-flex justify-content-between">
                                             <div class="media-body d-flex align-items-center text-capitalize">
-                                                <a th:href="@{/DetailProjet/{id}(id=${project[0].id})}">
-                                                    <h6 class="mt-0  fw-500 media-ui__title" th:text="${project[0].title}"></h6>
+                                                <a href="application-ui.html">
+                                                    <h6 class="mt-0  fw-500 media-ui__title" th:text="${task[0].title}"></h6>
                                                 </a>
-                                                <span class="media-badge text-uppercase color-white bg-danger" >Retardé</span>
+                                                <span class="media-badge text-uppercase color-white bg-success" th:if="${(task[0].etat == 100)  and(task[0].datef >= task[0].datefu)  }">Terminé</span>
+                                                <span class="media-badge text-uppercase color-white bg-warning" th:if="${(task[0].etat == 100)  and(task[0].datef < task[0].datefu)}">Terminé en retard</span>
+                                                <span class="media-badge text-uppercase color-white bg-warning" th:if="${(task[0].etat < 100) and (task[0].etat>0)  and ( (task[0].datef >= task[0].datefu) and (T(java.time.LocalDate).parse(task[0].datef) >= #temporals.createToday())) }">En cours</span>
+                                                <span class="media-badge text-uppercase color-white bg-warning" th:if="${(task[0].etat == 0  ) and (T(java.time.LocalDate).parse(task[0].datef) >= #temporals.createToday()) and (task[0].datedu == '0') }">Pas encore commencé</span>
+                                                <span class="media-badge text-uppercase color-white bg-danger" th:if="${(task[0].etat == 101)}">Annulé</span>
+                                                <span class="media-badge text-uppercase color-white bg-danger" th:if="${  (task[0].etat != 100) and ((task[0].datef < task[0].datefu) or (T(java.time.LocalDate).parse(task[0].datef) < #temporals.createToday())) }">retardé</span>
                                             </div>
                                         </div>
                                         <div class="user-group-people mt-15 text-capitalize">
-                                            <p th:text="${project[0].description}"></p>
+                                            <p th:text="${task[0].description}"></p>
                                             <div class="user-group-project">
                                                 <div class="d-flex align-items-center user-group-progress-top">
                                                     <div class="media-ui__start">
                                                         <span class="color-light fs-12">Start Date</span>
-                                                        <p class="fs-14 fw-500 color-dark mb-0" th:text="${project[0].dated}"></p>
+                                                        <p class="fs-14 fw-500 color-dark mb-0" th:text="${task[0].dated}"></p>
                                                     </div>
                                                     <div class="media-ui__end">
                                                         <span class="color-light fs-12">end date</span>
-                                                        <p class="fs-16 fw-500 color-success mb-0" th:text="${project[0].datef}"></p>
+                                                        <p class="fs-16 fw-500 color-success mb-0" th:text="${task[0].datef}"></p>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="user-group-progress-bar">
+                                            <div class="progress-wrap d-flex align-items-center mb-0" th:if="${ (task[0].etat != 100) and (task[0].etat != null) and (T(java.time.LocalDate).parse(task[0].datef) >= #temporals.createToday()) }">
+
+                                                <div class="progress" >
+
+                                                    <div class="progress-bar bg-warning" role="progressbar"    th:style="'width: ' + ${task[0].etat} + '%;'"  aria-valuenow="83" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+
+
+                                                <span class="progress-percentage" th:text="${(task[0].etat * 1).intValue()} + '%'"></span>
+
+
+                                            </div>
+
+                                            <div class="progress-wrap d-flex align-items-center mb-0" th:if="${ (task[0].etat != 100) and (T(java.time.LocalDate).parse(task[0].datef) < #temporals.createToday()) }">
+
+                                                <div class="progress" >
+
+                                                    <div class="progress-bar bg-danger" role="progressbar"    th:style="'width: ' + ${task[0].etat} + '%;'"  aria-valuenow="83" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+
+
+                                                <span class="progress-percentage" th:text="${(task[0].etat * 1).intValue()} + '%'"></span>
+
+
+                                            </div>
+
+                                            <div class="progress-wrap d-flex align-items-center mb-0" th:if="${ (task[0].etat == 100) and (task[0].datef >= task[0].datefu) }">
+                                                <div class="progress">
+                                                    <div class="progress-bar bg-success" role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+
+
+
+                                                <span class="progress-icon"><span class="color-success" data-feather="check"></span></span>
+
+                                            </div>
+
+                                            <div class="progress-wrap d-flex align-items-center mb-0" th:if="${ (task[0].etat == 100) and (task[0].datef < task[0].datefu) }">
+                                                <div class="progress">
+                                                    <div class="progress-bar bg-warning" role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+
+
+
+                                                <span class="progress-icon test"><span class="color-warning" data-feather="check"></span></span>
+
+                                            </div>
+
+
+                                            <p class="color-light fs-12 mb-20" th:if="${(task[0].etat != null) }" th:text="${(task[0].etat * 1).intValue()} + '% des taches réalisées'"></p>
+
+
+                                        </div>
                                     </div>
 
                                     <div class="ap-button account-profile-cards__button button-group d-flex justify-content-center flex-wrap pt-20">
-                                        <a th:href="@{/DetailProjet/{id}(id=${project[0].id})}">
+                                        <a th:href="@{/user/DetailTacheU/{id}(id=${task[0].id})}">
                                             <button type="button" class="border text-capitalize px-25 color-gray transparent shadow2 radius-md">
                                                 Voir</button></a>
-                                        <a th:href="@{/EditProject/{id}(id=${project[0].id})}">
-                                            <button type="button" class="border text-capitalize px-25 color-gray transparent shadow2 radius-md">
-                                                Editer</button></a>
-                                        <button type="submit" class="border text-capitalize px-25 color-gray transparent shadow2 radius-md" data-toggle="modal" data-target="#modal-info-delete"
-                                                th:data-id="${project[0].id}" th:data-nom="${project[0].title+' de '+project[0].clients.company}">
-                                            Supprimer</button>
 
                                     </div>
                                 </div>
 
                             </div>
                         </div>
+                        <div class="row" th:unless="${task.size() > 0}">
+                            <div class="col-lg-12">
+                                <p class="text-center">Aucune tâche trouvée.</p>
+                            </div>
+                        </div>
                     </div>
                     <!-- Barre de pagination (affichée seulement si nécessaire) -->
-                    <div class="row" th:if="${projects.size() > 0}">
+                    <div class="row" th:if="${task.size() > 0}">
                         <div class="col-lg-12">
                             <div class="d-flex justify-content-sm-end justify-content-star mt-1 mb-30">
                                 <nav class="atbd-page">
@@ -279,17 +270,17 @@
                                                 <span class="la la-angle-left"></span>
                                             </a>
                                             <a href="#" class="atbd-pagination__link" th:if="${currentPage > 0}"
-                                               th:href="@{/admin/projet-retarde(search=${search}, page=${currentPage - 1})}">
+                                               th:href="@{/user/tacheu-termine(search=${search}, page=${currentPage - 1})}">
                                                 <span class="page-number">Précédent</span>
                                             </a>
                                             <span th:each="pageNumber : ${#numbers.sequence(0, totalPages - 1)}">
-                            <a href="#" class="atbd-pagination__link" th:href="@{/admin/projet-retarde(search=${search}, page=${pageNumber})}"
+                            <a href="#" class="atbd-pagination__link" th:href="@{/user/tacheu-termine(search=${search}, page=${pageNumber})}"
                                th:classappend="${pageNumber == currentPage} ? 'active' : ''">
                                 <span class="page-number" th:text="${pageNumber + 1}"></span>
                             </a>
                         </span>
                                             <a href="#" class="atbd-pagination__link" th:if="${currentPage < totalPages - 1}"
-                                               th:href="@{/admin/projet-retarde(search=${search}, page=${currentPage + 1})}">
+                                               th:href="@{/user/tacheu-termine(search=${search}, page=${currentPage + 1})}">
                                                 <span class="page-number">Suivant</span>
                                             </a>
                                             <a href="#" class="atbd-pagination__link pagination-control">
@@ -324,7 +315,7 @@
                         </div>
                     </div>
                 </div>
-                <form th:action="@{/admin/project/delete}" method="post">
+                <form th:action="@{/user/tache/delete}" method="post">
                     <div class="modal-footer">
                         <input type="hidden" class="form-control" id="modal-id" name="id" readonly>
                         <button type="button" class="btn btn-danger btn-outlined btn-sm" data-dismiss="modal">Non</button>
@@ -376,6 +367,9 @@
 </div>
 <div class="overlay-dark-sidebar"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+
 <script>
     $(document).ready(function(){
         $("#myInput").on("keyup", function() {
@@ -457,7 +451,7 @@
 <!-- endinject-->
 </body>
 <!-- Include jQuery (if not already included) -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 
 
 

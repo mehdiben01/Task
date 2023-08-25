@@ -2,7 +2,6 @@ package Service;
 
 import Model.Project;
 import Repository.ProjectRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -13,9 +12,11 @@ import java.util.NoSuchElementException;
 @Service
 public class ProjectService{
 
-    @Autowired
-    private ProjectRepository projectRepository;
+    private final ProjectRepository projectRepository;
 
+    public ProjectService(ProjectRepository projectRepository) {
+        this.projectRepository = projectRepository;
+    }
 
 
     public Project save(Project project){

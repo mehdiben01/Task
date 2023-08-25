@@ -12,42 +12,24 @@
         rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
         crossorigin="anonymous">
   <!-- inject:css-->
-
-  <link rel="stylesheet" href="assets/vendor_assets/css/bootstrap/bootstrap.css">
-
-  <link rel="stylesheet" href="assets/vendor_assets/css/daterangepicker.css">
-
-  <link rel="stylesheet" href="assets/vendor_assets/css/fontawesome.css">
-
-  <link rel="stylesheet" href="assets/vendor_assets/css/footable.standalone.min.css">
-
-  <link rel="stylesheet" href="assets/vendor_assets/css/fullcalendar@5.2.0.css">
-
-  <link rel="stylesheet" href="assets/vendor_assets/css/jquery-jvectormap-2.0.5.css">
-
-  <link rel="stylesheet" href="assets/vendor_assets/css/jquery.mCustomScrollbar.min.css">
-
-  <link rel="stylesheet" href="assets/vendor_assets/css/leaflet.css">
-
-  <link rel="stylesheet" href="assets/vendor_assets/css/line-awesome.min.css">
-
-  <link rel="stylesheet" href="assets/vendor_assets/css/magnific-popup.css">
-
-  <link rel="stylesheet" href="assets/vendor_assets/css/MarkerCluster.css">
-
-  <link rel="stylesheet" href="assets/vendor_assets/css/MarkerCluster.Default.css">
-
-  <link rel="stylesheet" href="assets/vendor_assets/css/select2.min.css">
-
-  <link rel="stylesheet" href="assets/vendor_assets/css/slick.css">
-
-  <link rel="stylesheet" href="assets/vendor_assets/css/star-rating-svg.css">
-
-  <link rel="stylesheet" href="assets/vendor_assets/css/trumbowyg.min.css">
-
-  <link rel="stylesheet" href="assets/vendor_assets/css/wickedpicker.min.css">
-
-  <link rel="stylesheet" href="style.css">
+  <link th:href="@{/assets/vendor_assets/css/bootstrap/bootstrap.css}" rel="stylesheet">
+  <link th:href="@{/assets/vendor_assets/css/daterangepicker.css}" rel="stylesheet">
+  <link th:href="@{/assets/vendor_assets/css/fontawesome.css}" rel="stylesheet">
+  <link th:href="@{/assets/vendor_assets/css/footable.standalone.min.css}" rel="stylesheet">
+  <link th:href="@{/assets/vendor_assets/css/fullcalendar@5.2.0.css}" rel="stylesheet">
+  <link th:href="@{/assets/vendor_assets/css/jquery-jvectormap-2.0.5.css}" rel="stylesheet">
+  <link th:href="@{/assets/vendor_assets/css/jquery.mCustomScrollbar.min.css}" rel="stylesheet">
+  <link th:href="@{/assets/vendor_assets/css/leaflet.css}" rel="stylesheet">
+  <link th:href="@{/assets/vendor_assets/css/line-awesome.min.css}" rel="stylesheet">
+  <link th:href="@{/assets/vendor_assets/css/magnific-popup.css}" rel="stylesheet">
+  <link th:href="@{/assets/vendor_assets/css/MarkerCluster.css}" rel="stylesheet">
+  <link th:href="@{/assets/vendor_assets/css/MarkerCluster.Default.css}" rel="stylesheet">
+  <link th:href="@{/assets/vendor_assets/css/select2.min.css}" rel="stylesheet">
+  <link th:href="@{/assets/vendor_assets/css/slick.css}" rel="stylesheet">
+  <link th:href="@{/assets/vendor_assets/css/star-rating-svg.css}" rel="stylesheet">
+  <link th:href="@{/assets/vendor_assets/css/trumbowyg.min.css}" rel="stylesheet">
+  <link th:href="@{/assets/vendor_assets/css/wickedpicker.min.css}" rel="stylesheet">
+  <link th:href="@{/style.css}" rel="stylesheet">
 
   <!-- endinject -->
 
@@ -111,9 +93,9 @@
 
             </div>
             <div class=" d-flex flex-wrap justify-content-center breadcrumb-main__wrapper">
-            <form class="d-flex align-items-center user-member__form my-sm-0 my-2" th:action="@{/tache}" method="get">
+            <form class="d-flex align-items-center user-member__form my-sm-0 my-2" th:action="@{/admin/tache}" method="get">
               <span data-feather="search"></span>
-              <input class="form-control mr-sm-2 border-0 box-shadow-none" type="search" name="search" th:value="${search}" placeholder="Search" aria-label="Search">
+              <input class="form-control mr-sm-2 border-0 box-shadow-none" type="search" name="search" th:value="${search}" placeholder="Recherche" aria-label="Search">
             </form>
             </div>
             <div class=" d-flex flex-wrap justify-content-center breadcrumb-main__wrapper">
@@ -131,12 +113,12 @@
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                   <ul>
-                    <li><a class="dropdown-item" href="/tache" >La liste des taches</a></li>
-                    <li><a class="dropdown-item" href="/tache-termine" >La liste des taches terminé</a></li>
-                    <li><a class="dropdown-item" href="/tache-encours" >La liste des taches en cours</a></li>
-                    <li><a class="dropdown-item" href="/tache-noncommence" >La liste des taches non commencé</a></li>
-                    <li><a class="dropdown-item" href="/tache-retarde">La liste des taches retardé</a></li>
-                    <li><a class="dropdown-item" href="/tache-termineretard">La liste des tâches terminées en retard</a></li>
+                    <li><a class="dropdown-item" href="/admin/tache" >La liste des taches</a></li>
+                    <li><a class="dropdown-item" href="/admin/tache-termine" >La liste des taches terminé</a></li>
+                    <li><a class="dropdown-item" href="/admin/tache-encours" >La liste des taches en cours</a></li>
+                    <li><a class="dropdown-item" href="/admin/tache-noncommence" >La liste des taches non commencé</a></li>
+                    <li><a class="dropdown-item" href="/admin/tache-retarde">La liste des taches retardé</a></li>
+                    <li><a class="dropdown-item" href="/admin/tache-termineretard">La liste des tâches terminées en retard</a></li>
                   </ul>
                 </div>
               </div>
@@ -158,7 +140,7 @@
                     </div>
                     <div class="modal-body">
                       <div class="new-member-modal">
-                        <form action="/tache/save" method="post" th:object="${tache}" enctype="multipart/form-data" class="was-validated">
+                        <form th:action="@{/admin/tache/save}" method="post" th:object="${tache}" enctype="multipart/form-data" class="was-validated">
                           <div class="form-group mb-20">
                             <label class="mb-15">Titre</label>
                             <input type="text" class="form-control" placeholder="Nom" th:field="*{title}" name="title" pattern="[A-Za-zÀ-ÿ\s]+" required
@@ -271,7 +253,7 @@
           <div class="container">
 
 
-            <div class="row" id="project-list">
+            <div class="row" id="project-list" th:if="${task.size() > 0}">
               <div class="col-xl-4 mb-25 col-md-6 project-item" th:each="task : ${task}">
                 <div class="user-group radius-xl bg-white media-ui media-ui--completed pt-30 pb-25">
                   <div class="border-bottom px-30">
@@ -283,13 +265,13 @@
                         <span class="media-badge text-uppercase color-white bg-success" th:if="${(task[0].etat == 100)  and(task[0].datef >= task[0].datefu)  }">Terminé</span>
                         <span class="media-badge text-uppercase color-white bg-warning" th:if="${(task[0].etat == 100)  and(task[0].datef < task[0].datefu)}">Terminé en retard</span>
                         <span class="media-badge text-uppercase color-white bg-warning" th:if="${(task[0].etat < 100) and (task[0].etat>0)  and ( (task[0].datef >= task[0].datefu) and (T(java.time.LocalDate).parse(task[0].datef) >= #temporals.createToday())) }">En cours</span>
-                        <span class="media-badge text-uppercase color-white bg-warning" th:if="${(task[0].etat == 0  ) and (T(java.time.LocalDate).parse(task[0].datef) >= #temporals.createToday()) and (task[0].datedu == '0') }">Pas encore commencé</span>
+                        <span class="media-badge text-uppercase color-white bg-warning" th:if="${(task[0].etat == 0  ) and (T(java.time.LocalDate).parse(task[0].datef) >= #temporals.createToday()) and (task[0].datedu == '3000') }">Pas encore commencé</span>
                         <span class="media-badge text-uppercase color-white bg-danger" th:if="${(task[0].etat == 101)}">Annulé</span>
                         <span class="media-badge text-uppercase color-white bg-danger" th:if="${  (task[0].etat != 100) and ((task[0].datef < task[0].datefu) or (T(java.time.LocalDate).parse(task[0].datef) < #temporals.createToday())) }">retardé</span>
                       </div>
                     </div>
                     <div class="user-group-people mt-15 text-capitalize">
-                      <p th:text="${task[0].description}"></p>
+                      <p th:text="${#strings.length(task[0].description) > 100 ? #strings.substring(task[0].description, 0, 100) + '...' : task[0].description}"></p>
                       <div class="user-group-project">
                         <div class="d-flex align-items-center user-group-progress-top">
                           <div class="media-ui__start">
@@ -360,10 +342,10 @@
                   </div>
 
                   <div class="ap-button account-profile-cards__button button-group d-flex justify-content-center flex-wrap pt-20">
-                    <a th:href="@{/EditTache/{id}(id=${task[0].id})}">
+                    <a th:href="@{/admin/DetailTache/{id}(id=${task[0].id})}">
                       <button type="button" class="border text-capitalize px-25 color-gray transparent shadow2 radius-md">
                         Voir</button></a>
-                    <a th:href="@{/EditTache/{id}(id=${task[0].id})}">
+                    <a th:href="@{/admin/EditTache/{id}(id=${task[0].id})}">
                       <button type="button" class="border text-capitalize px-25 color-gray transparent shadow2 radius-md">
                         Editer</button></a>
                     <button type="submit" class="border text-capitalize px-25 color-gray transparent shadow2 radius-md" data-toggle="modal" data-target="#modal-info-delete"
@@ -373,6 +355,11 @@
                   </div>
                 </div>
 
+              </div>
+            </div>
+            <div class="row" th:unless="${task.size() > 0}">
+              <div class="col-lg-12">
+                <p class="text-center">Aucune tâche trouvée.</p>
               </div>
             </div>
           </div>
@@ -387,17 +374,17 @@
                         <span class="la la-angle-left"></span>
                       </a>
                       <a href="#" class="atbd-pagination__link" th:if="${currentPage > 0}"
-                         th:href="@{/tache(search=${search}, page=${currentPage - 1})}">
+                         th:href="@{/admin/tache(search=${search}, page=${currentPage - 1})}">
                         <span class="page-number">Précédent</span>
                       </a>
                       <span th:each="pageNumber : ${#numbers.sequence(0, totalPages - 1)}">
-                            <a href="#" class="atbd-pagination__link" th:href="@{/tache(search=${search}, page=${pageNumber})}"
+                            <a href="#" class="atbd-pagination__link" th:href="@{/admin/tache(search=${search}, page=${pageNumber})}"
                                th:classappend="${pageNumber == currentPage} ? 'active' : ''">
                                 <span class="page-number" th:text="${pageNumber + 1}"></span>
                             </a>
                         </span>
                       <a href="#" class="atbd-pagination__link" th:if="${currentPage < totalPages - 1}"
-                         th:href="@{/tache(search=${search}, page=${currentPage + 1})}">
+                         th:href="@{/admin/tache(search=${search}, page=${currentPage + 1})}">
                         <span class="page-number">Suivant</span>
                       </a>
                       <a href="#" class="atbd-pagination__link pagination-control">
@@ -432,7 +419,7 @@
             </div>
           </div>
         </div>
-        <form action="/tache/delete" method="post">
+        <form th:action="@{/admin/tache/delete}" method="post">
           <div class="modal-footer">
             <input type="hidden" class="form-control" id="modal-id" name="id" readonly>
             <button type="button" class="btn btn-danger btn-outlined btn-sm" data-dismiss="modal">Non</button>
@@ -518,53 +505,53 @@
     });
   });
 </script>
-<script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDduF2tLXicDEPDMAtC6-NLOekX0A5vlnY"></script>
+
 <!-- inject:js-->
-<script src="assets/vendor_assets/js/jquery/jquery-3.5.1.min.js"></script>
-<script src="assets/vendor_assets/js/jquery/jquery-ui.js"></script>
-<script src="assets/vendor_assets/js/bootstrap/popper.js"></script>
-<script src="assets/vendor_assets/js/bootstrap/bootstrap.min.js"></script>
-<script src="assets/vendor_assets/js/moment/moment.min.js"></script>
-<script src="assets/vendor_assets/js/accordion.js"></script>
-<script src="assets/vendor_assets/js/autoComplete.js"></script>
-<script src="assets/vendor_assets/js/Chart.min.js"></script>
-<script src="assets/vendor_assets/js/charts.js"></script>
-<script src="assets/vendor_assets/js/daterangepicker.js"></script>
-<script src="assets/vendor_assets/js/drawer.js"></script>
-<script src="assets/vendor_assets/js/dynamicBadge.js"></script>
-<script src="assets/vendor_assets/js/dynamicCheckbox.js"></script>
-<script src="assets/vendor_assets/js/feather.min.js"></script>
-<script src="assets/vendor_assets/js/footable.min.js"></script>
-<script src="assets/vendor_assets/js/fullcalendar@5.2.0.js"></script>
-<script src="assets/vendor_assets/js/google-chart.js"></script>
-<script src="assets/vendor_assets/js/jquery-jvectormap-2.0.5.min.js"></script>
-<script src="assets/vendor_assets/js/jquery-jvectormap-world-mill-en.js"></script>
-<script src="assets/vendor_assets/js/jquery.countdown.min.js"></script>
-<script src="assets/vendor_assets/js/jquery.filterizr.min.js"></script>
-<script src="assets/vendor_assets/js/jquery.magnific-popup.min.js"></script>
-<script src="assets/vendor_assets/js/jquery.mCustomScrollbar.min.js"></script>
-<script src="assets/vendor_assets/js/jquery.peity.min.js"></script>
-<script src="assets/vendor_assets/js/jquery.star-rating-svg.min.js"></script>
-<script src="assets/vendor_assets/js/leaflet.js"></script>
-<script src="assets/vendor_assets/js/leaflet.markercluster.js"></script>
-<script src="assets/vendor_assets/js/loader.js"></script>
-<script src="assets/vendor_assets/js/message.js"></script>
-<script src="assets/vendor_assets/js/moment.js"></script>
-<script src="assets/vendor_assets/js/muuri.min.js"></script>
-<script src="assets/vendor_assets/js/notification.js"></script>
-<script src="assets/vendor_assets/js/popover.js"></script>
-<script src="assets/vendor_assets/js/select2.full.min.js"></script>
-<script src="assets/vendor_assets/js/slick.min.js"></script>
-<script src="assets/vendor_assets/js/trumbowyg.min.js"></script>
-<script src="assets/vendor_assets/js/wickedpicker.min.js"></script>
-<script src="assets/theme_assets/js/drag-drop.js"></script>
-<script src="assets/theme_assets/js/footable.js"></script>
-<script src="assets/theme_assets/js/full-calendar.js"></script>
-<script src="assets/theme_assets/js/googlemap-init.js"></script>
-<script src="assets/theme_assets/js/icon-loader.js"></script>
-<script src="assets/theme_assets/js/jvectormap-init.js"></script>
-<script src="assets/theme_assets/js/leaflet-init.js"></script>
-<script src="assets/theme_assets/js/main.js"></script>
+<script th:src="@{/assets/vendor_assets/js/jquery/jquery-3.5.1.min.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/jquery/jquery-ui.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/bootstrap/popper.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/bootstrap/bootstrap.min.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/moment/moment.min.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/accordion.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/autoComplete.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/Chart.min.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/charts.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/daterangepicker.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/drawer.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/dynamicBadge.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/dynamicCheckbox.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/feather.min.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/footable.min.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/fullcalendar@5.2.0.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/google-chart.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/jquery-jvectormap-2.0.5.min.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/jquery-jvectormap-world-mill-en.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/jquery.countdown.min.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/jquery.filterizr.min.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/jquery.magnific-popup.min.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/jquery.mCustomScrollbar.min.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/jquery.peity.min.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/jquery.star-rating-svg.min.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/leaflet.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/leaflet.markercluster.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/loader.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/message.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/moment.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/muuri.min.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/notification.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/popover.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/select2.full.min.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/slick.min.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/trumbowyg.min.js}"></script>
+<script th:src="@{/assets/vendor_assets/js/wickedpicker.min.js}"></script>
+<script th:src="@{/assets/theme_assets/js/drag-drop.js}"></script>
+<script th:src="@{/assets/theme_assets/js/footable.js}"></script>
+<script th:src="@{/assets/theme_assets/js/full-calendar.js}"></script>
+<script th:src="@{/assets/theme_assets/js/googlemap-init.js}"></script>
+<script th:src="@{/assets/theme_assets/js/icon-loader.js}"></script>
+<script th:src="@{/assets/theme_assets/js/jvectormap-init.js}"></script>
+<script th:src="@{/assets/theme_assets/js/leaflet-init.js}"></script>
+<script th:src="@{/assets/theme_assets/js/main.js}"></script>
 <!-- endinject-->
 </body>
 <!-- Include jQuery (if not already included) -->

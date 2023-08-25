@@ -2,7 +2,6 @@ package Service;
 
 import Model.Utilisateur;
 import Repository.UtilisateurRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -13,8 +12,11 @@ import java.util.NoSuchElementException;
 @Service
 public class UtilisateurService  {
 
-    @Autowired
-    private UtilisateurRepository utilisateurRepository;
+    private final UtilisateurRepository utilisateurRepository;
+
+    public UtilisateurService(UtilisateurRepository utilisateurRepository) {
+        this.utilisateurRepository = utilisateurRepository;
+    }
 
     public Utilisateur findByEmail(String username){
         return utilisateurRepository.findByUsername(username);

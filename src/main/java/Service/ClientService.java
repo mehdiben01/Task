@@ -2,7 +2,6 @@ package Service;
 
 import Model.Client;
 import Repository.ClientRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -13,8 +12,11 @@ import java.util.NoSuchElementException;
 @Service
 public class ClientService {
 
-    @Autowired
-    private ClientRepository clientRepository;
+    private final ClientRepository clientRepository;
+
+    public ClientService(ClientRepository clientRepository) {
+        this.clientRepository = clientRepository;
+    }
 
     public Client save(Client client){
         return clientRepository.save(client);
@@ -39,6 +41,8 @@ public class ClientService {
     public Page<Object[]> getAllClientsSupp(String search, Pageable pageable){
         return clientRepository.findAllCLientSupp(search,pageable);
     }
+
+
 
 
 }

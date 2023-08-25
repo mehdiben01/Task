@@ -1,5 +1,6 @@
 package Service;
 
+import Model.Role;
 import Model.Utilisateur;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -26,13 +27,14 @@ public class UserDetailsServiceImp implements UserDetailsService {
         if ("1".equals(utilisateur.getIsDeleted())) {
             throw new DisabledException("L'administrateur a désactivé votre compte");
         }
-        String[] roles = utilisateur.getRoles().stream().map(u -> u.getRole()).toArray(String[]::new);
-        UserDetails userDetails = User
+        String[] roles = utilisateur.getRoles().stream().map(Role::getRole).toArray(String[]::new);
+        return User
                 .withUsername(utilisateur.getUsername())
                 .password(utilisateur.getPassword())
                 .roles(roles).build();
-        return userDetails;
     }
+
+
 
 
 

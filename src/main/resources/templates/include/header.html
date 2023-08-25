@@ -10,11 +10,6 @@
                         <img class="dark" th:src="@{/img/logo_dark.png}" alt="svg" />
                         <img class="light" th:src="@{/img/logo_white.png}" alt="img" />
                     </a>
-
-                    <form action="/static" class="search-form">
-                    <span data-feather="search"></span>
-                    <input class="form-control mr-sm-2 box-shadow-none" type="text" placeholder="Search...">
-                </form>
                 <div class="top-menu">
 
                     <div class="strikingDash-top-menu position-relative">
@@ -822,129 +817,6 @@
                         </div>
                     </li>
                     <!-- ends: .nav-notification -->
-                    <li class="nav-settings">
-                        <div class="dropdown-custom">
-                            <a href="javascript:;" class="nav-item-toggle">
-                                <span data-feather="settings"></span></a>
-                            <div class="dropdown-wrapper dropdown-wrapper--large">
-                                <ul class="list-settings">
-                                    <li class="d-flex">
-                                        <div class="mr-3"><img src="img/mail.png" alt=""></div>
-                                        <div class="flex-grow-1">
-                                            <h6>
-                                                <a href="" class="stretched-link">All Features</a>
-                                            </h6>
-                                            <p>Introducing Increment subscriptions </p>
-                                        </div>
-                                    </li>
-                                    <li class="d-flex">
-                                        <div class="mr-3"><img src="img/color-palette.png" alt=""></div>
-                                        <div class="flex-grow-1">
-                                            <h6>
-                                                <a href="" class="stretched-link">Themes</a>
-                                            </h6>
-                                            <p>Third party themes that are compatible</p>
-                                        </div>
-                                    </li>
-                                    <li class="d-flex">
-                                        <div class="mr-3"><img src="img/home.png" alt=""></div>
-                                        <div class="flex-grow-1">
-                                            <h6>
-                                                <a href="" class="stretched-link">Payments</a>
-                                            </h6>
-                                            <p>We handle billions of dollars</p>
-                                        </div>
-                                    </li>
-                                    <li class="d-flex">
-                                        <div class="mr-3"><img src="img/video-camera.png" alt=""></div>
-                                        <div class="flex-grow-1">
-                                            <h6>
-                                                <a href="" class="stretched-link">Design Mockups</a>
-                                            </h6>
-                                            <p>Share planning visuals with clients</p>
-                                        </div>
-                                    </li>
-                                    <li class="d-flex">
-                                        <div class="mr-3"><img src="img/document.png" alt=""></div>
-                                        <div class="flex-grow-1">
-                                            <h6>
-                                                <a href="" class="stretched-link">Content Planner</a>
-                                            </h6>
-                                            <p>Centralize content gethering and editing</p>
-                                        </div>
-                                    </li>
-                                    <li class="d-flex"  >
-                                        <div class="mr-3"><img src="img/microphone.png" alt=""></div>
-                                        <div class="flex-grow-1">
-                                            <h6>
-                                                <a href="" class="stretched-link">Diagram Maker</a>
-                                            </h6>
-                                            <p>Plan user flows & test scenarios</p>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </li>
-                    <!-- ends: .nav-settings -->
-                    <li class="nav-support">
-                        <div class="dropdown-custom">
-                            <a href="javascript:;" class="nav-item-toggle">
-                                <span data-feather="help-circle"></span></a>
-                            <div class="dropdown-wrapper">
-                                <div class="list-group">
-                                    <span>Documentation</span>
-                                    <ul>
-                                        <li>
-                                            <a href="">How to customize admin</a>
-                                        </li>
-                                        <li>
-                                            <a href="">How to use</a>
-                                        </li>
-                                        <li>
-                                            <a href="">The relation of vertical spacing</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="list-group">
-                                    <span>Payments</span>
-                                    <ul>
-                                        <li>
-                                            <a href="">How to customize admin</a>
-                                        </li>
-                                        <li>
-                                            <a href="">How to use</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="list-group">
-                                    <span>Content Planner</span>
-                                    <ul>
-                                        <li>
-                                            <a href="">How to customize admin</a>
-                                        </li>
-                                        <li>
-                                            <a href="">How to use</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    <!-- ends: .nav-support -->
-                    <li class="nav-flag-select">
-                        <div class="dropdown-custom">
-                            <a href="javascript:;" class="nav-item-toggle"><img th:src="@{/img/flag.png}" alt="" class="rounded-circle"></a>
-                            <div class="dropdown-wrapper dropdown-wrapper--small">
-                                <a href="#"><img th:src="@{/img/eng.png}" alt=""> English</a>
-                                <a href="#"><img th:src="@{/img/ger.png}" alt=""> German</a>
-                                <a href="#"><img th:src="@{/img/spa.png}" alt=""> Spanish</a>
-                                <a href="#"><img th:src="@{/img/tur.png}" alt=""> Turkish</a>
-
-                            </div>
-                        </div>
-                    </li>
-                    <!-- ends: .nav-flag-select -->
                     <li class="nav-author">
                         <div class="dropdown-custom">
                             <a href="javascript:;" class="nav-item-toggle"><img th:src="${imagePath}" alt="" class="rounded-circle"></a>
@@ -964,27 +836,10 @@
                                             <a th:href="@{/profil}">
                                                 <span data-feather="user"></span> Profil</a>
                                         </li>
-                                        <li>
-                                            <a href="">
-                                                <span data-feather="settings"></span> Settings</a>
-                                        </li>
-                                        <li>
-                                            <a href="">
-                                                <span data-feather="key"></span> Billing</a>
-                                        </li>
-                                        <li>
-                                            <a href="">
-                                                <span data-feather="users"></span> Activity</a>
-                                        </li>
-                                        <li>
-                                            <a href="">
-                                                <span data-feather="bell"></span> Help</a>
-                                        </li>
                                     </ul>
                                     <a th:href="@{/logout}" class="nav-author__signout">
-                                        <span data-feather="log-out"></span> Sign Out
+                                        <span data-feather="log-out"></span> Se déconnecter
                                     </a>
-
                                 </div>
                             </div>
                             <!-- ends: .dropdown-wrapper -->
@@ -1012,76 +867,82 @@
                         <span>Main menu</span>
                     </li>
                     <li>
-                        <a href="/" th:class="${activePage == 'index'} ? 'active' : ''">
+                        <a th:href="@{/}" th:class="${activePage == 'index'} ? 'active' : ''">
                             <span data-feather="home" class="nav-icon"></span>
-                            <span class="menu-text">Dashboard</span>
+                            <span class="menu-text">Tableau de bord</span>
                         </a>
 
 
                     </li>
                     <li>
-                    <a href="/profil" th:class="${activePage == 'profil'} ? 'active' : ''">
+                    <a th:href="@{/profil}" th:class="${activePage == 'profil'} ? 'active' : ''">
                         <span data-feather="settings" class="nav-icon"></span>
                         <span class="menu-text">Profile Settings</span>
                     </a>
                     </li>
+                    <li th:if="${#request.isUserInRole('USER')}">
+                        <a th:href="@{/user/tacheu}" th:class="${activePage == 'tacheu' || activePage == 'tacheu-termine' || activePage == 'tacheu-encours' || activePage == 'tacheu-noncommence'   } ? 'active' : ''">
+                            <span data-feather="clipboard" class="nav-icon"></span>
+                            <span class="menu-text">Les taches</span>
+                        </a>
+                    </li>
                     <li class="has-child" th:if="${#request.isUserInRole('ADMIN')}">
-                        <a href="/team" th:class="${activePage == 'team'|| activePage == 'detailTeam' || activePage == 'team-annule'} ? 'active' : ''">
+                        <a th:href="@{/team}" th:class="${activePage == 'team'|| activePage == 'detailTeam' || activePage == 'team-annule'} ? 'active' : ''">
                             <span data-feather="users" class="nav-icon"></span>
                             <span class="menu-text">Equipes</span>
                             <span class="toggle-icon"></span>
                         </a>
                         <ul>
                             <li>
-                                <a href="/admin/team" th:class="${activePage == 'team'  ||  activePage == 'detailTeam' } ? 'active' : ''">Les membres</a>
+                                <a th:href="@{/admin/team}" th:class="${activePage == 'team'  ||  activePage == 'detailTeam' } ? 'active' : ''">Les membres</a>
                             </li>
                             <li>
-                                <a href="/team-annule" th:class="${activePage == 'team-annule' ? 'active' : ''}">Corbeille</a>
+                                <a th:href="@{/admin/team-annule}" th:class="${activePage == 'team-annule' ? 'active' : ''}">Corbeille</a>
                             </li>
                         </ul>
                     </li>
-                    <li class="has-child">
-                        <a href="/client" th:class="${activePage == 'client'  ||  activePage == 'detailClient' ||  activePage == 'client-annule'} ? 'active' : ''">
+                    <li class="has-child" th:if="${#request.isUserInRole('ADMIN')}">
+                        <a th:href="@{/admin/client}" th:class="${activePage == 'client'  ||  activePage == 'detailClient' ||  activePage == 'client-annule'} ? 'active' : ''">
                             <span data-feather="user-check" class="nav-icon"></span>
                             <span class="menu-text">Clients</span>
                             <span class="toggle-icon"></span>
                         </a>
                         <ul>
                             <li>
-                                <a href="/client" th:class="${activePage == 'client'  ||  activePage == 'detailClient' } ? 'active' : ''">Les clients</a>
+                                <a th:href="@{/admin/client}" th:class="${activePage == 'client'  ||  activePage == 'detailClient' } ? 'active' : ''">Les clients</a>
                             </li>
                             <li>
-                                <a href="/client-annule" th:class="${activePage == 'client-annule' ? 'active' : ''}">Corbeille</a>
+                                <a th:href="@{/admin/client-annule}" th:class="${activePage == 'client-annule' ? 'active' : ''}">Corbeille</a>
                             </li>
                         </ul>
                     </li>
-                    <li class="has-child">
-                        <a href="/tache" th:class="${activePage == 'tache' || activePage == 'tache-retarde' || activePage == 'Detailtache' || activePage == 'tache-noncommence' || activePage == 'Edittache' || activePage == 'tache-termine' || activePage == 'tache-encours' || activePage == 'tache-annule' || activePage == 'tache-termineretard' } ? 'active' : ''">
+                    <li class="has-child" th:if="${#request.isUserInRole('ADMIN')}">
+                        <a th:href="@{/admin/tache}" th:class="${activePage == 'tache' || activePage == 'tache-retarde' || activePage == 'detailTache' || activePage == 'tache-noncommence' || activePage == 'Edittache' || activePage == 'tache-termine' || activePage == 'tache-encours' || activePage == 'tache-annule' || activePage == 'tache-termineretard' } ? 'active' : ''">
                             <span data-feather="clipboard" class="nav-icon"></span>
                             <span class="menu-text">Taches</span>
                             <span class="toggle-icon"></span>
                         </a>
                         <ul>
                             <li>
-                                <a href="/tache" th:class="${activePage == 'tache' || activePage == 'tache-retarde' || activePage == 'Detailtache' || activePage == 'tache-noncommence' || activePage == 'Edittache' || activePage == 'tache-termine' || activePage == 'tache-encours'  || activePage == 'tache-termineretard' } ? 'active' : ''">Les taches</a>
+                                <a th:href="@{/admin/tache}" th:class="${activePage == 'tache' || activePage == 'tache-retarde' || activePage == 'detailTache' || activePage == 'tache-noncommence' || activePage == 'Edittache' || activePage == 'tache-termine' || activePage == 'tache-encours'  || activePage == 'tache-termineretard' } ? 'active' : ''">Les taches</a>
                             </li>
                             <li>
-                                <a href="/tache-annule" th:class="${activePage == 'tache-annule' ? 'active' : ''}">Corbeille</a>
+                                <a th:href="@{/admin/tache-annule}" th:class="${activePage == 'tache-annule' ? 'active' : ''}">Corbeille</a>
                             </li>
                         </ul>
                     </li>
-                    <li class="has-child">
-                        <a href="/projet" th:class="${activePage == 'projet' || activePage == 'projet-retarde' || activePage == 'DetailProjet' || activePage == 'projet-noncommence' || activePage == 'EditProjet' || activePage == 'projet-termine' || activePage == 'projet-encours' || activePage == 'projet-annule'} ? 'active' : ''">
+                    <li class="has-child" th:if="${#request.isUserInRole('ADMIN')}">
+                        <a th:href="@{/admin/projet}" th:class="${activePage == 'projet' || activePage == 'projet-retarde' || activePage == 'DetailProjet' || activePage == 'projet-noncommence' || activePage == 'EditProjet' || activePage == 'projet-termine' || activePage == 'projet-encours' || activePage == 'projet-annule'} ? 'active' : ''">
                             <span data-feather="target" class="nav-icon"></span>
                             <span class="menu-text">Projets</span>
                             <span class="toggle-icon"></span>
                         </a>
                         <ul>
                             <li>
-                                <a href="/projet" th:class="${activePage == 'projet' || activePage == 'projet-retarde' || activePage == 'DetailProjet' || activePage == 'projet-noncommence' || activePage == 'EditProjet' || activePage == 'projet-termine' || activePage == 'projet-encours' } ? 'active' : ''">Les projets</a>
+                                <a th:href="@{/admin/projet}" th:class="${activePage == 'projet' || activePage == 'projet-retarde' || activePage == 'DetailProjet' || activePage == 'projet-noncommence' || activePage == 'EditProjet' || activePage == 'projet-termine' || activePage == 'projet-encours' } ? 'active' : ''">Les projets</a>
                             </li>
                             <li>
-                                <a href="/projet-annule" th:class="${activePage == 'projet-annule' ? 'active' : ''}">Corbeille</a>
+                                <a th:href="@{/admin/projet-annule}" th:class="${activePage == 'projet-annule' ? 'active' : ''}">Corbeille</a>
                             </li>
                         </ul>
                     </li>

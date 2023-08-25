@@ -61,7 +61,7 @@
               </div>
             </div>
             <div class="d-flex text-capitalize">
-              <a th:href="@{/EditProject/{id}(id=${project[0][0].id})}"> <button type="button" class="breadcrumb-edit border-0 color-primary content-center bg-white fs-12 fw-500 radius-md">
+              <a th:href="@{/admin/EditProject/{id}(id=${project[0][0].id})}"> <button type="button" class="breadcrumb-edit border-0 color-primary content-center bg-white fs-12 fw-500 radius-md">
                 <span data-feather="edit-3"></span>Editer</button></a>
               <button type="button" class="breadcrumb-remove border-0 color-danger content-center bg-white fs-12 fw-500 ml-10 radius-md" data-toggle="modal" data-target="#modal-info-delete"
                       th:data-id="${project[0][0].id}" th:data-nom="${project[0][0].title+' de '+project[0][0].clients.company}">
@@ -75,12 +75,12 @@
       <div class="projects-tab-content mb-30">
         <div class="row">
           <div class="col-xxl-3 col-lg-4 mb-25">
-            <div class="progress-box px-25 pt-25 pb-10 bg-warning radius-xl" th:if="${ (project[0][1] != 100) and (project[0][1] != null) }">
+            <div class="progress-box px-25 pt-25 pb-10 bg-warning radius-xl" th:if="${ (project[0][1] != 100) and (project[0][1] != null) and (project[0][1] != 0) }">
 
               <div class="d-flex justify-content-between mb-3">
                 <h6 class="text-white fw-500 fs-16 text-capitalize">Moyenne des tâches réalisées</h6>
 
-                <span class="progress-percentage text-white fw-500 fs-16 text-capitalize" th:text="${project[0][1]+'%'}"></span>
+                <span class="progress-percentage text-white fw-500 fs-16 text-capitalize" th:text="${project[0][1]+' %'}"></span>
 
               </div>
               <div class="progress-wrap d-flex align-items-center mb-15">
@@ -107,7 +107,7 @@
               </div>
 
             </div>
-            <div  class="progress-box px-25 pt-25 pb-10 bg-warning radius-xl" th:if="${ (project[0][1] == null) and (project[0][0].isDeleted != '1')}">
+            <div  class="progress-box px-25 pt-25 pb-10 bg-warning radius-xl" th:if="${ ((project[0][1] == null) or (project[0][1] == 0))  and (project[0][0].isDeleted != '1')}">
 
               <div class="d-flex justify-content-between mb-3">
                 <h6 class="text-white fw-500 fs-16">La réalisation du projet n'a pas encore commencé</h6>
@@ -188,8 +188,8 @@
                     <div class="about-projects">
                       <div class="about-projects__details">
                         <!-- Afficher l'image du client -->
-                        <img th:src="${project[0][0].clients.cheminImage}" class="wh-200 mb-3" alt="Image du client" width="100">
-                        <p class="color-dark fs-14 mt-1 mb-0 fw-500" th:text="${project[0][0].clients.company}"></p>
+                     <a th:href="@{/admin/EditClient/{id}(id=${project[0][0].clients.id})}">   <img th:src="${project[0][0].clients.cheminImage}" class="wh-200 mb-3" alt="Image du client" width="100"></a>
+                        <a th:href="@{/admin/EditClient/{id}(id=${project[0][0].clients.id})}">   <p class="color-dark fs-14 mt-1 mb-0 fw-500" th:text="${project[0][0].clients.company}"></p></a>
 
                       </div>
                     </div>
@@ -239,32 +239,31 @@
               <!-- ends: .card -->
               <div class="col-xxl-4 col-lg-12 col-12 mb-25">
                 <div class="card h-100">
-                  <div class="card-header d-flex justify-content-between align-items-center py-10  px-sm-25 px-3">
-                    <h6 class="fw-500 ">Liste des membres ayant participé à ce projet</h6>
+                  <div class="card-header d-flex justify-content-between align-items-center py-10 px-sm-25 px-3">
+                    <h6 class="fw-500">Liste des membres ayant participé à ce projet</h6>
                   </div>
-                  <div class="card-body" >
+                  <div class="card-body" style="max-height: 300px; overflow-y: auto;">
                     <div th:each="taches : ${project[0][0].taches}" th:if="${taches.users != null}" class="d-flex align-items-center mb-25">
                       <!-- Check if taches.users exists -->
-
-                        <!-- Display user information -->
-                        <img th:src="${taches.users.cheminImage}" class="wh-46 mr-15 rounded-circle" alt="img">
-                        <div>
-                          <!-- Afficher le nom du client -->
-                          <p class="fs-14 fw-600 color-dark mb-0" th:text="${taches.users.nom+' '+taches.users.prenom}"></p>
-                          <!-- Afficher le poste du client -->
-                          <span class="mt-1 fs-14 color-light" th:text="${'Tâche : '+taches.title}"></span><br>
-                          <span class="mt-1 fs-14 color-light" th:text="${'Pourcentage réalisé  : '+taches.etat+'%'}"></span><br>
-                          <span class="mt-1 fs-14 color-light" th:text="${'Date de debut : '+taches.dated+' - Date de fin : '+taches.datef}"></span>
-                        </div>
-
+                      <!-- Display user information -->
+                     <a th:href="@{/admin/DetailTeam/{username}(username=${taches.users.username})}"> <img th:src="${taches.users.cheminImage}" class="wh-46 mr-15 rounded-circle" alt="img"></a>
+                      <div>
+                        <!-- Afficher le nom du client -->
+                        <a th:href="@{/admin/DetailTeam/{username}(username=${taches.users.username})}">  <p class="fs-14 fw-600 color-dark mb-0" th:text="${taches.users.nom+' '+taches.users.prenom}"></p></a>
+                        <!-- Afficher le poste du client -->
+                        <a th:href="@{/admin/DetailTache/{id}(id=${taches.id})}"><span class="mt-1 fs-14 color-light" th:text="${'Tâche : '+taches.title}"></span></a><br>
+                        <span class="mt-1 fs-14 color-light" th:text="${'Pourcentage réalisé  : '+taches.etat+'%'}"></span><br>
+                        <span class="mt-1 fs-14 color-light" th:text="${'Date de debut : '+taches.dated+' - Date de fin : '+taches.datef}"></span>
+                      </div>
                     </div>
-                    <div th:if="${ project[0][1] == null}">
+                    <div th:if="${project[0][1] == null}">
                       <p>Aucun utilisateur assigné à cette tâche.</p>
                     </div>
                   </div>
                 </div>
                 <!-- ends: .card -->
               </div>
+
             </div>
           </div>
 
@@ -291,7 +290,7 @@
             </div>
           </div>
         </div>
-        <form action="/project/delete" method="post">
+        <form th:action="@{/admin/project/delete}" method="post">
           <div class="modal-footer">
             <input type="hidden" class="form-control" id="modal-id" name="id" readonly>
             <button type="button" class="btn btn-danger btn-outlined btn-sm" data-dismiss="modal">Non</button>
@@ -365,7 +364,7 @@
     });
   });
 </script>
-<script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDduF2tLXicDEPDMAtC6-NLOekX0A5vlnY"></script>
+
 <!-- inject:js-->
 <script th:src="@{/assets/vendor_assets/js/jquery/jquery-3.5.1.min.js}"></script>
 <script th:src="@{/assets/vendor_assets/js/jquery/jquery-ui.js}"></script>

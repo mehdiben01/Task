@@ -34,6 +34,12 @@
   <!-- endinject -->
 
   <link rel="icon" type="image/png" sizes="16x16" href="img/favicon.png">
+  <style>
+    .edit-profile__body .form-group textarea.form-control {
+      height: 209px;
+      resize: none;
+    }
+  </style>
 </head>
 
 <body class="layout-light side-menu overlayScroll">
@@ -141,11 +147,11 @@
                         <div class="row justify-content-center">
                           <div class="col-xxl-6 col-lg-8 col-sm-10">
                             <div class="edit-profile__body mx-lg-20">
-                              <form action="/tache/update" method="post" th:object="${tache}" class="was-validated">
+                              <form th:action="@{/admin/tache/update}" method="post" th:object="${tache}" class="was-validated">
                                 <input type="hidden" class="form-control" id="id"  name="id" th:value="${tache.id}">
                                 <div class="form-group mb-20">
                                   <label for="title">Nom</label>
-                                  <input type="text" class="form-control" id="title" name="title" placeholder="title" th:value="${tache.title}" pattern="[A-Za-zÀ-ÿ\s]+"   required  th:classappend="${#fields.hasErrors('title')} ? 'is-invalid'">
+                                  <input type="text" class="form-control" id="title" name="title" placeholder="title" th:value="${tache.title}" pattern="[A-Za-zÀ-ÿ\s]+"   required  th:classappend="${#fields.hasErrors('title')} ? 'is-invalid'" maxlength="200">
                                   <div class="invalid-feedback">
                                     <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></span>
                                     Le titre est requis.
@@ -153,7 +159,7 @@
                                 </div>
                                 <div class="form-group mb-20">
                                   <label for="description">Prenom</label>
-                                  <textarea class="form-control" id="description" name="description" placeholder="description" th:text="${tache.description}" pattern="[A-Za-zÀ-ÿ\s]+" required th:classappend="${#fields.hasErrors('description')} ? 'is-invalid'"></textarea>
+                                  <textarea class="form-control" id="description" name="description" placeholder="description" th:text="${tache.description}" pattern="[A-Za-zÀ-ÿ\s]+" required th:classappend="${#fields.hasErrors('description')} ? 'is-invalid'" maxlength="650"></textarea>
                                   <div class="invalid-feedback">
                                     <span th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></span>
                                     La description est requis.
@@ -212,7 +218,7 @@
                                 </div>
                                   <input type="hidden" class="form-control" id="dateDebutInput" name="datedu" placeholder="date de debut" th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" readonly>
                                 <div class="button-group d-flex flex-wrap pt-30 mb-15">
-                                 <button type="submit" class="btn btn-primary btn-default btn-squared mr-15 text-capitalize">update profile
+                                 <button type="submit" class="btn btn-primary btn-default btn-squared mr-15 text-capitalize">modifier
                                   </button>
                                 </div>
                               </form>
@@ -347,7 +353,7 @@
             </div>
           </div>
         </div>
-        <form action="/tache/delete" method="post">
+        <form th:action="@{/admin/tache/delete}" method="post">
           <div class="modal-footer">
             <input type="hidden" class="form-control" id="modal-id" name="id" readonly>
             <button type="button" class="btn btn-danger btn-outlined btn-sm" data-dismiss="modal">Non</button>
@@ -446,7 +452,7 @@
     });
   });
 </script>
-<script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDduF2tLXicDEPDMAtC6-NLOekX0A5vlnY"></script>
+
 <!-- inject:js-->
 <!-- inject:js-->
 <script th:src="@{/assets/vendor_assets/js/jquery/jquery-3.5.1.min.js}"></script>

@@ -30,6 +30,8 @@ public class TacheSupprimee {
 
     private String datefu;
 
+    private String isDeleted="1";
+
 
     @ManyToOne
     private Project project;

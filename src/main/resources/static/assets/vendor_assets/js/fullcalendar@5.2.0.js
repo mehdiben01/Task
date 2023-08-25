@@ -14064,7 +14064,7 @@ var FullCalendar = (function (exports) {
             var apiKey = meta.googleCalendarApiKey || options.googleCalendarApiKey;
             if (!apiKey) {
                 onFailure({
-                    message: 'Specify a googleCalendarApiKey. See http://fullcalendar.io/docs/google_calendar/'
+                    message: 'Specify a googleCalendarApiKey.'
                 });
             }
             else {

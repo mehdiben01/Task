@@ -64,11 +64,15 @@
                                 <strong><span th:text="${message}"></span></strong>
                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
+                            <div th:if="${messagesu}" class="alert alert-success alert-dismissible fade show" role="alert">
+                                <strong><span th:text="${messagesu}"></span></strong>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
                             <!-- Suite du contenu de la page -->
                         </div>
 
                         <div class="breadcrumb-main">
-                            <h4 class="text-capitalize breadcrumb-title">My profile</h4>
+                            <h4 class="text-capitalize breadcrumb-title" th:text="${'Projet : '+project.title}"></h4>
                             <div class="breadcrumb-action justify-content-center flex-wrap">
 
 
@@ -97,10 +101,9 @@
                                 <div class="ps-tab p-20 pb-25">
                                     <div class="nav flex-column text-left" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                                         <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true">
-                                            <span data-feather="user"></span>Edit profile</a>
+                                            <span data-feather="user"></span>Editer le projet</a>
                                         <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false">
-                                            <span data-feather="settings"></span>Account
-                                            setting</a>
+                                            <span data-feather="settings"></span>Annuler le projet</a>
 
 
                                     </div>
@@ -120,19 +123,18 @@
                                         <div class="card">
                                             <div class="card-header px-sm-25 px-3">
                                                 <div class="edit-profile__title">
-                                                    <h6>Edit Profile</h6>
-                                                    <span class="fs-13 color-light fw-400">Set up your personal
-                                                            information</span>
+                                                    <h6>Editer le projet</h6>
+                                                    <span class="fs-13 color-light fw-400">Configurez les informations du projet</span>
                                                 </div>
                                             </div>
                                             <div class="card-body">
                                                 <div class="row justify-content-center">
                                                     <div class="col-xxl-6 col-lg-8 col-sm-10">
                                                         <div class="edit-profile__body mx-lg-20">
-                                                            <form action="/project/update" method="post" th:object="${project}" class="was-validated">
+                                                            <form th:action="@{/admin/project/update}" method="post" th:object="${project}" class="was-validated">
                                                                 <input type="hidden" class="form-control" id="id"  name="id" th:value="${project.id}">
                                                                 <div class="form-group mb-20">
-                                                                    <label for="names">Nom</label>
+                                                                    <label for="names">Titre</label>
                                                                     <input type="text" class="form-control" id="names" name="title" placeholder="Nom" th:value="${project.title}" pattern="[A-Za-zÀ-ÿ\s]+"   required  th:classappend="${#fields.hasErrors('title')} ? 'is-invalid'">
                                                                     <div class="invalid-feedback">
                                                                         <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></span>
@@ -140,7 +142,7 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group mb-20">
-                                                                    <label for="names">Prenom</label>
+                                                                    <label for="names">Description</label>
                                                                     <textarea class="form-control" placeholder="Description" th:text="${project.description}" name="description" required th:classappend="${#fields.hasErrors('description')} ? 'is-invalid'" maxlength="300"></textarea>
                                                                     <div class="invalid-feedback">
                                                                         <span th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></span>
@@ -176,22 +178,8 @@
 
 
 
-                                                                    <button type="submit" class="btn btn-primary btn-default btn-squared mr-15 text-capitalize">update profile
+                                                                    <button type="submit" class="btn btn-primary btn-default btn-squared mr-15 text-capitalize">mettre à jour le projet
                                                                     </button>
-
-
-
-
-
-
-
-
-                                                                    <button class="btn btn-light btn-default btn-squared fw-400 text-capitalize">cancel
-                                                                    </button>
-
-
-
-
 
                                                                 </div>
                                                             </form>
@@ -228,7 +216,7 @@
                                                             <div class="my-sm-0 my-10 py-10">
 
                                                                 <button type="submit" class="btn btn-danger btn-default btn-squared fw-400 text-capitalize" data-toggle="modal" data-target="#modal-info-delete"
-                                                                        th:data-id="${project.clients.id}" th:data-nom="${project.title+' de '+project.clients.company}">close account
+                                                                        th:data-id="${project.id}" th:data-nom="${project.title+' de '+project.clients.company}">Annuler le projet
                                                                 </button>
 
                                                             </div>
@@ -326,7 +314,7 @@
                         </div>
                     </div>
                 </div>
-                <form action="/project/delete" method="post">
+                <form th:action="@{/admin/project/delete}" method="post">
                     <div class="modal-footer">
                         <input type="hidden" class="form-control" id="modal-id" name="id" readonly>
                         <button type="button" class="btn btn-danger btn-outlined btn-sm" data-dismiss="modal">Non</button>
@@ -400,7 +388,7 @@
         });
     });
 </script>
-<script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDduF2tLXicDEPDMAtC6-NLOekX0A5vlnY"></script>
+
 <!-- inject:js-->
 <script th:src="@{/assets/vendor_assets/js/jquery/jquery-3.5.1.min.js}"></script>
 <script th:src="@{/assets/vendor_assets/js/jquery/jquery-ui.js}"></script>

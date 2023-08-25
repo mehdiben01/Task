@@ -26,10 +26,10 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
     long count();
 
 
-    @Query("SELECT p, AVG(t.etat), COUNT(t.id) FROM Project p LEFT JOIN p.taches t WHERE p.isDeleted = '0' GROUP BY p")
+    @Query("SELECT p, ROUND(AVG(t.etat), 2), COUNT(t.id) FROM Project p LEFT JOIN p.taches t WHERE p.isDeleted = '0' GROUP BY p")
     List<Object[]> selectExistingProjectsAndAverageEtat();
 
-    @Query("SELECT p, AVG(t.etat), COUNT(t.id), MAX(t.datefu) FROM Project p LEFT JOIN p.taches t " +
+    @Query("SELECT p, ROUND(AVG(t.etat), 2), COUNT(t.id), MAX(t.datefu) FROM Project p LEFT JOIN p.taches t " +
             "WHERE (" +
             "   LOWER(p.title) LIKE %:search% " +
             "   OR LOWER(p.description) LIKE %:search% " +
@@ -49,14 +49,14 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
     Optional<Project> getProjectById(Integer id);
 
     boolean existsByTitleAndDescriptionAndClientsNot(String title, String description , Client clients);
-    boolean existsByTitleAndClients(String title , Client clients);
+    boolean existsByTitleAndIdNot(String title, Integer id);
 
     boolean existsByTitleAndClientsNot(String title , Client clients);
 
-    @Query("SELECT p, AVG(t.etat), COUNT(t.id) FROM Project p LEFT JOIN p.taches t WHERE p.id = :id  GROUP BY p")
+    @Query("SELECT p, ROUND(AVG(t.etat), 2), COUNT(t.id) FROM Project p LEFT JOIN p.taches t WHERE p.id = :id  GROUP BY p")
     List<Object[]> selectDetailProjct(@Param("id") Integer id);
 
-    @Query("SELECT p, AVG(t.etat) AS averageState, COUNT(t.id), MAX(t.datefu) " +
+    @Query("SELECT p, ROUND(AVG(t.etat), 2) AS averageState, COUNT(t.id), MAX(t.datefu) " +
             "FROM Project p " +
             "LEFT JOIN p.taches t " +
             "WHERE p.isDeleted = '0' " +
@@ -67,15 +67,13 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
             "AND p.id IN (" +
             "   SELECT DISTINCT t.project.id " +
             "   FROM Tache t " +
-            "   WHERE t.datefu != '0' " +
             "   GROUP BY t.project.id " +
-            "   HAVING AVG(t.etat) = 100" +
+            "   HAVING AVG(t.etat) = 100 " +
             ") " +
-            "GROUP BY p " +
-            "HAVING MAX(t.datefu) <= p.datef")
+            "GROUP BY p ")
     Page<Object[]> selectExistingProjectsTermine(@Param("search") String search, Pageable pageable);
 
-    @Query("SELECT p, AVG(t.etat) AS averageState, COUNT(t.id), MAX(t.datefu) " +
+    @Query("SELECT p, ROUND(AVG(t.etat), 2) AS averageState, COUNT(t.id), MAX(t.datefu) " +
             "FROM Project p LEFT JOIN p.taches t " +
             "WHERE p.isDeleted = '0'  " +
             "AND TO_DATE(p.datef, 'YYYY-MM-DD') >= CURRENT_DATE " +
@@ -86,7 +84,6 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
             "AND p.id IN (" +
             "   SELECT DISTINCT t.project.id " +
             "   FROM Tache t " +
-            "   WHERE t.datefu = '0' " +
             "   GROUP BY t.project.id " +
             "   HAVING AVG(t.etat) BETWEEN 1 and 99" +
             ") " +

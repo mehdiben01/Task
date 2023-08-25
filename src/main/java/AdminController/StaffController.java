@@ -1,4 +1,4 @@
-package Controller;
+package AdminController;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +9,6 @@ public class StaffController {
 
     @GetMapping("/staff")
     public String getStaff(){
-        return "staff/test";
+        return "tache";
     }
 }
