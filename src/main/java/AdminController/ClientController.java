@@ -132,7 +132,7 @@ public class ClientController {
             boolean imageUpdateResult = imageService.updateImage(client, imageFile);
             if (!imageUpdateResult) {
                 redirectAttributes.addFlashAttribute("message", ImageService.IMAGE_SIZE_ERROR_MESSAGE);
-                return "redirect:/admin/team";
+                return "redirect:/admin/client";
             }
         }
 

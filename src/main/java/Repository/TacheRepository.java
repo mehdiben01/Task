@@ -129,7 +129,8 @@ public interface TacheRepository extends JpaRepository<Tache, Integer> {
 
     @Query("SELECT COUNT(t) " +
             "FROM Tache t " +
-            "WHERE TO_DATE(t.datef, 'YYYY-MM-DD') < CURRENT_DATE ")
+            "WHERE TO_DATE(t.datef, 'YYYY-MM-DD') < CURRENT_DATE "+
+            "AND t.etat!=100")
     long countR();
 
 

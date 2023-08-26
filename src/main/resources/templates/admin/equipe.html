@@ -360,27 +360,7 @@
 </div>
 <div class="overlay-dark-sidebar"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script>
-  $(document).ready(function() {
-    $('#modal-info-delete').on('show.bs.modal', function (event) {
-      const button = $(event.relatedTarget);
-      const idValue = button.attr('data-id');
-      const nomValue = button.attr('data-nom');
 
-      $("#modal-nom-display").text(nomValue);
-      $("#modal-id").val(idValue);
-    });
-
-    // When the 'Yes' button in the modal is clicked, retrieve the 'id' value and do something with it
-    $(".btn-success").click(function() {
-      const idValue = $("#modal-id").val();
-      const nomValue = $("#modal-nom-display").text();
-      // Now you can use the 'idValue' and 'nomValue' variables in your code to perform the necessary action with the ID and name.
-      console.log("ID to be deleted:", idValue);
-      console.log("Name to be deleted:", nomValue);
-    });
-  });
-</script>
 
 
 
