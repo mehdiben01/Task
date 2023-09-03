@@ -233,10 +233,10 @@
                         </a>
                         <span class="media-badge text-uppercase color-white bg-success" th:if="${(project[1] == 100) and (project[0].isDeleted != '1') and(project[0].datef >= project[3])  }">Terminé</span>
                         <span class="media-badge text-uppercase color-white bg-warning" th:if="${(project[1] == 100) and (project[0].isDeleted != '1') and(project[0].datef < project[3])  }">Terminé en retard</span>
-                        <span class="media-badge text-uppercase color-white bg-warning" th:if="${(project[1] < 100) and (project[1]>0) and (project[0].isDeleted != '1') and(T(java.time.LocalDate).parse(project[0].datef) >= #temporals.createToday())  }">En cours</span>
-                        <span class="media-badge text-uppercase color-white bg-warning" th:if="${ (project[0].isDeleted != '1') and(T(java.time.LocalDate).parse(project[0].datef) >= #temporals.createToday())  and  (project[1] == null) or (project[1] == 0) }">Pas encore commencé</span>
+                          <span class="media-badge text-uppercase color-white bg-warning" th:if="${(project[1] < 100) and (project[1]>0) and (project[0].isDeleted != '1') and (#dates.format(project[0].datef, 'yyyy-MM-dd') >= #dates.format(#dates.createNow(), 'yyyy-MM-dd'))  }">En cours</span>
+                        <span class="media-badge text-uppercase color-white bg-warning" th:if="${ (project[0].isDeleted != '1') and(#dates.format(project[0].datef, 'yyyy-MM-dd') >= #dates.format(#dates.createNow(), 'yyyy-MM-dd'))  and  (project[1] == null) or (project[1] == 0) }">Pas encore commencé</span>
                         <span class="media-badge text-uppercase color-white bg-danger" th:if="${(project[0].isDeleted == '1')}">Annulé</span>
-                        <span class="media-badge text-uppercase color-white bg-danger" th:if="${(T(java.time.LocalDate).parse(project[0].datef) < #temporals.createToday()) and (project[1] != 100)  and (project[0].isDeleted != '1') }">retardé</span>
+                        <span class="media-badge text-uppercase color-white bg-danger" th:if="${(#dates.format(project[0].datef, 'yyyy-MM-dd') < #dates.format(#dates.createNow(), 'yyyy-MM-dd')) and (project[1] != 100)  and (project[0].isDeleted != '1') }">retardé</span>
                       </div>
                     </div>
                     <div class="user-group-people mt-15 text-capitalize">
@@ -255,7 +255,7 @@
                       </div>
                     </div>
                     <div class="user-group-progress-bar">
-                      <div class="progress-wrap d-flex align-items-center mb-0" th:if="${ (project[1] != 100) and (project[1] != null) and (T(java.time.LocalDate).parse(project[0].datef) >= T(java.time.LocalDate).parse(project[3]))  }">
+                      <div class="progress-wrap d-flex align-items-center mb-0" th:if="${ (project[1] != 100) and (project[1] != null) and (project[0].datef >= project[3])  }">
 
                         <div class="progress" >
 
@@ -267,7 +267,7 @@
 
 
                       </div>
-                      <div class="progress-wrap d-flex align-items-center mb-0" th:if="${ ((project[1] == 100) or (project[1] != 100)  or (project[1] != null)) and (T(java.time.LocalDate).parse(project[0].datef) < T(java.time.LocalDate).parse(project[3]))  }">
+                      <div class="progress-wrap d-flex align-items-center mb-0" th:if="${ ((project[1] == 100) or (project[1] != 100)  or (project[1] != null)) and (project[0].datef < project[3])  }">
 
                         <div class="progress" >
 
@@ -280,7 +280,7 @@
 
                       </div>
 
-                      <div class="progress-wrap d-flex align-items-center mb-0" th:if="${(project[1] == 100) and (T(java.time.LocalDate).parse(project[0].datef) >= T(java.time.LocalDate).parse(project[3]))  }">
+                      <div class="progress-wrap d-flex align-items-center mb-0" th:if="${(project[1] == 100) and (project[0].datef >= project[3])  }">
                         <div class="progress">
                           <div class="progress-bar bg-success" role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>

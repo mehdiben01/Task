@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,7 +22,7 @@ public interface TacheRepository extends JpaRepository<Tache, Integer> {
 
     boolean existsByTitleAndDescriptionAndProjectAndUsersNot(String title,String description, Project project, Utilisateur users );
 
-    boolean existsByTitleAndDescriptionAndDatedAndDatefAndUsersAndProjectAndEtat(String title, String description, String dated, String datef,  Utilisateur users, Project project, Integer etat);
+    boolean existsByTitleAndDescriptionAndDatedAndDatefAndUsersAndProjectAndEtat(String title, String description, Date dated, Date datef, Utilisateur users, Project project, Integer etat);
 
     Optional<Tache> getTacheById(Integer id);
 
@@ -35,8 +36,8 @@ public interface TacheRepository extends JpaRepository<Tache, Integer> {
             "FROM Tache t " +
             "WHERE (LOWER(t.title) LIKE %:search% " +
             "OR (LOWER(t.description)) LIKE %:search% " +
-            "OR (LOWER(t.dated)) LIKE %:search% " +
-            "OR (LOWER(t.datef)) LIKE %:search%) " +
+            "OR TO_CHAR(t.dated, 'YYYY-MM-DD') LIKE %:search% " +
+            "OR TO_CHAR(t.datef, 'YYYY-MM-DD') LIKE %:search%) " +
             "GROUP BY t.id  ")
     Page<Object[]> selectAllTaches(@Param("search") String search, Pageable pageable);
 
@@ -45,8 +46,8 @@ public interface TacheRepository extends JpaRepository<Tache, Integer> {
             "WHERE t.datef > t.datefu " +
             "AND (LOWER(t.title) LIKE %:search% " +
             "OR (LOWER(t.description)) LIKE %:search% " +
-            "OR (LOWER(t.dated)) LIKE %:search% " +
-            "OR (LOWER(t.datef)) LIKE %:search% )" +
+            "OR TO_CHAR(t.dated, 'YYYY-MM-DD') LIKE %:search% " +
+            "OR TO_CHAR(t.datef, 'YYYY-MM-DD') LIKE %:search% )" +
             "GROUP BY t.id ")
     Page<Object[]> selectAllTachesAnnuler(@Param("search") String search, Pageable pageable);
 
@@ -57,8 +58,8 @@ public interface TacheRepository extends JpaRepository<Tache, Integer> {
             "AND TO_DATE(t.datef, 'YYYY-MM-DD') >= CURRENT_DATE " +
             "AND (LOWER(t.title) LIKE %:search% " +
             "OR (LOWER(t.description)) LIKE %:search% " +
-            "OR (LOWER(t.dated)) LIKE %:search% " +
-            "OR (LOWER(t.datef)) LIKE %:search% )" +
+            "OR TO_CHAR(t.dated, 'YYYY-MM-DD') LIKE %:search% " +
+            "OR TO_CHAR(t.datef, 'YYYY-MM-DD') LIKE %:search% )" +
             "GROUP BY t.id ")
     Page<Object[]> selectAllTachesEncours(@Param("search") String search, Pageable pageable);
 
@@ -69,8 +70,8 @@ public interface TacheRepository extends JpaRepository<Tache, Integer> {
             "AND TO_DATE(t.datef, 'YYYY-MM-DD') >= CURRENT_DATE " +
             "AND (LOWER(t.title) LIKE %:search% " +
             "OR (LOWER(t.description)) LIKE %:search% " +
-            "OR (LOWER(t.dated)) LIKE %:search% " +
-            "OR (LOWER(t.datef)) LIKE %:search% )" +
+            "OR TO_CHAR(t.dated, 'YYYY-MM-DD') LIKE %:search% " +
+            "OR TO_CHAR(t.datef, 'YYYY-MM-DD') LIKE %:search% )" +
             "GROUP BY t.id ")
     Page<Object[]> selectAllTachesNONC(@Param("search") String search, Pageable pageable);
 
@@ -80,8 +81,8 @@ public interface TacheRepository extends JpaRepository<Tache, Integer> {
             "AND ((t.datef < t.datefu) or TO_DATE(t.datef, 'YYYY-MM-DD') < CURRENT_DATE) " +
             "AND (LOWER(t.title) LIKE %:search% " +
             "OR (LOWER(t.description)) LIKE %:search% " +
-            "OR (LOWER(t.dated)) LIKE %:search% " +
-            "OR (LOWER(t.datef)) LIKE %:search% )" +
+            "OR TO_CHAR(t.dated, 'YYYY-MM-DD') LIKE %:search% " +
+            "OR TO_CHAR(t.datef, 'YYYY-MM-DD') LIKE %:search% )" +
             "GROUP BY t.id ")
     Page<Object[]> selectAllTachesRet(@Param("search") String search, Pageable pageable);
 
@@ -91,8 +92,8 @@ public interface TacheRepository extends JpaRepository<Tache, Integer> {
             "AND t.datef >= t.datefu " +
             "AND (LOWER(t.title) LIKE %:search% " +
             "OR (LOWER(t.description)) LIKE %:search% " +
-            "OR (LOWER(t.dated)) LIKE %:search% " +
-            "OR (LOWER(t.datef)) LIKE %:search% )" +
+            "OR TO_CHAR(t.dated, 'YYYY-MM-DD') LIKE %:search% " +
+            "OR TO_CHAR(t.datef, 'YYYY-MM-DD') LIKE %:search% )" +
             "GROUP BY t.id ")
     Page<Object[]> selectAllTachesTermine(@Param("search") String search, Pageable pageable);
 
@@ -102,8 +103,8 @@ public interface TacheRepository extends JpaRepository<Tache, Integer> {
             "AND t.datef < t.datefu " +
             "AND (LOWER(t.title) LIKE %:search% " +
             "OR (LOWER(t.description)) LIKE %:search% " +
-            "OR (LOWER(t.dated)) LIKE %:search% " +
-            "OR (LOWER(t.datef)) LIKE %:search% ) " +
+            "OR TO_CHAR(t.dated, 'YYYY-MM-DD') LIKE %:search% " +
+            "OR TO_CHAR(t.datef, 'YYYY-MM-DD') LIKE %:search% ) " +
             "GROUP BY t.id ")
     Page<Object[]> selectAllTachesTermineEnRet(@Param("search") String search, Pageable pageable);
 
@@ -144,8 +145,8 @@ public interface TacheRepository extends JpaRepository<Tache, Integer> {
             "AND ((TO_DATE(t.datef, 'YYYY-MM-DD') >= CURRENT_DATE) or (t.etat=100)) " +
             "AND (LOWER(t.title) LIKE %:search% " +
             "OR (LOWER(t.description)) LIKE %:search% " +
-            "OR (LOWER(t.dated)) LIKE %:search% " +
-            "OR (LOWER(t.datef)) LIKE %:search%) " +
+            "OR TO_CHAR(t.dated, 'YYYY-MM-DD') LIKE %:search% " +
+            "OR TO_CHAR(t.datef, 'YYYY-MM-DD') LIKE %:search%) " +
             "GROUP BY t.id")
     Page<Object[]> selectTachesByUserId(@Param("userId") Integer userId, @Param("search") String search, Pageable pageable);
 
@@ -163,8 +164,8 @@ public interface TacheRepository extends JpaRepository<Tache, Integer> {
             "AND t.datef>=t.datefu " +
             "AND (LOWER(t.title) LIKE %:search% " +
             "OR (LOWER(t.description)) LIKE %:search% " +
-            "OR (LOWER(t.dated)) LIKE %:search% " +
-            "OR (LOWER(t.datef)) LIKE %:search%) " +
+            "OR TO_CHAR(t.dated, 'YYYY-MM-DD') LIKE %:search% " +
+            "OR TO_CHAR(t.datef, 'YYYY-MM-DD') LIKE %:search%) " +
             "GROUP BY t.id")
     Page<Object[]> selectTachesTermineByUserId(@Param("userId") Integer userId, @Param("search") String search, Pageable pageable);
 
@@ -176,8 +177,8 @@ public interface TacheRepository extends JpaRepository<Tache, Integer> {
             "AND TO_DATE(t.datef, 'YYYY-MM-DD') >= CURRENT_DATE " +
             "AND (LOWER(t.title) LIKE %:search% " +
             "OR (LOWER(t.description)) LIKE %:search% " +
-            "OR (LOWER(t.dated)) LIKE %:search% " +
-            "OR (LOWER(t.datef)) LIKE %:search%) " +
+            "OR TO_CHAR(t.dated, 'YYYY-MM-DD') LIKE %:search% " +
+            "OR TO_CHAR(t.datef, 'YYYY-MM-DD') LIKE %:search%) " +
             "GROUP BY t.id")
     Page<Object[]> selectTachesEnCoursByUserId(@Param("userId") Integer userId, @Param("search") String search, Pageable pageable);
 
@@ -189,8 +190,8 @@ public interface TacheRepository extends JpaRepository<Tache, Integer> {
             "AND TO_DATE(t.datef, 'YYYY-MM-DD') >= CURRENT_DATE " +
             "AND (LOWER(t.title) LIKE %:search% " +
             "OR (LOWER(t.description)) LIKE %:search% " +
-            "OR (LOWER(t.dated)) LIKE %:search% " +
-            "OR (LOWER(t.datef)) LIKE %:search%) " +
+            "OR TO_CHAR(t.dated, 'YYYY-MM-DD') LIKE %:search% " +
+            "OR TO_CHAR(t.datef, 'YYYY-MM-DD') LIKE %:search%) " +
             "GROUP BY t.id")
     Page<Object[]> selectTachesNonCommenceByUserId(@Param("userId") Integer userId, @Param("search") String search, Pageable pageable);
 

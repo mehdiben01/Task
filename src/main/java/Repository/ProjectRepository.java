@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,7 +18,7 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
 
     boolean existsByTitleOrDescription(String title, String description);
 
-    boolean existsByTitleAndDescriptionAndDatedAndDatefAndClients(String title, String description, String dated, String datef, Client clients);
+    boolean existsByTitleAndDescriptionAndDatedAndDatefAndClients(String title, String description, Date dated, Date datef, Client clients);
 
     List<Project> findAllByIsDeleted(String isDeleted);
 
@@ -33,8 +34,8 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
             "WHERE (" +
             "   LOWER(p.title) LIKE %:search% " +
             "   OR LOWER(p.description) LIKE %:search% " +
-            "   OR LOWER(p.dated) LIKE %:search% " +
-            "   OR LOWER(p.datef) LIKE %:search%" +
+            "   OR TO_CHAR(p.dated, 'YYYY-MM-DD') LIKE %:search% " + // Convertir dated en texte
+            "   OR TO_CHAR(p.datef, 'YYYY-MM-DD') LIKE %:search%" +
             ") " +
             "AND p.isDeleted = '0' " +
             "AND p.id IN (" +
@@ -79,8 +80,8 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
             "AND TO_DATE(p.datef, 'YYYY-MM-DD') >= CURRENT_DATE " +
             "AND (LOWER(p.title) LIKE %:search% " +
             "OR LOWER(p.description) LIKE %:search% " +
-            "OR LOWER(p.dated) LIKE %:search% " +
-            "OR LOWER(p.datef) LIKE %:search%) " +
+            "OR TO_CHAR(p.dated, 'YYYY-MM-DD') LIKE %:search% " +
+            "OR TO_CHAR(p.datef, 'YYYY-MM-DD') LIKE %:search%) " +
             "AND p.id IN (" +
             "   SELECT DISTINCT t.project.id " +
             "   FROM Tache t " +
@@ -96,8 +97,8 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
             "WHERE p.isDeleted = '1'  " +
             "AND (LOWER(p.title) LIKE %:search% " +
             "OR LOWER(p.description) LIKE %:search% " +
-            "OR LOWER(p.dated) LIKE %:search% " +
-            "OR LOWER(p.datef) LIKE %:search%) " +
+            "OR TO_CHAR(p.dated, 'YYYY-MM-DD') LIKE %:search% " +
+            "OR TO_CHAR(p.datef, 'YYYY-MM-DD') LIKE %:search%) " +
             "GROUP BY p.id ")
     Page<Object[]> selectExistingProjectsAnnule(@Param("search") String search, Pageable pageable);
 
@@ -107,8 +108,8 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
             "AND TO_DATE(p.datef, 'YYYY-MM-DD') >= CURRENT_DATE " +
             "AND (LOWER(p.title) LIKE %:search% " +
             "OR LOWER(p.description) LIKE %:search% " +
-            "OR LOWER(p.dated) LIKE %:search% " +
-            "OR LOWER(p.datef) LIKE %:search%) " +
+            "OR TO_CHAR(p.dated, 'YYYY-MM-DD') LIKE %:search% " +
+            "OR TO_CHAR(p.datef, 'YYYY-MM-DD') LIKE %:search%) " +
             "AND ( " +
             "    NOT EXISTS (SELECT 1 FROM Tache t WHERE t.project = p) " +
             "    OR p.id IN ( " +
@@ -127,8 +128,8 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
             "AND TO_DATE(p.datef, 'YYYY-MM-DD') < CURRENT_DATE " +
             "AND (LOWER(p.title) LIKE %:search% " +
             "OR LOWER(p.description) LIKE %:search% " +
-            "OR LOWER(p.dated) LIKE %:search% " +
-            "OR LOWER(p.datef) LIKE %:search%) " +
+            "OR TO_CHAR(p.dated, 'YYYY-MM-DD') LIKE %:search% " +
+            "OR TO_CHAR(p.datef, 'YYYY-MM-DD') LIKE %:search%) " +
             "GROUP BY p.id")
     Page<Object[]> selectExistingProjectsRetarde(@Param("search") String search, Pageable pageable);
 

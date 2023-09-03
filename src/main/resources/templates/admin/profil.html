@@ -180,7 +180,7 @@
                                                                     </div>
                                                                     <div class="form-group mb-20">
                                                                         <label for="names">Date de naissance</label>
-                                                                        <input type="date" class="form-control" id="date" name="daten" placeholder="Duran Clayton" th:value="${daten}" required  th:classappend="${#fields.hasErrors('daten')} ? 'is-invalid'">
+                                                                        <input type="date" class="form-control" id="date" name="daten" placeholder="yyyy-MM-dd" th:value="${#dates.format(daten, 'yyyy-MM-dd')}" required  th:classappend="${#fields.hasErrors('daten')} ? 'is-invalid'">
                                                                         <div class="invalid-feedback">
                                                                             <span th:if="${#fields.hasErrors('daten')}" th:errors="*{daten}"></span>
                                                                             La date de naissance est requise.

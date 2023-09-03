@@ -18,8 +18,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -101,13 +101,14 @@ public class TacheUController {
             return "redirect:/error"; // Par exemple, rediriger vers une page d'erreur générale
         }
 
-        LocalDate currentDate = LocalDate.now();
-        LocalDate endDate = LocalDate.parse(tache.getDatef()); // Supposons que tache.getDatef() renvoie une chaîne au format 'YYYY-MM-DD'
+        Date currentDate = new Date(); // Obtenez la date actuelle en tant qu'objet java.util.Date
+        Date endDate = tache.getDatef(); // Supposons que tache.getDatef() renvoie un objet java.util.Date
 
-        if ((endDate.isBefore(currentDate))  && (tache.getEtat() != 100)) {
+        if (endDate.before(currentDate) && tache.getEtat() != 100) {
             // La date de fin est antérieure à la date actuelle, rediriger vers la page d'accès refusé
             return "redirect:/denied";
         }
+
 
         model.addAttribute("tache", tache);
         model.addAttribute("activePage", "tacheu");

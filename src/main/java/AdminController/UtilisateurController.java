@@ -124,7 +124,7 @@ public class UtilisateurController  {
         utilisateur.setPrenom(utilisateur.getPrenom().toLowerCase());
         utilisateur.setProfession(utilisateur.getProfession().toLowerCase());
         utilisateur.setPassword(passwordEncoder.encode(utilisateur.getPassword()));
-        utilisateur.setUsername(utilisateur.getPrenom().toLowerCase().replace(" ","")+""+utilisateur.getNom().toLowerCase().replace(" ","")+""+utilisateur.getDaten().substring((int) 8.10));
+        utilisateur.setUsername(utilisateur.getPrenom().toLowerCase().replace(" ","")+""+utilisateur.getNom().toLowerCase().replace(" ",""));
 
         // Vérifier si l'utilisateur existe déjà
         boolean champExiste = utilisateurRepository.existsByUsernameOrTel(utilisateur.getUsername(),  utilisateur.getTel());
@@ -196,7 +196,7 @@ public class UtilisateurController  {
         }
 
         // Vérifier si l'utilisateur existe déjà
-        boolean DataExiste = utilisateurRepository.existsByNomAndPrenomAndProfessionAndDatenAndTel(updatedUtilisateur.getNom().toUpperCase(),updatedUtilisateur.getPrenom().toLowerCase(),updatedUtilisateur.getProfession().toLowerCase(),updatedUtilisateur.getDaten(),updatedUtilisateur.getTel());
+        boolean DataExiste = utilisateurRepository.existsByNomAndPrenomAndProfessionAndDatenAndTel(updatedUtilisateur.getNom().toUpperCase(),updatedUtilisateur.getPrenom().toLowerCase(),updatedUtilisateur.getProfession().toLowerCase(), updatedUtilisateur.getDaten(),updatedUtilisateur.getTel());
         if (DataExiste) {
             // Gérer le cas où l'utilisateur existe déjà
             redirectAttributes.addFlashAttribute("message", "Les données existent déjà.");
@@ -206,10 +206,12 @@ public class UtilisateurController  {
             existingUtilisateur.setNom(updatedUtilisateur.getNom().toUpperCase());
             existingUtilisateur.setPrenom(updatedUtilisateur.getPrenom().toLowerCase());
             existingUtilisateur.setProfession(updatedUtilisateur.getProfession().toLowerCase());
-            existingUtilisateur.setDaten(updatedUtilisateur.getDaten());
+
             existingUtilisateur.setTel(updatedUtilisateur.getTel());
             existingUtilisateur.setRoles(updatedUtilisateur.getRoles());
-            existingUtilisateur.setUsername(updatedUtilisateur.getPrenom().toLowerCase().replace(" ","")+""+updatedUtilisateur.getNom().toLowerCase().replace(" ","")+""+updatedUtilisateur.getDaten().substring(8,10));
+            existingUtilisateur.setUsername(updatedUtilisateur.getPrenom().toLowerCase().replace(" ","")+""+updatedUtilisateur.getNom().toLowerCase().replace(" ",""));
+            existingUtilisateur.setDaten(updatedUtilisateur.getDaten());
+            System.out.println("La valeur de updatedUtilisateur.getDaten() est : " + updatedUtilisateur.getDaten());
         }
         boolean NomExiste = utilisateurRepository.existsByNomAndPrenomAndIdNot(updatedUtilisateur.getNom().toUpperCase(),updatedUtilisateur.getPrenom().toLowerCase(), updatedUtilisateur.getId());
         if (NomExiste) {

@@ -3,9 +3,11 @@ package Model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -24,7 +26,9 @@ public class Utilisateur {
     @Column(nullable = false)
     private String prenom;
     @Column(nullable = false)
-    private String daten;
+    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date daten;
     @Column(nullable = false)
     private String tel;
     @Column(nullable = false)

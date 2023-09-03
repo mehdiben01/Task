@@ -21,8 +21,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -238,10 +238,11 @@ public class ProjectController {
         Project projet = (Project) project.get(0)[0];
 
         // Récupérer la date de fin du projet
-        LocalDate dateFinProjet = LocalDate.parse(projet.getDatef());
-
+        Date dateFinProjet = projet.getDatef();
+        // Date actuelle
+        Date dateActuelle = new Date();
         // Calculer la différence entre la date de fin du projet et la date actuelle
-        long joursRestants = ChronoUnit.DAYS.between(LocalDate.now(), dateFinProjet);
+        long joursRestants = ChronoUnit.DAYS.between(dateActuelle.toInstant(), dateFinProjet.toInstant());
 
         // Transmettre le nombre de jours restants au modèle
         model.addAttribute("joursRestants", joursRestants);

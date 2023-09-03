@@ -109,7 +109,7 @@
                       <input id="file-upload" type="file" name="image" class="d-none" onchange="this.form.submit()">
                       <label for="file-upload">
                         <!-- Profile picture image-->
-                        <img class="ap-img__main rounded-circle wh-120" th:src="${utilisateur.cheminImage}" alt="profile" id="profile-image" loading="lazy">
+                        <img class="ap-img__main rounded-circle wh-120" th:src="${'http://localhost:9000/taskmanager/' +utilisateur.cheminImage}" alt="profile" id="profile-image" loading="lazy">
                         <span class="cross" id="remove_pro_pic">
                 <span data-feather="camera"></span>
             </span>
@@ -186,7 +186,7 @@
                                 </div>
                                 <div class="form-group mb-20">
                                   <label for="company1">Date de naissance</label>
-                                  <input type="date" class="form-control" id="company1" placeholder="Example" name="daten" th:value="${utilisateur.daten}" required  th:classappend="${#fields.hasErrors('daten')} ? 'is-invalid'">
+                                  <input type="date" class="form-control" id="daten" placeholder="Example" name="daten" th:value="${utilisateur.daten}" required  th:classappend="${#fields.hasErrors('daten')} ? 'is-invalid'">
                                   <div class="invalid-feedback">
                                     <span th:if="${#fields.hasErrors('daten')}" th:errors="*{daten}"></span>
                                     La date de naissance est requise.

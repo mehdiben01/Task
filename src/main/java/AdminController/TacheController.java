@@ -24,8 +24,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.time.LocalDate;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -239,16 +241,16 @@ public class TacheController {
         tache.setDescription(tache.getDescription().toLowerCase());
         Object[] projectDates = projectDatesList.get(0); // Retrieve the first row
         // Check if the task's start date is after the project's start date
-        LocalDate taskStartDate = LocalDate.parse(tache.getDated());
-        LocalDate projectStartDate = LocalDate.parse(projectDates[0].toString());
-        if (taskStartDate.isBefore(projectStartDate)) {
+        Date taskStartDate = tache.getDated();
+        Date projectStartDate = (Date) projectDates[0]; // Assurez-vous que projectDates[0] est de type java.util.Date
+        if (taskStartDate.before(projectStartDate)) {
             redirectAttributes.addFlashAttribute("errors", "Vérifier les dates du projet.");
             return "redirect:/admin/tache";
         }
         // Check if the task's end date is before the project's end date
-        LocalDate taskEndDate = LocalDate.parse(tache.getDatef());
-        LocalDate projectEndDate = LocalDate.parse(projectDates[1].toString());
-        if (taskEndDate.isAfter(projectEndDate)) {
+        Date taskEndDate = tache.getDatef();
+        Date projectEndDate = (Date) projectDates[1]; // Assurez-vous que projectDates[1] est de type java.util.Date
+        if (taskEndDate.after(projectEndDate)) {
             redirectAttributes.addFlashAttribute("errors", "Vérifier les dates du projet.");
             return "redirect:/admin/tache";
         }
@@ -314,7 +316,15 @@ public class TacheController {
              existingTache.setDatefu(updateTache.getDatedu());
          }
         if (updateTache.getEtat() == 0) {
-            existingTache.setDatedu("0");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = null;
+            try {
+                date = dateFormat.parse("0001-01-01");
+            } catch (ParseException e) {
+                // Gérer l'exception si la date ne peut pas être analysée
+                e.printStackTrace();
+            }
+            existingTache.setDatedu(date);
         }
              existingTache.setTitle(updateTache.getTitle().toLowerCase());
              existingTache.setDescription(updateTache.getDescription().toLowerCase());

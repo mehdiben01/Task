@@ -8,6 +8,7 @@ import Service.ImageService;
 import Service.ProjectService;
 import Service.TacheService;
 import Service.UtilisateurService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -48,6 +50,10 @@ public class AdminController implements ErrorController {
     private final TacheRepository tacheRepository;
     private final ProjectService projectService;
 
+    @Autowired
+    private ServletContext servletContext;
+
+
     public AdminController(UtilisateurRepository utilisateurRepository, UtilisateurService utilisateurService, ImageService imageService, TacheService tacheService, TacheRepository tacheRepository, ProjectService projectService) {
         this.utilisateurRepository = utilisateurRepository;
         this.utilisateurService = utilisateurService;
@@ -55,6 +61,7 @@ public class AdminController implements ErrorController {
         this.tacheService = tacheService;
         this.tacheRepository = tacheRepository;
         this.projectService = projectService;
+
     }
 
     @ModelAttribute
@@ -78,6 +85,9 @@ public class AdminController implements ErrorController {
             }
         }
     }
+
+
+
 
 
 
@@ -156,7 +166,7 @@ public class AdminController implements ErrorController {
         }
 
         // Vérifier si l'utilisateur existe déjà
-        boolean DataExiste = utilisateurRepository.existsByNomAndPrenomAndProfessionAndDatenAndTel(updatedUtilisateur.getNom().toUpperCase(),updatedUtilisateur.getPrenom().toLowerCase(),updatedUtilisateur.getProfession().toLowerCase(),updatedUtilisateur.getDaten(),updatedUtilisateur.getTel());
+        boolean DataExiste = utilisateurRepository.existsByNomAndPrenomAndProfessionAndDatenAndTel(updatedUtilisateur.getNom().toUpperCase(),updatedUtilisateur.getPrenom().toLowerCase(),updatedUtilisateur.getProfession().toLowerCase(), updatedUtilisateur.getDaten(),updatedUtilisateur.getTel());
         if (DataExiste) {
             // Gérer le cas où l'utilisateur existe déjà
             redirectAttributes.addFlashAttribute("message", "Les données que vous avez fournies existent déjà.");

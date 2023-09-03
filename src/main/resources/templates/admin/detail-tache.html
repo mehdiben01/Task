@@ -115,7 +115,7 @@
 
                         </div>
                         <div class="card mt-10">
-                            <div  class="progress-box px-25 pt-25 pb-10 bg-warning radius-xl" th:if="${  (tache.etat == 100) and (tache.datefu>tache.datef) and (T(java.time.LocalDate).parse(tache.datef) < #temporals.createToday())}">
+                            <div  class="progress-box px-25 pt-25 pb-10 bg-warning radius-xl" th:if="${  (tache.etat == 100) and (#dates.format(tache.datef, 'yyyy-MM-dd') < #dates.format(#dates.createNow(), 'yyyy-MM-dd'))}">
 
                                 <div class="d-flex justify-content-between mb-3">
                                     <h6 class="text-white fw-500 fs-16">Tache terminé en retard</h6>
@@ -124,7 +124,7 @@
                             </div>
                         </div>
                         <div class="card mt-10">
-                            <div class="progress-box px-25 pt-25 pb-10 bg-danger radius-xl" th:if="${ (tache.isDeleted != '1') and (tache.etat != 100) and  (T(java.time.LocalDate).parse(tache.datef) < #temporals.createToday())}">
+                            <div class="progress-box px-25 pt-25 pb-10 bg-danger radius-xl" th:if="${ (tache.isDeleted != '1') and (tache.etat != 100) and  (#dates.format(tache.datef, 'yyyy-MM-dd') < #dates.format(#dates.createNow(), 'yyyy-MM-dd'))}">
 
                                 <div class="d-flex justify-content-between mb-3">
                                     <h6 class="text-white fw-500 fs-16">Tache en retard</h6>
@@ -200,19 +200,19 @@
                                                 </li>
                                             </ul>
                                             <ul class="d-flex text-capitalize">
-                                                <li  th:if="${(tache.datedu) == '0'}">
+                                                <li  th:if="${(tache.datedu) == null}">
                                                     <span class="color-light fs-13" >Date de debut de la tâche</span>
                                                     <p class="color-primary fs-14 mt-1 mb-0 fw-500">La tâche pas encore commnecé</p>
                                                 </li>
-                                                <li  th:unless="${(tache.datedu) == '0'}">
+                                                <li  th:unless="${(tache.datedu) == null}">
                                                     <span class="color-light fs-13" >Date de debut de la tâche</span>
                                                     <p class="color-primary fs-14 mt-1 mb-0 fw-500" th:text="${tache.datedu}"></p>
                                                 </li>
-                                                <li th:if="${(tache.datefu) == '0'}">
+                                                <li th:if="${(tache.datefu) == null}">
                                                     <span class="color-light fs-13" >Date de fin de la tâche</span>
                                                     <p class="color-primary fs-14 mt-1 mb-0 fw-500">La tâche pas encore terminé</p>
                                                 </li>
-                                                <li th:unless="${(tache.datefu) == '0'}">
+                                                <li th:unless="${(tache.datefu) == null}">
                                                     <span class="color-light fs-13" >Date de fin de la tâche</span>
                                                     <p class="color-primary fs-14 mt-1 mb-0 fw-500" th:text="${tache.datefu}"></p>
                                                 </li>

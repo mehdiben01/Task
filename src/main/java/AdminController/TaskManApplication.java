@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @SpringBootApplication
 @EntityScan(basePackages = "Model")
 @EnableJpaRepositories(basePackages = "Repository")
-@ComponentScan(basePackages = {"AdminController", "Service", "Security","UserController"})
+@ComponentScan(basePackages = {"AdminController", "Service", "Security","UserController","Configuration"})
 @EnableTransactionManagement
 public class TaskManApplication {
 

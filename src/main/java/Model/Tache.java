@@ -3,8 +3,10 @@ package Model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.util.Date;
 
 
 @Entity
@@ -21,18 +23,24 @@ public class Tache {
     @Column(nullable = false)
     private String description;
     @Column(nullable = false)
-    private String dated;
+    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date dated;
 
     @Column(nullable = false)
-    private String datef;
+    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date datef;
     @Column(nullable = false)
     private int etat;
-
-    private String datedu="3000";
+    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date datedu=null;
 
     private String isDeleted="0";
-
-    private String datefu="0";
+    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date datefu=null;
     @ManyToOne
     private Project project;
 

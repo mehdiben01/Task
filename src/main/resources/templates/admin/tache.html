@@ -264,10 +264,10 @@
                         </a>
                         <span class="media-badge text-uppercase color-white bg-success" th:if="${(task[0].etat == 100)  and(task[0].datef >= task[0].datefu)  }">Terminé</span>
                         <span class="media-badge text-uppercase color-white bg-warning" th:if="${(task[0].etat == 100)  and(task[0].datef < task[0].datefu)}">Terminé en retard</span>
-                        <span class="media-badge text-uppercase color-white bg-warning" th:if="${(task[0].etat < 100) and (task[0].etat>0)  and ( (task[0].datef >= task[0].datefu) and (T(java.time.LocalDate).parse(task[0].datef) >= #temporals.createToday())) }">En cours</span>
-                        <span class="media-badge text-uppercase color-white bg-warning" th:if="${(task[0].etat == 0  ) and (T(java.time.LocalDate).parse(task[0].datef) >= #temporals.createToday()) and (task[0].datedu == '3000') }">Pas encore commencé</span>
+                        <span class="media-badge text-uppercase color-white bg-warning" th:if="${(task[0].etat < 100) and (task[0].etat>0)  and  (task[0].datef >= task[0].datefu) and (#dates.format(task[0].datef, 'yyyy-MM-dd') >= #dates.format(#dates.createNow(), 'yyyy-MM-dd')) }">En cours</span>
+                        <span class="media-badge text-uppercase color-white bg-warning" th:if="${(task[0].etat == 0  ) and (#dates.format(task[0].datef, 'yyyy-MM-dd') >= #dates.format(#dates.createNow(), 'yyyy-MM-dd')) and ((task[0].datedu == null) or (#dates.format(task[0].datedu, 'yyyy-MM-dd') == '0001-01-01')) }">Pas encore commencé</span>
                         <span class="media-badge text-uppercase color-white bg-danger" th:if="${(task[0].etat == 101)}">Annulé</span>
-                        <span class="media-badge text-uppercase color-white bg-danger" th:if="${  (task[0].etat != 100) and ((task[0].datef < task[0].datefu) or (T(java.time.LocalDate).parse(task[0].datef) < #temporals.createToday())) }">retardé</span>
+                        <span class="media-badge text-uppercase color-white bg-danger" th:if="${  (task[0].etat != 100) and ((task[0].datef < task[0].datefu) or (#dates.format(task[0].datef, 'yyyy-MM-dd') < #dates.format(#dates.createNow(), 'yyyy-MM-dd'))) }">retardé</span>
                       </div>
                     </div>
                     <div class="user-group-people mt-15 text-capitalize">
@@ -286,7 +286,7 @@
                       </div>
                     </div>
                     <div class="user-group-progress-bar">
-                      <div class="progress-wrap d-flex align-items-center mb-0" th:if="${ (task[0].etat != 100) and (task[0].etat != null) and (T(java.time.LocalDate).parse(task[0].datef) >= #temporals.createToday()) }">
+                      <div class="progress-wrap d-flex align-items-center mb-0" th:if="${ (task[0].etat != 100) and (task[0].etat != null) and (#dates.format(task[0].datef, 'yyyy-MM-dd') >= #dates.format(#dates.createNow(), 'yyyy-MM-dd')) }">
 
                         <div class="progress" >
 
@@ -299,7 +299,7 @@
 
                       </div>
 
-                      <div class="progress-wrap d-flex align-items-center mb-0" th:if="${ (task[0].etat != 100) and (T(java.time.LocalDate).parse(task[0].datef) < #temporals.createToday()) }">
+                      <div class="progress-wrap d-flex align-items-center mb-0" th:if="${ (task[0].etat != 100) and (#dates.format(task[0].datef, 'yyyy-MM-dd') < #dates.format(#dates.createNow(), 'yyyy-MM-dd')) }">
 
                         <div class="progress" >
 

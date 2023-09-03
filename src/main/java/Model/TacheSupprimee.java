@@ -3,8 +3,10 @@ package Model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Data
@@ -19,16 +21,21 @@ public class TacheSupprimee {
     @Column(nullable = false)
     private String description;
     @Column(nullable = false)
-    private String dated;
+    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date dated;
 
     @Column(nullable = false)
-    private String datef;
+    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date datef;
     @Column(nullable = false)
     private int etat;
+    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date datedu;
 
-    private String datedu;
-
-    private String datefu;
+    private Date datefu;
 
     private String isDeleted="1";
 
