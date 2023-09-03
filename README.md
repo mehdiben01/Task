@@ -1,5 +1,5 @@
-# Task
-Application de gestion des taches
+# Task Manager Application
 # Spring Boot
+# Spring security
 # Postgresql
-Minio pour le stockage
+# Minio pour le stockage
