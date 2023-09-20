@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -27,7 +28,7 @@ public class UtilisateurService  {
     public Utilisateur save(Utilisateur utilisateur){
         return utilisateurRepository.save(utilisateur);
     }
-    // Méthode pour récupérer tous les utilisateurs where type = staff
+
     public List<Utilisateur> getAllUtilisateurs() {
         return utilisateurRepository.findAllByIsDeleted("0" );
     }
@@ -55,4 +56,19 @@ public class UtilisateurService  {
     public Utilisateur loadUserByUsername(String username){
         return utilisateurRepository.findByUsername(username);
     }
+
+    public boolean existsByTelAndIdNot(String nom, Integer id){
+        return utilisateurRepository.existsByTelAndIdNot(nom,id);
+    }
+
+    public boolean existsByNomAndPrenomAndProfessionAndDatenAndTel(String nom, String prenom , String profession , Date daten , String tel){
+        return utilisateurRepository.existsByNomAndPrenomAndProfessionAndDatenAndTel(nom,prenom,profession,daten,tel);
+    }
+
+    public boolean existsByNomAndPrenomAndIdNot(String nom, String prenom , Integer id){
+        return utilisateurRepository.existsByNomAndPrenomAndIdNot(nom,prenom,id);
+    }
+
+
+
 }

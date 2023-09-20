@@ -91,7 +91,7 @@
                     <input id="file-upload" type="file" name="image" class="d-none" onchange="this.form.submit()">
                     <label for="file-upload">
                       <!-- Profile picture image-->
-                      <img class="ap-img__main rounded-circle wh-120" th:src="${clients.cheminImage}" alt="profile">
+                      <img class="ap-img__main rounded-circle wh-120" th:src="${privateImageURL}" alt="profile">
                       <span class="cross" id="remove_pro_pic">
                                                     <span data-feather="camera"></span>
                                                 </span>

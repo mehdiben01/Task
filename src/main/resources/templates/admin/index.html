@@ -30,13 +30,13 @@
     <link th:href="@{/style.css}" rel="stylesheet">
 
     <!-- endinject -->
-   <style>
-       .table {
-           width: 100%;
-           margin-bottom: 0rem;
-           color: #212529;
-       }
-   </style>
+    <style>
+        .table {
+            width: 100%;
+            margin-bottom: 0rem;
+            color: #212529;
+        }
+    </style>
     <link rel="icon" type="image/png" sizes="16x16" href="img/favicon.png">
 </head>
 
@@ -296,11 +296,11 @@
                                                 </thead>
                                                 <tbody th:each="tachesretdebut :${tachesretdebut}">
                                                 <tr>
-                                                <td >
-                                                    <a th:href="@{'/admin/DetailTache/' + ${tachesretdebut.id}}"> <!-- Replace 'task/details/' with your actual URL -->
-                                                        <span th:text="${tachesretdebut.title}"></span>
-                                                    </a>
-                                                </td>
+                                                    <td >
+                                                        <a th:href="@{'/admin/DetailTache/' + ${tachesretdebut.id}}"> <!-- Replace 'task/details/' with your actual URL -->
+                                                            <span th:text="${tachesretdebut.title}"></span>
+                                                        </a>
+                                                    </td>
                                                     <td>
                                                         <a th:href="@{'/admin/DetailTeam/' + ${tachesretdebut.users.username}}">
                                                             <img class="rounded-circle wh-34" th:src="${tachesretdebut.users.cheminImage}" alt="author">

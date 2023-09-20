@@ -36,7 +36,6 @@ import java.util.List;
 public class AdminController implements ErrorController {
 
 
-
     private final UtilisateurRepository utilisateurRepository;
 
     private final UtilisateurService utilisateurService;
@@ -74,7 +73,6 @@ public class AdminController implements ErrorController {
             if (utilisateur != null) {
                 model.addAttribute("username", username);
                 model.addAttribute("fullName", utilisateur.getFullName());
-                model.addAttribute("imagePath", utilisateur.getCheminImage());
                 model.addAttribute("prenom", utilisateur.getPrenom());
                 model.addAttribute("nom", utilisateur.getNom());
                 model.addAttribute("profession", utilisateur.getProfession());
@@ -82,6 +80,11 @@ public class AdminController implements ErrorController {
                 model.addAttribute("daten", utilisateur.getDaten());
                 model.addAttribute("id", utilisateur.getId());
                 model.addAttribute("roles", utilisateur.getRoles());
+                String cheminImage = utilisateur.getCheminImage();
+                if (cheminImage != null) {
+                    String privateImageURL = imageService.getPrivateImageURL("taskmanager", cheminImage);
+                    model.addAttribute("privateImageURL", privateImageURL);
+                }
             }
         }
     }
@@ -143,6 +146,7 @@ public class AdminController implements ErrorController {
     public String getLogin() {
         return "admin/connexion";
     }
+
 
     @GetMapping("/logout")
     public String logout(HttpServletRequest request) throws ServletException {
@@ -239,7 +243,11 @@ public class AdminController implements ErrorController {
         // Récupérer l'utilisateur existant à partir de la base de données
         Utilisateur existingUtilisateur = utilisateurService.getUtilisateurById(updatedUtilisateur.getId());
 
-        boolean updateSuccess = imageService.updateImage(existingUtilisateur, imageFile);
+
+        String objectName =  existingUtilisateur.getCheminImage();
+
+
+        boolean updateSuccess = imageService.updateImage(existingUtilisateur, imageFile , objectName);
 
 
             if (imageFile.getSize() > 2 * 1024 * 1024) {
@@ -248,7 +256,7 @@ public class AdminController implements ErrorController {
                 redirectAttributes.addFlashAttribute("message", ImageService.IMAGE_SAVE_ERROR_MESSAGE);
             }
             else {
-                redirectAttributes.addFlashAttribute("messagepro", "Votre photo de profil a été mise à jour avec succès..");
+                redirectAttributes.addFlashAttribute("messagepro", "Votre photo de profil a été mise à jour avec succès.");
                 utilisateurService.save(existingUtilisateur);
             }
         return "redirect:/profil";

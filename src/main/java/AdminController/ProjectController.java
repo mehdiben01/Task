@@ -2,12 +2,10 @@ package AdminController;
 
 import Model.Client;
 import Model.Project;
+import Model.Tache;
 import Model.Utilisateur;
 import Repository.ProjectRepository;
-import Service.ClientService;
-import Service.ProjectService;
-import Service.TacheService;
-import Service.UtilisateurService;
+import Service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,7 +19,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
 
@@ -38,12 +35,15 @@ public class ProjectController {
 
     private final ClientService clientService;
 
+    private final ImageService imageService;
+
     @Autowired
-    public ProjectController(ProjectService projectService, ProjectRepository projectRepository,  TacheService tacheService, ClientService clientService, ClientService service, UtilisateurService utilisateurService){
+    public ProjectController(ProjectService projectService, ProjectRepository projectRepository, TacheService tacheService, ClientService clientService, ImageService imageService, ClientService service, UtilisateurService utilisateurService){
         this.projectService = projectService;
         this.projectRepository = projectRepository;
         this.tacheService = tacheService;
         this.clientService = clientService;
+        this.imageService = imageService;
         this.service = service;
         this.utilisateurService = utilisateurService;
     }
@@ -88,6 +88,30 @@ public class ProjectController {
         } else {
             existingProjectsAndAverageEtatPage = projectService.getExistingProjectsAndAverageEtatByTitle("", PageRequest.of(page, elementsPerPage));
         }
+        // Récupérez l'URL pré-signée pour chaque membre
+        for (Object[] projectData : existingProjectsAndAverageEtatPage) {
+            Project projectItem = (Project) projectData[0];
+            List<Tache> taches = projectItem.getTaches();
+            for (Tache tache : taches) {
+                if (tache.getUsers() != null) {
+                    String cheminImage = tache.getUsers().getCheminImage();
+                    if (cheminImage != null) {
+                        String privateImageURL = imageService.getPrivateImageURL("taskmanager", cheminImage);
+                        tache.getUsers().setCheminImage(privateImageURL);
+                    }
+                }
+            }
+        }
+
+        // Récupérez l'URL pré-signée pour chaque client
+        for (Object[] clientData : existingProjectsAndAverageEtatPage) {
+            String cheminImage = (String) clientData[4];
+            if (cheminImage != null) {
+                String privateImageURL = imageService.getPrivateImageURL("taskmanager", cheminImage);
+                clientData[4] = privateImageURL; // Remplacez le chemin de l'image par l'URL pré-signée
+            }
+        }
+
 
         model.addAttribute("projects", existingProjectsAndAverageEtatPage.getContent());
         model.addAttribute("countproj", existingProjectsAndAverageEtatPage.getTotalElements());
@@ -233,22 +257,43 @@ public class ProjectController {
     @GetMapping("DetailProjet/{id}")
     public String getDetailProject(@PathVariable("id") Integer id, Model model){
         List<Object[]> project = projectService.getProjectDetailsById(id);
+        for (Object[] projectData : project) {
+            Project projectItem = (Project) projectData[0];
+            List<Tache> taches = projectItem.getTaches();
+            for (Tache tache : taches) {
+                if (tache.getUsers() != null) {
+                    String cheminImage = tache.getUsers().getCheminImage();
+                    if (cheminImage != null) {
+                        String privateImageURL = imageService.getPrivateImageURL("taskmanager", cheminImage);
+                        tache.getUsers().setCheminImage(privateImageURL);
+                    }
+                }
+            }
+        }
         // Transmettre les données récupérées à la vue
         model.addAttribute("project", project);
         Project projet = (Project) project.get(0)[0];
 
         // Récupérer la date de fin du projet
         Date dateFinProjet = projet.getDatef();
-        // Date actuelle
-        Date dateActuelle = new Date();
-        // Calculer la différence entre la date de fin du projet et la date actuelle
-        long joursRestants = ChronoUnit.DAYS.between(dateActuelle.toInstant(), dateFinProjet.toInstant());
+        // Obtenir la date d'aujourd'hui
+        Date dateAujourdhui = new Date();
 
+        // Calculer la différence en millisecondes entre les deux dates
+        long differenceEnMillis = dateFinProjet.getTime() - dateAujourdhui.getTime();
+
+        // Convertir la différence en jours
+        long joursRestants = differenceEnMillis / (24 * 60 * 60 * 1000);
         // Transmettre le nombre de jours restants au modèle
         model.addAttribute("joursRestants", joursRestants);
         Project projects = projectService.getProjectById(id);
         model.addAttribute("projects", projects);
         model.addAttribute("activePage","DetailProjet");
+        String cheminImageProject = projects.getClients().getCheminImage();
+        if (cheminImageProject != null) {
+            String privateImageURL = imageService.getPrivateImageURL("taskmanager", cheminImageProject);
+            model.addAttribute("CompanyImage", privateImageURL);
+        }
         return "admin/detail-projet";
     }
 

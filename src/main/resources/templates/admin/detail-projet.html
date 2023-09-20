@@ -115,7 +115,7 @@
 
             </div>
             <div class="card mt-10">
-            <div  class="progress-box px-25 pt-25 pb-10 bg-warning radius-xl" th:if="${ (project[0][0].isDeleted != '1') and (project[0][1] == 100) and (T(java.time.LocalDate).parse(project[0][0].datef) < #temporals.createToday())}">
+            <div  class="progress-box px-25 pt-25 pb-10 bg-warning radius-xl" th:if="${ (project[0][0].isDeleted != '1') and (project[0][1] == 100) and (#dates.format(project[0][0].datef, 'yyyy-MM-dd') < #dates.format(#dates.createNow(), 'yyyy-MM-dd'))}">
 
               <div class="d-flex justify-content-between mb-3">
                 <h6 class="text-white fw-500 fs-16">Projet terminé en retard</h6>
@@ -133,7 +133,7 @@
             </div>
             </div>
             <div class="card mt-10">
-            <div class="progress-box px-25 pt-25 pb-10 bg-danger radius-xl" th:if="${ (project[0][0].isDeleted != '1') and (project[0][1] != 100) and  (T(java.time.LocalDate).parse(project[0][0].datef) < #temporals.createToday())}">
+            <div class="progress-box px-25 pt-25 pb-10 bg-danger radius-xl" th:if="${ (project[0][0].isDeleted != '1') and (project[0][1] != 100) and (#dates.format(project[0][0].datef, 'yyyy-MM-dd') < #dates.format(#dates.createNow(), 'yyyy-MM-dd'))}">
 
               <div class="d-flex justify-content-between mb-3">
                 <h6 class="text-white fw-500 fs-16">Projet en retard</h6>
@@ -188,7 +188,7 @@
                     <div class="about-projects">
                       <div class="about-projects__details">
                         <!-- Afficher l'image du client -->
-                     <a th:href="@{/admin/EditClient/{id}(id=${project[0][0].clients.id})}">   <img th:src="${project[0][0].clients.cheminImage}" class="wh-200 mb-3" alt="Image du client" width="100"></a>
+                     <a th:href="@{/admin/EditClient/{id}(id=${project[0][0].clients.id})}">   <img th:src="${CompanyImage}" class="wh-200 mb-3" alt="Image du client" width="100"></a>
                         <a th:href="@{/admin/EditClient/{id}(id=${project[0][0].clients.id})}">   <p class="color-dark fs-14 mt-1 mb-0 fw-500" th:text="${project[0][0].clients.company}"></p></a>
 
                       </div>

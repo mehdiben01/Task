@@ -31,7 +31,7 @@ public interface ClientRepository extends JpaRepository<Client, Integer> {
 
 
 
-    @Query("SELECT c , count(c.id) "+
+    @Query("SELECT c , count(c.id) , c.cheminImage "+
            "FROM Client c "+
             "WHERE c.isDeleted ='0' "+
             "AND (LOWER(c.nom) LIKE %:search% "+
@@ -43,7 +43,7 @@ public interface ClientRepository extends JpaRepository<Client, Integer> {
             "GROUP BY c.id ")
     Page<Object[]> findAllCLient(@Param("search") String search, Pageable pageable);
 
-    @Query("SELECT c , count(c.id) "+
+    @Query("SELECT c , count(c.id) , c.cheminImage "+
             "FROM Client c "+
             "WHERE c.isDeleted ='1' "+
             "AND (LOWER(c.nom) LIKE %:search% "+

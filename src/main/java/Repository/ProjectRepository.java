@@ -27,10 +27,10 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
     long count();
 
 
-    @Query("SELECT p, ROUND(AVG(t.etat), 2), COUNT(t.id) FROM Project p LEFT JOIN p.taches t WHERE p.isDeleted = '0' GROUP BY p")
+    @Query("SELECT p, ROUND(AVG(t.etat), 2), COUNT(t.id)  FROM Project p LEFT JOIN p.taches t WHERE p.isDeleted = '0' GROUP BY p")
     List<Object[]> selectExistingProjectsAndAverageEtat();
 
-    @Query("SELECT p, ROUND(AVG(t.etat), 2), COUNT(t.id), MAX(t.datefu) FROM Project p LEFT JOIN p.taches t " +
+    @Query("SELECT p, ROUND(AVG(t.etat), 2), COUNT(t.id), MAX(t.datefu) , p.clients.cheminImage FROM Project p LEFT JOIN p.taches t " +
             "WHERE (" +
             "   LOWER(p.title) LIKE %:search% " +
             "   OR LOWER(p.description) LIKE %:search% " +
@@ -41,7 +41,7 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
             "AND p.id IN (" +
             "   SELECT DISTINCT p2.id FROM Project p2 LEFT JOIN p2.taches t2 " +
             ") " +
-            "GROUP BY p.id")
+            "GROUP BY p.id , p.clients.cheminImage")
     Page<Object[]> selectExistingProjectsAndAverageEtatByTitle(@Param("search") String search, Pageable pageable);
 
     @Query("SELECT p.dated, p.datef FROM Project p WHERE p.id = :projectId")
@@ -54,7 +54,7 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
 
     boolean existsByTitleAndClientsNot(String title , Client clients);
 
-    @Query("SELECT p, ROUND(AVG(t.etat), 2), COUNT(t.id) FROM Project p LEFT JOIN p.taches t WHERE p.id = :id  GROUP BY p")
+    @Query("SELECT p, ROUND(AVG(t.etat), 2), COUNT(t.id)  FROM Project p LEFT JOIN p.taches t WHERE p.id = :id  GROUP BY p ")
     List<Object[]> selectDetailProjct(@Param("id") Integer id);
 
     @Query("SELECT p, ROUND(AVG(t.etat), 2) AS averageState, COUNT(t.id), MAX(t.datefu) " +
@@ -63,8 +63,8 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
             "WHERE p.isDeleted = '0' " +
             "AND (LOWER(p.title) LIKE %:search% " +
             "OR LOWER(p.description) LIKE %:search% " +
-            "OR LOWER(p.dated) LIKE %:search% " +
-            "OR LOWER(p.datef) LIKE %:search%) " +
+            "OR TO_CHAR(p.dated, 'YYYY-MM-DD') LIKE %:search% " +
+            "OR TO_CHAR(p.datef, 'YYYY-MM-DD') LIKE %:search%) " +
             "AND p.id IN (" +
             "   SELECT DISTINCT t.project.id " +
             "   FROM Tache t " +
@@ -77,7 +77,7 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
     @Query("SELECT p, ROUND(AVG(t.etat), 2) AS averageState, COUNT(t.id), MAX(t.datefu) " +
             "FROM Project p LEFT JOIN p.taches t " +
             "WHERE p.isDeleted = '0'  " +
-            "AND TO_DATE(p.datef, 'YYYY-MM-DD') >= CURRENT_DATE " +
+            "AND p.datef >= CURRENT_DATE " +
             "AND (LOWER(p.title) LIKE %:search% " +
             "OR LOWER(p.description) LIKE %:search% " +
             "OR TO_CHAR(p.dated, 'YYYY-MM-DD') LIKE %:search% " +
@@ -105,7 +105,7 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
     @Query("SELECT p , count(p.id) " +
             "FROM Project p " +
             "WHERE p.isDeleted = '0'  " +
-            "AND TO_DATE(p.datef, 'YYYY-MM-DD') >= CURRENT_DATE " +
+            "AND p.datef >= CURRENT_DATE " +
             "AND (LOWER(p.title) LIKE %:search% " +
             "OR LOWER(p.description) LIKE %:search% " +
             "OR TO_CHAR(p.dated, 'YYYY-MM-DD') LIKE %:search% " +
@@ -125,7 +125,7 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
     @Query("SELECT p , count(p.id) " +
             "FROM Project p " +
             "WHERE p.isDeleted = '0'  " +
-            "AND TO_DATE(p.datef, 'YYYY-MM-DD') < CURRENT_DATE " +
+            "AND p.datef < CURRENT_DATE " +
             "AND (LOWER(p.title) LIKE %:search% " +
             "OR LOWER(p.description) LIKE %:search% " +
             "OR TO_CHAR(p.dated, 'YYYY-MM-DD') LIKE %:search% " +
@@ -135,7 +135,7 @@ public interface ProjectRepository extends JpaRepository<Project, Integer> {
 
     @Query("SELECT COUNT(p.id) " +
             "FROM Project p " +
-            "WHERE TO_DATE(p.datef, 'YYYY-MM-DD') < CURRENT_DATE " +
+            "WHERE p.datef < CURRENT_DATE " +
             "AND p.isDeleted = '0' ")
     long countPR();
 

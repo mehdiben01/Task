@@ -67,7 +67,7 @@ public class ClientController {
 
     @GetMapping("/client")
     public String getClient(Model model, @RequestParam(required = false) String search,
-                            @RequestParam(defaultValue = "0") int page){
+                            @RequestParam(defaultValue = "0") int page) {
         Client client = new Client();
         model.addAttribute("client", client);
         Page<Object[]> existingClients;
@@ -76,12 +76,23 @@ public class ClientController {
         } else {
             existingClients = clientService.getAllClients("", PageRequest.of(page, elementsPerPage));
         }
+
+        // Récupérez l'URL pré-signée pour chaque client
+        for (Object[] clientData : existingClients) {
+            String cheminImage = (String) clientData[2];
+            if (cheminImage != null) {
+                String privateImageURL = imageService.getPrivateImageURL("taskmanager", cheminImage);
+                clientData[2] = privateImageURL; // Remplacez le chemin de l'image par l'URL pré-signée
+            }
+        }
+
         model.addAttribute("clients", existingClients.getContent());
         model.addAttribute("countclient", existingClients.getTotalElements());
         model.addAttribute("search", search);
         model.addAttribute("activePage", "client");
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", existingClients.getTotalPages());
+
         return "admin/client";
     }
     @GetMapping("/client-annule")
@@ -129,7 +140,7 @@ public class ClientController {
             return "redirect:/admin/client";
         }
         if (!imageFile.isEmpty()) {
-            boolean imageUpdateResult = imageService.updateImage(client, imageFile);
+            boolean imageUpdateResult = imageService.addImage(client, imageFile);
             if (!imageUpdateResult) {
                 redirectAttributes.addFlashAttribute("message", ImageService.IMAGE_SIZE_ERROR_MESSAGE);
                 return "redirect:/admin/client";
@@ -146,6 +157,12 @@ public class ClientController {
     @GetMapping("/EditClient/{id}")
     public String getDetailClient(@PathVariable("id") Integer id, Model model){
         Client client = clientService.getClientById(id);
+        // Récupérez l'URL pré-signée de l'image du client
+        String cheminImage = client.getCheminImage();
+        if (cheminImage != null) {
+            String privateImageURL = imageService.getPrivateImageURL("taskmanager", cheminImage);
+            model.addAttribute("privateImageURL", privateImageURL);
+        }
         model.addAttribute("clients", client);
         Client clients = new Client();
         model.addAttribute("client", clients);
@@ -215,7 +232,7 @@ public class ClientController {
         Client existingClient = clientService.getClientById(updateClient.getId());
 
         // Vérifier si un nouveau fichier d'image a été sélectionné
-        boolean updateSuccess = imageService.updateImage(existingClient, imageFile);
+        boolean updateSuccess = imageService.addImage(existingClient, imageFile);
 
 
         if (imageFile.getSize() > 2 * 1024 * 1024) {

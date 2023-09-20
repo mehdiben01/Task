@@ -109,7 +109,7 @@
                       <input id="file-upload" type="file" name="image" class="d-none" onchange="this.form.submit()">
                       <label for="file-upload">
                         <!-- Profile picture image-->
-                        <img class="ap-img__main rounded-circle wh-120" th:src="${'http://localhost:9000/taskmanager/' +utilisateur.cheminImage}" alt="profile" id="profile-image" loading="lazy">
+                        <img class="ap-img__main rounded-circle wh-120" th:src="${image}" alt="profile" id="profile-image" loading="lazy">
                         <span class="cross" id="remove_pro_pic">
                 <span data-feather="camera"></span>
             </span>
@@ -160,6 +160,7 @@
                             <div class="edit-profile__body mx-lg-20">
                               <form th:action="@{/admin/user/update}" method="post" th:object="${utilisateur}" class="was-validated">
                                 <input type="hidden" class="form-control" id="username"  name="username" th:value="${utilisateur.username}">
+                                <input type="hidden" class="form-control" id="id"  name="id" th:value="${utilisateur.id}">
                                 <div class="form-group mb-20">
                                   <label for="names">nom</label>
                                   <input type="text" class="form-control" id="names" placeholder="Nom" name="nom" th:value="${utilisateur.nom}" pattern="[A-Za-z\s]+" required th:classappend="${#fields.hasErrors('nom')} ? 'is-invalid'">
@@ -178,7 +179,7 @@
                                 </div>
                                 <div class="form-group mb-20">
                                   <label for="phoneNumber1">Téléphone</label>
-                                  <input type="tel" class="form-control" id="phoneNumber1" placeholder="+440 2546 5236" name="tel" th:value="${utilisateur.tel}" pattern="[0-9]{10}" required th:classappend="${#fields.hasErrors('tel')} ? 'is-invalid'">
+                                  <input type="tel" class="form-control" id="tel"  name="tel" th:value="${utilisateur.tel}" pattern="[0-9]{10}" required th:classappend="${#fields.hasErrors('tel')} ? 'is-invalid'">
                                   <div class="invalid-feedback">
                                     <span th:if="${#fields.hasErrors('tel')}" th:errors="*{tel}"></span>
                                     Le téléphone est requis.

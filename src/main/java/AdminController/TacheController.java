@@ -6,10 +6,7 @@ import Model.TacheSupprimee;
 import Model.Utilisateur;
 import Repository.ProjectRepository;
 import Repository.TacheRepository;
-import Service.ProjectService;
-import Service.TacheService;
-import Service.TacheSupprimeeService;
-import Service.UtilisateurService;
+import Service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -43,15 +40,17 @@ public class TacheController {
     private final ProjectRepository projectRepository;
 
     private final TacheSupprimeeService tacheSupprimeeService;
+    private final ImageService imageService;
 
 
 
     @Autowired
-    public  TacheController(TacheRepository tacheRepository, TacheService tacheService, TacheSupprimeeService tacheSupprimeeService,  ProjectRepository projectRepository,   UtilisateurService utilisateurService, ProjectService projects){
+    public  TacheController(TacheRepository tacheRepository, TacheService tacheService, TacheSupprimeeService tacheSupprimeeService, ProjectRepository projectRepository, ImageService imageService, UtilisateurService utilisateurService, ProjectService projects){
         this.tacheRepository = tacheRepository;
         this.tacheService = tacheService;
         this.projectRepository = projectRepository;
         this.tacheSupprimeeService = tacheSupprimeeService;
+        this.imageService = imageService;
         this.utilisateurService = utilisateurService;
         this.projects = projects;
     }
@@ -95,6 +94,22 @@ public class TacheController {
             existingTache = tacheService.getAllTask(search, Pageable.unpaged());
         } else {
             existingTache = tacheService.getAllTask("", PageRequest.of(page, elementsPerPage));
+        }
+        // Récupérez l'URL pré-signée pour chaque client
+        for (Object[] clientData : existingTache) {
+            String cheminImage = (String) clientData[2];
+            if (cheminImage != null) {
+                String privateImageURL = imageService.getPrivateImageURL("taskmanager", cheminImage);
+                clientData[2] = privateImageURL; // Remplacez le chemin de l'image par l'URL pré-signée
+            }
+        }
+        // Récupérez l'URL pré-signée pour chaque client
+        for (Object[] clientData : existingTache) {
+            String cheminImageCompany = (String) clientData[3];
+            if (cheminImageCompany != null) {
+                String privateImageURL = imageService.getPrivateImageURL("taskmanager", cheminImageCompany);
+                clientData[3] = privateImageURL; // Remplacez le chemin de l'image par l'URL pré-signée
+            }
         }
         model.addAttribute("task", existingTache.getContent());
         model.addAttribute("count",existingTache.getTotalElements());
@@ -277,6 +292,16 @@ public class TacheController {
         Tache tache = tacheService.getTacheById(id);
         model.addAttribute("tache", tache);
         model.addAttribute("activePage","tache");
+        String cheminImageMembre = tache.getUsers().getCheminImage();
+        if (cheminImageMembre != null) {
+            String privateImageURL = imageService.getPrivateImageURL("taskmanager", cheminImageMembre);
+            model.addAttribute("UserImage", privateImageURL);
+        }
+        String cheminImageProject = tache.getProject().getClients().getCheminImage();
+        if (cheminImageProject != null) {
+            String privateImageURL = imageService.getPrivateImageURL("taskmanager", cheminImageProject);
+            model.addAttribute("CompanyImage", privateImageURL);
+        }
         return "admin/detail-tache";
     }
 

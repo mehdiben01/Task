@@ -219,7 +219,7 @@
       <div class="projects-tab-content projects-tab-content--progress">
         <div class="tab-content mt-25" id="ap-tabContent">
 
-          <div class="container">
+          <div>
 
 
             <div class="row" id="project-list" th:if="${projects.size() > 0}">
@@ -255,6 +255,18 @@
                       </div>
                     </div>
                     <div class="user-group-progress-bar">
+                      <div th:if="${project[1] == null}">
+                        <!-- Affichez le contenu lorsque ROUND(AVG(t.etat), 2) est nul -->
+                        <div class="progress-wrap d-flex align-items-center mb-0">
+                          <div class="progress">
+                            <div class="progress-bar bg-warning" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                          </div>
+                          <span class="progress-percentage">0%</span>
+                        </div>
+                        <p class="color-light fs-12 mb-20" >0% des taches réalisées</p>
+                        <p class="color-light fs-12 mb-20" >Aucune tâche n'est liée à ce projet</p>
+
+                      </div>
                       <div class="progress-wrap d-flex align-items-center mb-0" th:if="${ (project[1] != 100) and (project[1] != null) and (project[0].datef >= project[3])  }">
 
                         <div class="progress" >
@@ -298,7 +310,18 @@
 
                     </div>
                   </div>
-
+                <div class="mt-20 px-30">
+                  <p class="fs-13 color-light mb-10">Assigné à</p>
+                  <ul class="d-flex flex-wrap user-group-people__parent">
+                    <li>
+                      <a href="#"><img class="rounded-circle wh-34 bg-opacity-secondary" th:src="${project[4]}" alt="author"></a>
+                    </li>
+                    <li th:each="taches : ${project[0].taches}">
+                      <a href="#"><img class="rounded-circle wh-34 bg-opacity-secondary" th:src="${taches.users.cheminImage}" alt="author"></a>
+                    </li>
+                  </ul>
+                  </ul>
+                </div>
                   <div class="ap-button account-profile-cards__button button-group d-flex justify-content-center flex-wrap pt-20">
                     <a th:href="@{/admin/DetailProjet/{id}(id=${project[0].id})}">
                       <button type="button" class="border text-capitalize px-25 color-gray transparent shadow2 radius-md">

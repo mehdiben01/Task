@@ -32,13 +32,13 @@ public interface TacheRepository extends JpaRepository<Tache, Integer> {
     List<Tache> selectTacheRetDebut();
 
 
-    @Query("SELECT t , COUNT(t.id) " +
+    @Query("SELECT t , COUNT(t.id) , t.users.cheminImage, t.project.clients.cheminImage " +
             "FROM Tache t " +
             "WHERE (LOWER(t.title) LIKE %:search% " +
             "OR (LOWER(t.description)) LIKE %:search% " +
             "OR TO_CHAR(t.dated, 'YYYY-MM-DD') LIKE %:search% " +
             "OR TO_CHAR(t.datef, 'YYYY-MM-DD') LIKE %:search%) " +
-            "GROUP BY t.id  ")
+            "GROUP BY t.id , t.users.cheminImage , t.project.clients.cheminImage   ")
     Page<Object[]> selectAllTaches(@Param("search") String search, Pageable pageable);
 
     @Query("SELECT t , count(t.id) " +
@@ -55,7 +55,7 @@ public interface TacheRepository extends JpaRepository<Tache, Integer> {
             "FROM Tache t " +
             "WHERE t.etat between 1 and 99 " +
             "AND t.datef >= t.datefu " +
-            "AND TO_DATE(t.datef, 'YYYY-MM-DD') >= CURRENT_DATE " +
+            "AND t.datef >= CURRENT_DATE " +
             "AND (LOWER(t.title) LIKE %:search% " +
             "OR (LOWER(t.description)) LIKE %:search% " +
             "OR TO_CHAR(t.dated, 'YYYY-MM-DD') LIKE %:search% " +
@@ -67,7 +67,7 @@ public interface TacheRepository extends JpaRepository<Tache, Integer> {
             "FROM Tache t " +
             "WHERE t.etat = 0 " +
             "AND t.datef >= t.datefu " +
-            "AND TO_DATE(t.datef, 'YYYY-MM-DD') >= CURRENT_DATE " +
+            "AND t.datef >= CURRENT_DATE " +
             "AND (LOWER(t.title) LIKE %:search% " +
             "OR (LOWER(t.description)) LIKE %:search% " +
             "OR TO_CHAR(t.dated, 'YYYY-MM-DD') LIKE %:search% " +
@@ -78,7 +78,7 @@ public interface TacheRepository extends JpaRepository<Tache, Integer> {
     @Query("SELECT t , count(t.id) " +
             "FROM Tache t " +
             "WHERE t.etat != 100 " +
-            "AND ((t.datef < t.datefu) or TO_DATE(t.datef, 'YYYY-MM-DD') < CURRENT_DATE) " +
+            "AND ((t.datef < t.datefu) or (t.datef < CURRENT_DATE)) " +
             "AND (LOWER(t.title) LIKE %:search% " +
             "OR (LOWER(t.description)) LIKE %:search% " +
             "OR TO_CHAR(t.dated, 'YYYY-MM-DD') LIKE %:search% " +
@@ -118,19 +118,19 @@ public interface TacheRepository extends JpaRepository<Tache, Integer> {
 
     @Query("SELECT COUNT(t) " +
             "FROM Tache t " +
-            "WHERE TO_DATE(t.datef, 'YYYY-MM-DD') >= CURRENT_DATE " +
+            "WHERE t.datef >= CURRENT_DATE " +
             "AND t.etat between 1 and 99 ")
     long countE();
 
     @Query("SELECT COUNT(t) " +
             "FROM Tache t " +
-            "WHERE TO_DATE(t.datef, 'YYYY-MM-DD') >= CURRENT_DATE " +
+            "WHERE t.datef >= CURRENT_DATE " +
             "AND t.etat=0 ")
     long countN();
 
     @Query("SELECT COUNT(t) " +
             "FROM Tache t " +
-            "WHERE TO_DATE(t.datef, 'YYYY-MM-DD') < CURRENT_DATE "+
+            "WHERE t.datef < CURRENT_DATE "+
             "AND t.etat!=100")
     long countR();
 
@@ -142,7 +142,7 @@ public interface TacheRepository extends JpaRepository<Tache, Integer> {
             "FROM Tache t " +
             "JOIN t.users u " +
             "WHERE (u.id = :userId) " +
-            "AND ((TO_DATE(t.datef, 'YYYY-MM-DD') >= CURRENT_DATE) or (t.etat=100)) " +
+            "AND ((t.datef >= CURRENT_DATE) or (t.etat=100)) " +
             "AND (LOWER(t.title) LIKE %:search% " +
             "OR (LOWER(t.description)) LIKE %:search% " +
             "OR TO_CHAR(t.dated, 'YYYY-MM-DD') LIKE %:search% " +
@@ -174,7 +174,7 @@ public interface TacheRepository extends JpaRepository<Tache, Integer> {
             "JOIN t.users u " +
             "WHERE (u.id = :userId) " +
             "AND t.etat between 1 and 99 "+
-            "AND TO_DATE(t.datef, 'YYYY-MM-DD') >= CURRENT_DATE " +
+            "AND t.datef >= CURRENT_DATE " +
             "AND (LOWER(t.title) LIKE %:search% " +
             "OR (LOWER(t.description)) LIKE %:search% " +
             "OR TO_CHAR(t.dated, 'YYYY-MM-DD') LIKE %:search% " +
@@ -187,7 +187,7 @@ public interface TacheRepository extends JpaRepository<Tache, Integer> {
             "JOIN t.users u " +
             "WHERE (u.id = :userId) " +
             "AND t.etat = 0 "+
-            "AND TO_DATE(t.datef, 'YYYY-MM-DD') >= CURRENT_DATE " +
+            "AND t.datef >= CURRENT_DATE " +
             "AND (LOWER(t.title) LIKE %:search% " +
             "OR (LOWER(t.description)) LIKE %:search% " +
             "OR TO_CHAR(t.dated, 'YYYY-MM-DD') LIKE %:search% " +
@@ -203,14 +203,14 @@ public interface TacheRepository extends JpaRepository<Tache, Integer> {
 
     @Query("SELECT COUNT(t) " +
             "FROM Tache t " +
-            "WHERE TO_DATE(t.datef, 'YYYY-MM-DD') >= CURRENT_DATE " +
+            "WHERE t.datef >= CURRENT_DATE " +
             "AND t.users.id = :userId "+
             "AND t.etat between 1 and 99 ")
     long countENC(@Param("userId") Integer userId);
 
     @Query("SELECT COUNT(t) " +
             "FROM Tache t " +
-            "WHERE TO_DATE(t.datef, 'YYYY-MM-DD') >= CURRENT_DATE " +
+            "WHERE t.datef >= CURRENT_DATE " +
             "AND t.users.id = :userId "+
             "AND t.etat=0 ")
     long countNonC(@Param("userId") Integer userId);

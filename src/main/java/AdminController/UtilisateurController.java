@@ -20,6 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.text.SimpleDateFormat;
 
 
 @Controller
@@ -58,7 +59,11 @@ public class UtilisateurController  {
                 model.addAttribute("username", username);
                 model.addAttribute("fullName", utilisateur.getFullName());
                 model.addAttribute("profession", utilisateur.getProfession());
-                model.addAttribute("imagePath", utilisateur.getCheminImage());
+                String cheminImage = utilisateur.getCheminImage();
+                if (cheminImage != null) {
+                    String privateImageURL = imageService.getPrivateImageURL("taskmanager", cheminImage);
+                    model.addAttribute("privateImageURL", privateImageURL);
+                }
                 // You can add more attributes here
             }
         }
@@ -80,6 +85,14 @@ public class UtilisateurController  {
             existingUtilisateurs = utilisateurService.getUtilisateur(search, PageRequest.of(page, elementsPerPage));
         } else {
             existingUtilisateurs = utilisateurService.getUtilisateur("", PageRequest.of(page, elementsPerPage));
+        }
+        // Récupérez l'URL pré-signée pour chaque client
+        for (Object[] clientData : existingUtilisateurs) {
+            String cheminImage = (String) clientData[2];
+            if (cheminImage != null) {
+                String privateImageURL = imageService.getPrivateImageURL("taskmanager", cheminImage);
+                clientData[2] = privateImageURL; // Remplacez le chemin de l'image par l'URL pré-signée
+            }
         }
         model.addAttribute("utilisateurs", existingUtilisateurs.getContent());
         model.addAttribute("countStaff", existingUtilisateurs.getTotalElements());
@@ -124,7 +137,9 @@ public class UtilisateurController  {
         utilisateur.setPrenom(utilisateur.getPrenom().toLowerCase());
         utilisateur.setProfession(utilisateur.getProfession().toLowerCase());
         utilisateur.setPassword(passwordEncoder.encode(utilisateur.getPassword()));
-        utilisateur.setUsername(utilisateur.getPrenom().toLowerCase().replace(" ","")+""+utilisateur.getNom().toLowerCase().replace(" ",""));
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd");
+        String dayOfBirth = dateFormat.format(utilisateur.getDaten());
+        utilisateur.setUsername(utilisateur.getPrenom().toLowerCase().replace(" ","")+""+utilisateur.getNom().toLowerCase().replace(" ","")+""+dayOfBirth);
 
         // Vérifier si l'utilisateur existe déjà
         boolean champExiste = utilisateurRepository.existsByUsernameOrTel(utilisateur.getUsername(),  utilisateur.getTel());
@@ -140,7 +155,7 @@ public class UtilisateurController  {
             return "redirect:/admin/team";
         }
         if (!imageFile.isEmpty()) {
-            boolean imageUpdateResult = imageService.updateImage(utilisateur, imageFile);
+            boolean imageUpdateResult = imageService.addImage(utilisateur, imageFile);
             if (!imageUpdateResult) {
                 redirectAttributes.addFlashAttribute("message", ImageService.IMAGE_SIZE_ERROR_MESSAGE);
                 return "redirect:/admin/team";
@@ -163,7 +178,11 @@ public class UtilisateurController  {
             // Si l'utilisateur n'existe pas ou si l'ID ne correspond pas, affichez une page de refus d'accès
             return "/denied"; // Assurez-vous d'avoir une vue pour la page "denied"
         }
-
+        String cheminImage = utilisateur.getCheminImage();
+        if (cheminImage != null) {
+            String privateImageURL = imageService.getPrivateImageURL("taskmanager", cheminImage);
+            model.addAttribute("image", privateImageURL);
+        }
         // Add the utilisateur to the model
         model.addAttribute("utilisateur", utilisateur);
         model.addAttribute("activePage","detailTeam");
@@ -194,37 +213,35 @@ public class UtilisateurController  {
             redirectAttributes.addFlashAttribute("message", "L'espace indésirable est présent dans la profession.");
             return "redirect:/admin/DetailTeam/" + existingUtilisateur.getUsername();
         }
-
-        // Vérifier si l'utilisateur existe déjà
-        boolean DataExiste = utilisateurRepository.existsByNomAndPrenomAndProfessionAndDatenAndTel(updatedUtilisateur.getNom().toUpperCase(),updatedUtilisateur.getPrenom().toLowerCase(),updatedUtilisateur.getProfession().toLowerCase(), updatedUtilisateur.getDaten(),updatedUtilisateur.getTel());
-        if (DataExiste) {
-            // Gérer le cas où l'utilisateur existe déjà
-            redirectAttributes.addFlashAttribute("message", "Les données existent déjà.");
-            return "redirect:/admin/DetailTeam/" + existingUtilisateur.getUsername();
-        }else{
-            // Mettre à jour les attributs de l'utilisateur existant avec les nouvelles valeurs
-            existingUtilisateur.setNom(updatedUtilisateur.getNom().toUpperCase());
-            existingUtilisateur.setPrenom(updatedUtilisateur.getPrenom().toLowerCase());
-            existingUtilisateur.setProfession(updatedUtilisateur.getProfession().toLowerCase());
-
-            existingUtilisateur.setTel(updatedUtilisateur.getTel());
-            existingUtilisateur.setRoles(updatedUtilisateur.getRoles());
-            existingUtilisateur.setUsername(updatedUtilisateur.getPrenom().toLowerCase().replace(" ","")+""+updatedUtilisateur.getNom().toLowerCase().replace(" ",""));
-            existingUtilisateur.setDaten(updatedUtilisateur.getDaten());
-            System.out.println("La valeur de updatedUtilisateur.getDaten() est : " + updatedUtilisateur.getDaten());
-        }
-        boolean NomExiste = utilisateurRepository.existsByNomAndPrenomAndIdNot(updatedUtilisateur.getNom().toUpperCase(),updatedUtilisateur.getPrenom().toLowerCase(), updatedUtilisateur.getId());
+        boolean NomExiste = utilisateurService.existsByNomAndPrenomAndIdNot(updatedUtilisateur.getNom().toUpperCase(),updatedUtilisateur.getPrenom().toLowerCase(), updatedUtilisateur.getId());
+        boolean TelExiste = utilisateurService.existsByTelAndIdNot(updatedUtilisateur.getTel(), updatedUtilisateur.getId());
+        boolean DataExiste = utilisateurService.existsByNomAndPrenomAndProfessionAndDatenAndTel(updatedUtilisateur.getNom().toUpperCase(),updatedUtilisateur.getPrenom().toLowerCase(),updatedUtilisateur.getProfession().toLowerCase(), updatedUtilisateur.getDaten(),updatedUtilisateur.getTel());
         if (NomExiste) {
             // Gérer le cas où l'utilisateur existe déjà
             redirectAttributes.addFlashAttribute("message", "Les données existent déjà.");
             return "redirect:/admin/DetailTeam/" + existingUtilisateur.getUsername();
         }
-        boolean TelExiste = utilisateurRepository.existsByTelAndIdNot(updatedUtilisateur.getTel(), updatedUtilisateur.getId());
         if (TelExiste) {
             // Gérer le cas où l'utilisateur existe déjà
             redirectAttributes.addFlashAttribute("message", "Les données existent déjà.");
             return "redirect:/admin/DetailTeam/" + existingUtilisateur.getUsername();
         }
+        if (DataExiste) {
+            // Gérer le cas où l'utilisateur existe déjà
+            redirectAttributes.addFlashAttribute("message", "Les données existent déjà.");
+            return "redirect:/admin/DetailTeam/" + existingUtilisateur.getUsername();
+        }
+
+            // Mettre à jour les attributs de l'utilisateur existant avec les nouvelles valeurs
+            existingUtilisateur.setNom(updatedUtilisateur.getNom().toUpperCase());
+            existingUtilisateur.setPrenom(updatedUtilisateur.getPrenom().toLowerCase());
+            existingUtilisateur.setProfession(updatedUtilisateur.getProfession().toLowerCase());
+            existingUtilisateur.setTel(updatedUtilisateur.getTel());
+            existingUtilisateur.setRoles(updatedUtilisateur.getRoles());
+            existingUtilisateur.setDaten(updatedUtilisateur.getDaten());
+
+
+
 
 
         redirectAttributes.addFlashAttribute("messagesu", "Les données ont été mises à jour avec succès.");
@@ -242,7 +259,7 @@ public class UtilisateurController  {
         Utilisateur existingUtilisateur = utilisateurService.loadUserByUsername(updatedUtilisateur.getUsername());
 
         // Vérifier si un nouveau fichier d'image a été sélectionné
-        boolean updateSuccess = imageService.updateImage(existingUtilisateur, imageFile);
+        boolean updateSuccess = imageService.addImage(existingUtilisateur, imageFile);
 
 
         if (imageFile.getSize() > 2 * 1024 * 1024) {

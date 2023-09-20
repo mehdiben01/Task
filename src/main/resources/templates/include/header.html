@@ -819,11 +819,11 @@
                     <!-- ends: .nav-notification -->
                     <li class="nav-author">
                         <div class="dropdown-custom">
-                            <a href="javascript:;" class="nav-item-toggle"><img th:src="${imagePath}" alt="" class="rounded-circle"></a>
+                            <a href="javascript:;" class="nav-item-toggle"><img th:src="${privateImageURL}" alt="" class="rounded-circle"></a>
                             <div class="dropdown-wrapper">
                                 <div class="nav-author__info">
                                     <div class="author-img">
-                                        <img th:src="${imagePath}" alt="" class="rounded-circle">
+                                        <img th:src="${privateImageURL}" alt="" class="rounded-circle">
                                     </div>
                                     <div>
                                         <h6 th:text="'Bienvenue, ' + ${#httpServletRequest.remoteUser}"></h6>

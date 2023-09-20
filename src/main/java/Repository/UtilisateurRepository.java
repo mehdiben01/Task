@@ -27,7 +27,8 @@ public interface UtilisateurRepository extends JpaRepository<Utilisateur, Intege
 
     boolean existsByTelAndIdNot(String tel , Integer id);
 
-    boolean existsByPassword(String password);
+
+
 
   boolean existsByNomAndPrenom(String nom, String prenom);
     List<Utilisateur> findAllByIsDeleted(String isDeleted);
@@ -40,7 +41,7 @@ public interface UtilisateurRepository extends JpaRepository<Utilisateur, Intege
     Optional<Utilisateur> getUtilisateurById(Integer id);
 
 
-    @Query("SELECT u , count(u.id) "+
+    @Query("SELECT u , count(u.id) , u.cheminImage "+
             "FROM Utilisateur u "+
             "JOIN u.roles r " +
             "WHERE u.isDeleted ='0' "+

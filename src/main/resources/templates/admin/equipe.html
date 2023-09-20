@@ -226,7 +226,7 @@
               <div class="account-profile-cards  ">
                 <div class="ap-img d-flex justify-content-center">
                   <!-- Profile picture image-->
-                  <img class="ap-img__main bg-opacity-primary  wh-120 rounded-circle mb-3 " th:src="${'http://localhost:9000/taskmanager/' +utilisateurs[0].cheminImage}" alt="profile">
+                  <img class="ap-img__main bg-opacity-primary  wh-120 rounded-circle mb-3 " th:src="${utilisateurs[2]}" alt="profile">
                 </div>
                 <div class="ap-nameAddress">
                   <h6 class="ap-nameAddress__title" th:text="${#strings.capitalize(utilisateurs[0].prenom) + ' ' +utilisateurs[0].nom}"></h6>

@@ -15,8 +15,8 @@ public interface TacheSupprimeeRepository  extends JpaRepository<TacheSupprimee 
             "FROM TacheSupprimee t " +
            "WHERE (LOWER(t.title) LIKE %:search% " +
            "OR LOWER(t.description) LIKE %:search% " +
-           "OR LOWER(t.dated) LIKE %:search% " +
-           "OR LOWER(t.datef) LIKE %:search% ) ")
+           "OR TO_CHAR(t.dated, 'YYYY-MM-DD') LIKE %:search% " +
+           "OR TO_CHAR(t.datef, 'YYYY-MM-DD') LIKE %:search% ) ")
     Page<Object[]> findAllTacheSupp(@Param("search") String search, Pageable pageable);
 
     void deleteTacheSupprimeeById(Integer id);

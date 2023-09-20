@@ -340,7 +340,16 @@
 
                     </div>
                   </div>
-
+                  <div class="mt-20 px-30">
+                    <p class="fs-13 color-light mb-10">Assigné à</p>
+                    <ul class="d-flex flex-wrap user-group-people__parent">
+                      <li>
+                        <a href="#"><img class="rounded-circle wh-34 bg-opacity-secondary" th:src="${task[2]}" alt="author"></a>
+                        <a href="#"><img class="rounded-circle wh-34 bg-opacity-secondary" th:src="${task[3]}" alt="author"></a>
+                      </li>
+                    </ul>
+                    </ul>
+                  </div>
                   <div class="ap-button account-profile-cards__button button-group d-flex justify-content-center flex-wrap pt-20">
                     <a th:href="@{/admin/DetailTache/{id}(id=${task[0].id})}">
                       <button type="button" class="border text-capitalize px-25 color-gray transparent shadow2 radius-md">
